@@ -2,11 +2,13 @@
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 
 set( LIBECHONEST_TYPES_SRC
-       types/Track.cpp
+       Track.cpp
+       Song.cpp
 )
 
 set( LIBECHONEST_TYPES_H
-       types/Track.h
+       Track.h
+       Song.h
 )
 
 QT4_WRAP_CPP( ${LIBECHONEST_TYPES_H} )

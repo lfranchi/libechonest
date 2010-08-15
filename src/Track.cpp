@@ -16,16 +16,36 @@
 
 #include "Track.h"
 
-#include "Track_p.h"
-
-Echonest::Track::Track()
-  : d( new QSharedDataPointer<Echonest::TrackData>( new Echonest::TrackData ) )
+class Echonest::TrackDataPrivate
 {
+  Echonest::TrackDataPrivate() {}
+  ~Echonest::TrackDataPrivate() {}
+  
+  QString artistName;
+  QString title;
+  QString analysisURL;
+  QString trackId;
+  QString previewUrl;
+  QString audioURL;
+  QString audioMD5;
+  QString albumName;
+  /** TODO analyisStatus */
+  qreal tempo;
+  qreal loudness;
+  qreal duration;
+  int timeSignature;
+  int key;
+  int mode;
+  int samplerate;
+  int bitrate;
+  int channels;
+  int analyzerVersion; 
+  
+};
 
-}
-
-Echonest::Track::Track( const QByteArray& xmlData )
-  : d( new QSharedDataPointer<Echonest::TrackData>( new Echonest::TrackData ) )
+Echonest::Track::Track( const QByteArray& xmlData, QObject* parent )
+  : QObject( parent )
+  , d( new Echonest::TrackDataPrivate )
 {
   // parse with QXmlStreamReader
 }
@@ -110,4 +130,15 @@ int Echonest::Track::samplerate() const
 {
   return d->samplerate;
 }
+
+int Echonest::Track::analyzerVersion() const
+{
+  return d->analyzerVersion;
+}
+
+int Echonest::Track::channels() const
+{
+  return d->channels;
+}
+
 
