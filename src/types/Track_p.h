@@ -25,6 +25,7 @@ namespace Echonest
 
 class TrackData : QSharedData
 {
+public:
   TrackData() {}
   ~TrackData() {}
   TrackData( const TrackData& other ) : QSharedData( other ) {}
@@ -32,14 +33,20 @@ class TrackData : QSharedData
   QString artistName;
   QString title;
   QString analysisURL;
-  uint trackId;
-  int mode;
+  QString trackId;
   QString previewUrl;
-  QString releaseName;
+  QString audioURL;
+  QString audioMD5;
+  QString albumName;
   /** TODO analyisStatus */
   qreal tempo;
   qreal loudness;
-  uint timeSignature;
+  qreal duration;
+  int timeSignature;
+  int key;
+  int mode;
+  int samplerate;
+  int bitrate;
 };
   
 }

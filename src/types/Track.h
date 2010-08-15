@@ -21,14 +21,50 @@
 #include "echonest_export.h"
 
 #include <QSharedDataPointer>
+#include <QString>
 
 namespace Echonest 
 {
 
 class TrackData;
   
+/**
+ * Upload-based Echo Nest Track API. If you want to search The Echo Nest for songs, use the Song API. 
+ *  If you want to upload your own files and retrieve the acoustic information about them, use this Track
+ *   class.
+ * 
+ * A Track encapsulates the audio analysis from The Echo Nest
+ * 
+ */
 class ECHONEST_EXPORT Track
 {
+  Track();
+  explicit Track( const QByteArray& xmlData );
+  
+  //TODO analysis
+  QString artistName() const;
+  QString title() const;
+  QString analysisURL() const;
+  
+  QString id() const;
+  QString audioMD5() const;
+  QString audioURL() const;
+  QString previewURL() const;
+  QString albumName() const; // in EN lingo, 'release'
+  
+  qreal duration() const;
+  qreal loudness() const;
+  qreal tempo() const;
+  
+  int bitrate() const;
+  int samplerate() const;
+  int key() const;
+  int mode() const;
+  int timeSignature() const;
+  int analyzerVersion() const;
+  int channels() const;
+  
+  QVector< 
   
 private:
   QSharedDataPointer<TrackData> d;
