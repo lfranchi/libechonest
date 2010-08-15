@@ -18,6 +18,8 @@
 #ifndef ECHONEST_TRACK_H
 #define ECHONEST_TRACK_H
 
+#include "echonest_export.h"
+
 #include <QSharedDataPointer>
 
 namespace Echonest 
@@ -25,9 +27,8 @@ namespace Echonest
 
 class TrackData;
   
-LIBECHONEST_EXPORT class Track
+class ECHONEST_EXPORT Track
 {
-  
   
 private:
   QSharedDataPointer<TrackData> d;
