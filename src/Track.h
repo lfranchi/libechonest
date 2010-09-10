@@ -22,6 +22,9 @@
 
 #include <QObject>
 #include <QString>
+#include <QSharedData>
+
+class TrackData;
 
 namespace Echonest 
 {
@@ -31,44 +34,58 @@ class TrackDataPrivate;
 /**
  * Upload-based Echo Nest Track API. If you want to search The Echo Nest for songs, use the Song API. 
  *  If you want to upload your own files and retrieve the acoustic information about them, use this Track
- *   class.
+ *   class. You can also fetch acoustic information from a track if you have the Track ID or MD5 of the file.
  * 
  * A Track encapsulates the audio analysis from The Echo Nest
  * 
  */
-class ECHONEST_EXPORT Track : public QObject
+class ECHONEST_EXPORT Track
 {
-  Q_OBJECT
-  
 public:
-  explicit Track( const QByteArray& xmlData, QObject* parent = 0 );
+    
+  enum AnalysisStatus {
+      Unknown = 0,
+      Pending = 1,
+      Complete = 2,
+      Error = 4
+  };
+    
+  explicit Track( const QByteArray& xmlData );
   
-  //TODO analysis
-  QString artistName() const;
+  QString artist() const;
   QString title() const;
-  QString analysisURL() const;
   
   QString id() const;
-  QString audioMD5() const;
-  QString audioURL() const;
-  QString previewURL() const;
-  QString albumName() const; // in EN lingo, 'release'
+  QString md5() const;
+  QString release() const; // in EN lingo, means albumn ame
+  QString sampleMD5() const;
   
-  qreal duration() const;
-  qreal loudness() const;
-  qreal tempo() const;
+  // TODO bars, beats, meta, sections, segments, tatums (the hard stuff! :)
+  
+  int analysisChannels() const;
+  qreal analysisSampleRate() const;
+  QString analyzerVersion() const;
   
   int bitrate() const;
-  int samplerate() const;
+  qreal duration() const;
+  qreal endOfFadeIn() const;
   int key() const;
+  qreal keyConfidence() const;
+  qreal loudness() const;
   int mode() const;
-  int timeSignature() const;
-  int analyzerVersion() const;
-  int channels() const;
+  qreal modeConfidence() const;
+  int numSamples() const;
+  int samplerate() const;
+  qreal startOfFadeOut() const;
+  qreal tempo() const;
+  qreal tempoConfidence() const;
   
+  AnalysisStatus status() const;  
   
 private:
-  TrackDataPrivate* const d;
+    AnalysisStatus statusToEnum( const QString& status ) const;
+    
+    QSharedDataPointer<TrackData> d;
 };
   
 } // namespace

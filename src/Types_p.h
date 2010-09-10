@@ -123,7 +123,7 @@ public:
     // sections                a list of dicts
     // segments                a list of dicts
     qreal start_of_fade_out; //       a float
-    int status; //                  ex. 'complete' // enum
+    QString status; //                  ex. 'complete' // enum
     // tatums                  a list of dicts
     qreal tempo; //                   a flat
     qreal tempo_confidence; //        a float

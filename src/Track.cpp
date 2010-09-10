@@ -16,45 +16,18 @@
 
 #include "Track.h"
 
-class Echonest::TrackDataPrivate
-{
-public:
-  TrackDataPrivate() {}
-  
-  ~TrackDataPrivate() {}
-  
-  QString artistName;
-  QString title;
-  QString analysisURL;
-  QString trackId;
-  QString previewUrl;
-  QString audioURL;
-  QString audioMD5;
-  QString albumName;
-  /** TODO analyisStatus */
-  qreal tempo;
-  qreal loudness;
-  qreal duration;
-  int timeSignature;
-  int key;
-  int mode;
-  int samplerate;
-  int bitrate;
-  int channels;
-  int analyzerVersion; 
-  
-};
+#include "Types_p.h"
 
-Echonest::Track::Track( const QByteArray& xmlData, QObject* parent )
-  : QObject( parent )
-  , d( new Echonest::TrackDataPrivate )
+Echonest::Track::Track( const QByteArray& xmlData )
+  : d( 0 )
 {
   // parse with QXmlStreamReader
+  // d = new TrackData( ... )
 }
 
-QString Echonest::Track::artistName() const
+QString Echonest::Track::artist() const
 {
-  return d->artistName;
+  return d->artist;
 }
 
 QString Echonest::Track::title() const
@@ -62,85 +35,121 @@ QString Echonest::Track::title() const
   return d->title;
 }
 
-QString Echonest::Track::analysisURL() const
-{
-  return d->analysisURL;
-}
-
-QString Echonest::Track::audioMD5() const
-{
-  return d->audioMD5;
-}
-
-QString Echonest::Track::audioURL() const
-{
-  return d->audioURL;
-}
-
 QString Echonest::Track::id() const
 {
-  return d->trackId;
+    return d->id;
 }
 
-QString Echonest::Track::previewURL() const
+QString Echonest::Track::md5() const
 {
-  return d->previewUrl;
+    return d->md5;
 }
 
-QString Echonest::Track::albumName() const
+QString Echonest::Track::release() const
 {
-  return d->albumName;
+    return d->release;
 }
 
-qreal Echonest::Track::duration() const
+QString Echonest::Track::sampleMD5() const
 {
-  return d->duration;
-}
-
-qreal Echonest::Track::loudness() const
-{
-  return d->loudness;
-}
-
-qreal Echonest::Track::tempo() const
-{
-  return d->tempo;
+    return d->sample_md5;
 }
 
 
-int Echonest::Track::mode() const
+int Echonest::Track::analysisChannels() const
 {
-  return d->mode;
+    return d->analysis_channels;
 }
 
-int Echonest::Track::key() const
+qreal Echonest::Track::analysisSampleRate() const
 {
-  return d->key;
+    return d->analysis_sample_rate;
 }
 
-int Echonest::Track::timeSignature() const
+QString Echonest::Track::analyzerVersion() const
 {
-  return d->timeSignature;
+    return d->analyzer_version;
 }
 
 int Echonest::Track::bitrate() const
 {
-  return d->bitrate;
+    return d->bitrate;
+}
+
+qreal Echonest::Track::duration() const
+{
+    return d->duration;
+}
+
+qreal Echonest::Track::endOfFadeIn() const
+{
+    return d->end_of_fade_in;
+}
+
+int Echonest::Track::key() const
+{
+    return d->key;
+}
+
+qreal Echonest::Track::keyConfidence() const
+{
+    return d->key_confidence;
+}
+
+qreal Echonest::Track::loudness() const
+{
+    return d->loudness;
+}
+
+int Echonest::Track::mode() const
+{
+    return d->mode;
+}
+
+qreal Echonest::Track::modeConfidence() const
+{
+    return d->mode_confidence;
+}
+
+int Echonest::Track::numSamples() const
+{
+    return d->num_samples;
 }
 
 int Echonest::Track::samplerate() const
 {
-  return d->samplerate;
+    return d->samplerate;
 }
 
-int Echonest::Track::analyzerVersion() const
+qreal Echonest::Track::startOfFadeOut() const
 {
-  return d->analyzerVersion;
+    return d->start_of_fade_out;
 }
 
-int Echonest::Track::channels() const
+qreal Echonest::Track::tempo() const
 {
-  return d->channels;
+    return d->tempo;
 }
 
+qreal Echonest::Track::tempoConfidence() const
+{
+    return d->tempo_confidence;
+}
 
+Echonest::Track::AnalysisStatus Echonest::Track::status() const
+{
+    return statusToEnum( d->status );
+}
+
+Echonest::Track::AnalysisStatus Echonest::Track::statusToEnum(const QString& status) const
+{
+    if( status == QLatin1String("unknown") ) {
+        return Echonest::Track::Unknown;
+    } else if( status == QLatin1String("pending") ) {
+        return Echonest::Track::Pending;
+    } else if( status == QLatin1String("complete") ) {
+        return Echonest::Track::Complete;
+    } else if( status == QLatin1String("error" )) {
+        return Echonest::Track::Error;
+    }
+}
