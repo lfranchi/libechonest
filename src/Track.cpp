@@ -18,8 +18,10 @@
 
 class Echonest::TrackDataPrivate
 {
-  Echonest::TrackDataPrivate() {}
-  ~Echonest::TrackDataPrivate() {}
+public:
+  TrackDataPrivate() {}
+  
+  ~TrackDataPrivate() {}
   
   QString artistName;
   QString title;
