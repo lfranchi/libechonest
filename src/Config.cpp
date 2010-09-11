@@ -17,6 +17,7 @@
 #include "Config.h"
 
 #include <QNetworkAccessManager>
+#include <QDebug>
 
 Echonest::Config* Echonest::Config::s_instance = 0;
 
@@ -24,7 +25,7 @@ QUrl Echonest::baseUrl()
 {
     QUrl url;
     url.setScheme( QLatin1String( "http" ) );
-    url.setHost( QLatin1String( "http://developer.echonest.com" ) );
+    url.setHost( QLatin1String( "developer.echonest.com" ) );
     return url;
 }
 
@@ -35,7 +36,6 @@ QUrl Echonest::baseGetQuery(const QByteArray& type, const QByteArray& method)
     url.setPath( QString::fromLatin1( "/api/v4/%1/%2" ).arg( QLatin1String( type ) ).arg( QLatin1String( method ) ) );
     url.addEncodedQueryItem( "api_key", Echonest::Config::instance()->apiKey() );
     url.addEncodedQueryItem( "format", "xml" );
-    
     return url;
 }
 

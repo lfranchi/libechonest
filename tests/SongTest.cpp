@@ -34,16 +34,13 @@ void SongTest::testSearch()
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Artist, QLatin1String("Modest Mouse") ) );
     
     QNetworkReply* reply = Echonest::Song::search( params, Echonest::Song::ArtistHotttnesss );
-    connect( reply, SIGNAL( finished() ), this, SLOT( searchFinished() ) );
     
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    
+    QVector< Echonest::Song > songs = Echonest::Song::parseSearch( reply );
 }
-
-void SongTest::searchFinished()
-{
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    Echonest::Song::parseSearch( reply );
-}
-
 
 QTEST_MAIN(SongTest)
 

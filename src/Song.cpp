@@ -101,9 +101,9 @@ QNetworkReply* Echonest::Song::search( const Echonest::Song::SearchParams& param
   
     SearchParams::const_iterator iter = params.constBegin();
     for( ; iter < params.constEnd(); ++iter )
-        url.addEncodedQueryItem( searchParamToString( iter->first ), iter->second.toString().toUtf8() );
+        url.addQueryItem( QLatin1String( searchParamToString( iter->first ) ), iter->second.toString() );
     
-    
+    qDebug() << "Creating search URL" << url;
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
@@ -115,6 +115,11 @@ QHash< Echonest::Song::SongInformationFlag, QVariant > Echonest::Song::parseInfo
 QVector< Echonest::Song > Echonest::Song::parseSearch( QNetworkReply* reply )
 {
     qDebug() << reply->readAll();
+    
+    QVector<Echonest::Song> songs;
+    
+    return songs;
+    
 }
 
 QByteArray Echonest::Song::searchParamToString( Echonest::Song::SearchParam param )
