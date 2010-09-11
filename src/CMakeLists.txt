@@ -6,6 +6,7 @@ set( LIBECHONEST_TYPES_SRC
         Song.cpp
         Artist.cpp
         Playlist.cpp
+        Config.cpp
 )
 
 set( LIBECHONEST_TYPES_H
@@ -13,9 +14,10 @@ set( LIBECHONEST_TYPES_H
         Song.h
         Artist.h
         Playlist.h
+        Config.h
 )
 
 QT4_WRAP_CPP( ${LIBECHONEST_TYPES_H} )
 
 add_library( echonest SHARED ${LIBECHONEST_TYPES_SRC} )
-target_link_libraries( echonest ${QT_QTCORE_LIBRARY} )
+target_link_libraries( echonest ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}  )

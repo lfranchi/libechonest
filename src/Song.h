@@ -20,12 +20,17 @@
 
 #include "echonest_export.h"
 #include "Types_p.h"
+#include "Track.h"
 
 #include <QSharedData>
+#include <QHash>
+#include <QVariant>
+#include <QVector>
 
 class QNetworkReply;
 
 namespace Echonest{
+
   
 /**
  * This encapsulates an Echo Nest song---use it if you wish to get information about a song,
@@ -35,6 +40,46 @@ class ECHONEST_EXPORT Song
 {
   
 public:
+  enum SongInformationFlag {
+      AudioSummary = 0x0,
+      Tracks = 0x1,
+      Hotttnesss = 0x2,
+      ArtistHotttnesss = 0x4,
+      ArtistFamiliarity = 0x8,
+      ArtistLocation = 0x16
+  };
+  Q_DECLARE_FLAGS( SongInformation, SongInformationFlag )
+
+  enum SearchParam {
+      Title,
+      Artist,
+      Combined,
+      Description,
+      ArtistId,
+      Results,
+      MaxTempo,
+      MinTempo,
+      MaxDanceability,
+      MinDanceability,
+      MaxComplexity,
+      MinComplexity,
+      MaxDuration,
+      MinDuration,
+      MaxLoudness,
+      MinLoudness,
+      MaxFamiliarity,
+      MinFamiliarity,
+      MaxHotttnesss,
+      MinHotttnesss,
+      MaxLongitude,
+      MinLongitude,
+      Mode,
+      Key,
+      Sort
+  };
+  typedef QPair< Echonest::Song::SearchParam, QVariant > SearchParamData;
+  typedef QVector< SearchParamData > SearchParams;
+  
   Song();
   explicit Song( const QByteArray& xmlData );
   
@@ -53,22 +98,63 @@ public:
   
   QString artistId() const;
   void setArtistId( const QString& artistId );
+  
   /** 
    * The following require fetching from The Echo Nest, so return a QNetworkReply*
    *  that is ready for parsing when the finished() signal is emitted.
+   *
+   * To parse the resulting data, call the Song::parseReply() function.
    * 
    */
-  /// TODO Audio Summary
-  QNetworkReply* fetchTracks() const;
-  QNetworkReply* fetchSongHotttnesss() const;
-  QNetworkReply* fetchArtistHotttnesss() const;
-  QNetworkReply* fetchArtistFamiliarity() const;
-  QNetworkReply* fetchArtistLocation() const;
+  QNetworkReply* fetchInformation( SongInformation parts ) const;
   
+  /**
+   * Search for a song from The Echo Nest with the given search parameters. See 
+   *  http://developer.echonest.com/docs/v4/song.html#search for a description of the
+   *  parameters and data types.
+   * 
+   * The result will contain the requested information from the SongInformation flags, and
+   *  can be extracted in the parseSearch() function.
+   * 
+   */
+  static QNetworkReply* search( const SearchParams& params, SongInformation parts );
+  
+  /**
+   * Parse the result of the fetchInformation() call.
+   * For each requested SongInformationFlag in the original request, a corresponding
+   *  key/value pair will be populated. The value depends on the type of request:
+   * 
+   *   AudioSummary      <--> AudioSummary object
+   *   Tracks            <--> QVector< Track >
+   *   Hotttnesss        <--> qreal
+   *   ArtistHotttnesss  <--> qreal
+   *   ArtistFamiliarity <--> qreal
+   *   ArtistLocation    <--> ArtistLocation object
+   */
+  static QHash< SongInformationFlag, QVariant > parseInformation( QNetworkReply* reply );
+  
+  /**
+   * Parse the result of the search() call.
+   */
+  static QVector<Song> parseSearch( QNetworkReply* reply );
+  
+  /**
+   * Identify a song from a given Echo Nest fingerprint hash code
+   * 
+   * NOTE this is currently not supported, as the Echo Nest hash code
+   *      generator is not currently open source, so I don't care much 
+   *      for it.
+   *
+   * static QNetworkReply* identify(  ) const;
+   */
   
 private:
+    static QByteArray searchParamToString( SearchParam param );
+    
   QSharedDataPointer<SongData> d;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Song::SongInformation)
 
 } // namespace
 #endif

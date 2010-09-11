@@ -16,7 +16,13 @@
 
 #include "Song.h"
 
+#include "Config.h"
 #include "Types_p.h"
+
+#include <QNetworkReply>
+#include <QDebug>
+
+#include <QtNetwork/QNetworkReply>
 
 Echonest::Song::Song()
     : d( new SongData )
@@ -68,3 +74,105 @@ void Echonest::Song::setArtistName(const QString& artistName)
 {
     d->artistName = artistName;
 }
+
+QNetworkReply* Echonest::Song::fetchInformation( Echonest::Song::SongInformation parts ) const
+{
+    QUrl url = Echonest::baseGetQuery( "song", "profile" );
+    url.addEncodedQueryItem( "id", d->id.toUtf8() );
+    if( parts.testFlag( Echonest::Song::AudioSummary ) )
+        url.addEncodedQueryItem( "bucket", "audio_summary" );
+    if( parts.testFlag( Echonest::Song::Tracks ) )
+        url.addEncodedQueryItem( "bucket", "tracks" );
+    if( parts.testFlag( Echonest::Song::Hotttnesss ) )
+        url.addEncodedQueryItem( "bucket", "song_hotttnesss" );
+    if( parts.testFlag( Echonest::Song::ArtistHotttnesss ) )
+        url.addEncodedQueryItem( "bucket", "artist_hotttnesss" );
+    if( parts.testFlag( Echonest::Song::ArtistFamiliarity ) )
+        url.addEncodedQueryItem( "bucket", "artist_familiarity" );
+    if( parts.testFlag( Echonest::Song::ArtistLocation ) )
+        url.addEncodedQueryItem( "bucket", "artist_location" );
+    
+    return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
+}
+
+QNetworkReply* Echonest::Song::search( const Echonest::Song::SearchParams& params, Echonest::Song::SongInformation parts )
+{
+    QUrl url = Echonest::baseGetQuery( "song", "search" );
+  
+    SearchParams::const_iterator iter = params.constBegin();
+    for( ; iter < params.constEnd(); ++iter )
+        url.addEncodedQueryItem( searchParamToString( iter->first ), iter->second.toString().toUtf8() );
+    
+    
+    return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
+}
+
+QHash< Echonest::Song::SongInformationFlag, QVariant > Echonest::Song::parseInformation( QNetworkReply* reply )
+{
+
+}
+
+QVector< Echonest::Song > Echonest::Song::parseSearch( QNetworkReply* reply )
+{
+    qDebug() << reply->readAll();
+}
+
+QByteArray Echonest::Song::searchParamToString( Echonest::Song::SearchParam param )
+{
+    switch( param )
+    {
+        case Echonest::Song::Title:
+            return "title";
+        case Echonest::Song::Artist:
+            return "artist";
+        case Echonest::Song::Combined:
+            return "combined";
+        case Echonest::Song::Description:
+            return "description";
+        case Echonest::Song::ArtistId:
+            return "artist_id";
+        case Echonest::Song::Results:
+            return "results";
+        case Echonest::Song::MaxTempo:
+            return "max_tempo";
+        case Echonest::Song::MinTempo:
+            return "min_tempo";
+        case Echonest::Song::MaxDanceability:
+            return "max_danceability";
+        case Echonest::Song::MinDanceability:
+            return "min_danceability";
+        case Echonest::Song::MaxComplexity:
+            return "max_complexity";
+        case Echonest::Song::MinComplexity:
+            return "min_complexity";
+        case Echonest::Song::MaxDuration:
+            return "max_duration";
+        case Echonest::Song::MinDuration:
+            return "min_duration";
+        case Echonest::Song::MaxLoudness:
+            return "max_loudness";
+        case Echonest::Song::MinLoudness:
+            return "min_loudness";
+        case Echonest::Song::MaxFamiliarity:
+            return "max_familiarity";
+        case Echonest::Song::MinFamiliarity:
+            return "min_familiarity";
+        case Echonest::Song::MaxHotttnesss:
+            return "max_hotttnesss";
+        case Echonest::Song::MinHotttnesss:
+            return "min_hotttnesss";
+        case Echonest::Song::MaxLongitude:
+            return "max_longitude";
+        case Echonest::Song::MinLongitude:
+            return "min_longitude";
+        case Echonest::Song::Mode:
+            return "mode";
+        case Echonest::Song::Key:
+            return "key";
+        case Echonest::Song::Sort:
+            return "sort";
+    }
+    return QByteArray();
+}
+
+
