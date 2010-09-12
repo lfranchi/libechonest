@@ -153,3 +153,10 @@ Echonest::Track::AnalysisStatus Echonest::Track::statusToEnum(const QString& sta
         return Echonest::Track::Error;
     }
 }
+
+QDebug Echonest::operator<<(QDebug d, const Echonest::Track& track)
+{
+    d << QString::fromLatin1( "Track(%1, %2, %3" ).arg( track.title() ).arg( track.artist() ).arg( track.release() );
+    return d.maybeSpace();
+}
+

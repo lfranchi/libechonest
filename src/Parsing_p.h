@@ -20,6 +20,7 @@
 #include "Config.h"
 
 #include <QXmlStreamReader>
+#include "Song.h"
 
 class QNetworkReply;
 
@@ -36,6 +37,12 @@ namespace Parser
     // read the start element and then the status element, throwing 
     //  if the result code is not Success
     void readStatus( QXmlStreamReader& xml ) throw( ParseError );
+    
+    // parses a <songs></songs> block and turns them into a list of Song object
+    QVector< Song > parseSongList( QXmlStreamReader& xml ) throw( ParseError );
+   
+    // parses a <song></song> block
+    Song parseSong( QXmlStreamReader& xml ) throw( ParseError );
 }
 }
 

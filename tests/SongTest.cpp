@@ -28,11 +28,11 @@ void SongTest::initTestCase()
 }
 
 
-void SongTest::testSearch()
+void SongTest::testSearch1()
 {
     Echonest::Song::SearchParams params;
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Artist, QLatin1String("Modest Mouse") ) );
-    params.append( Echonest::Song::SearchParamData( Echonest::Song::Title, QLatin1String("Three Legged Horses") ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::Title, QLatin1String("Float On") ) );
     
     QNetworkReply* reply = Echonest::Song::search( params, Echonest::Song::ArtistHotttnesss );
     
@@ -41,7 +41,40 @@ void SongTest::testSearch()
     loop.exec();
     
     QVector< Echonest::Song > songs = Echonest::Song::parseSearch( reply );
+    qDebug() << songs << songs.size();
+    QVERIFY( songs.size() == 2 );
+    Q_FOREACH( Echonest::Song song, songs ) {
+        QVERIFY( song.title().toLower() == QLatin1String( "float on" ) );
+        QVERIFY( song.artistName().toLower() == QLatin1String( "modest mouse" ) );
+    }
 }
+
+void SongTest::testSearch2()
+{
+    Echonest::Song::SearchParams params;
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::Key, QLatin1String("7") ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::Description, QLatin1String("female+vocalist") ) );
+    
+    QNetworkReply* reply = Echonest::Song::search( params, Echonest::Song::ArtistHotttnesss );
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    
+    QVector< Echonest::Song > songs = Echonest::Song::parseSearch( reply );
+    qDebug() << songs << songs.size();
+    QVERIFY( songs.size() == 2 );
+    Q_FOREACH( Echonest::Song song, songs ) {
+        QVERIFY( song.title().toLower() == QLatin1String( "float on" ) );
+        QVERIFY( song.artistName().toLower() == QLatin1String( "modest mouse" ) );
+    }
+}
+
+void SongTest::testSearch3()
+{
+
+}
+
 
 QTEST_MAIN(SongTest)
 

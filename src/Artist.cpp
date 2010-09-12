@@ -112,3 +112,9 @@ QNetworkReply* Echonest::Artist::fetchVideo() const
 {
 
 }
+
+QDebug Echonest::operator<<(QDebug d, const Echonest::Artist& artist)
+{
+    d << QString::fromLatin1( "Artist(%1, %2)" ).arg( artist.name() ).arg( artist.id() );
+}
+

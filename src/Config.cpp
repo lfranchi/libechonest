@@ -52,6 +52,17 @@ Echonest::ErrorType Echonest::ParseError::errorType() const
     return type;
 }
 
+void Echonest::ParseError::setNetworkError( QNetworkReply::NetworkError error )
+{
+    nError = error;
+}
+
+QNetworkReply::NetworkError Echonest::ParseError::networkError() const
+{
+    return nError;
+}
+
+
 
 class Echonest::ConfigPrivate {
 public:

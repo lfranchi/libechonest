@@ -20,6 +20,7 @@
 
 #include "echonest_export.h"
 
+#include <QDebug>
 #include <QSharedData>
 
 class QNetworkReply;
@@ -66,6 +67,9 @@ namespace Echonest{
     private:
         QSharedDataPointer<ArtistData> d;
     };
+    
+    QDebug operator<<(QDebug d, const Echonest::Artist& artist);
+    
     
 } // namespace
 #endif

@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QDebug>
 #include <QSharedData>
 
 class TrackData;
@@ -87,7 +88,10 @@ private:
     
     QSharedDataPointer<TrackData> d;
 };
-  
+
+QDebug operator<<(QDebug d, const Echonest::Track& track);
+
+
 } // namespace
 
 #endif

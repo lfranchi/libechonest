@@ -25,7 +25,9 @@ class SongTest : public QObject
 private slots:
     void initTestCase();
     
-    void testSearch();
+    void testSearch1();
+    void testSearch2();
+    void testSearch3();
 };
 
 #endif

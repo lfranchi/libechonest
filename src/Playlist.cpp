@@ -53,3 +53,9 @@ Echonest::Song Echonest::DynamicPlaylist::fetchNextSong()
 {
 
 }
+
+QDebug Echonest::operator<<(QDebug d, const Echonest::DynamicPlaylist& playlist)
+{
+    d << QString::fromLatin1( "DynamicPlaylist(%1, %2)" ).arg( playlist.id(), playlist.currentSong().toString() );
+    return d.maybeSpace();
+}

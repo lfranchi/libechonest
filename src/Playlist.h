@@ -22,6 +22,7 @@
 #include "Song.h"
 
 #include <QSharedData>
+#include <QDebug>
 
 class QNetworkReply;
 class DynamicPlaylistData;
@@ -72,6 +73,9 @@ namespace Echonest{
     private:
         QSharedDataPointer<DynamicPlaylistData> d;
     };
+    
+    QDebug operator<<(QDebug d, const Echonest::DynamicPlaylist& playlist);
+    
     
 } // namespace
 #endif

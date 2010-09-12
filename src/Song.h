@@ -25,6 +25,7 @@
 #include <QSharedData>
 #include <QHash>
 #include <QVariant>
+#include <QDebug>
 #include <QVector>
 #include "Config.h"
 
@@ -82,7 +83,7 @@ public:
   typedef QVector< SearchParamData > SearchParams;
   
   Song();
-  explicit Song( const QByteArray& xmlData );
+  Song( const QString& id, const QString& title, const QString& artistId, const QString& artistName );
   
   /**
    * The following pieces of data are present in all Song objects, and do not require
@@ -149,11 +150,17 @@ public:
    * static QNetworkReply* identify(  ) const;
    */
   
+  QString toString() const;
+  
 private:
     static QByteArray searchParamToString( SearchParam param );
+    static void addQueryInformation( QUrl& url, SongInformation parts );
     
   QSharedDataPointer<SongData> d;
 };
+
+
+QDebug operator<<(QDebug d, const Song &song);
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Song::SongInformation)
 

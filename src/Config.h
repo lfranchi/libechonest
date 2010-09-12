@@ -23,6 +23,7 @@
 #include <QUrl>
 
 #include <exception>
+#include <QNetworkReply>
 
 class QNetworkAccessManager;
 
@@ -38,21 +39,21 @@ namespace Echonest{
         /**
          * Echo Nest API errors
          */
-        UnknownError = 1000,
-        MissingAPIKey = 1001,
-        NotAllowed = 1002,
-        RateLimitExceeded = 1003,
-        MissingParameter = 1004,
-        InvalidParameter = 1005,
+        UnknownError = -1,
+        NoError = 0,
+        MissingAPIKey = 1,
+        NotAllowed = 2,
+        RateLimitExceeded = 3,
+        MissingParameter = 4,
+        InvalidParameter = 5,
         
         /// libechonest errors
-        UnfinishedQuery = 1006, /// An unfinished QNetworkReply* was passed to the parse function
-        EmptyResult = 1007,
-        UnknownParseError = 1008
+        UnfinishedQuery = 6, /// An unfinished QNetworkReply* was passed to the parse function
+        EmptyResult = 7,
+        UnknownParseError = 8,
         
-        /**
-         * If the error code is 0 < x < 399, it is a standard QNetworkReply::NetworkError
-         */
+        /// QNetworkReply errors
+        NetworkError = 9
     };
     
     class ParseError : public std::exception
@@ -63,8 +64,16 @@ namespace Echonest{
     
         ErrorType errorType() const;
         
+        /**
+         * If the ErrorType is NetworkError, this value contains the QNetworkReply
+         *  error code that was returned.
+         */
+        void setNetworkError( QNetworkReply::NetworkError error );
+        QNetworkReply::NetworkError networkError() const;
+        
     private:
         ErrorType type;
+        QNetworkReply::NetworkError nError;
     };
     
     class ConfigPrivate;
