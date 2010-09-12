@@ -155,7 +155,7 @@ QNetworkReply* Echonest::Song::fetchInformation( Echonest::Song::SongInformation
     url.addEncodedQueryItem( "id", d->id.toUtf8() );
     addQueryInformation( url, parts );
     
-    qDebug() << "Creating fetchINformation URL" << url;
+    qDebug() << "Creating fetchInformation URL" << url;
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
@@ -176,9 +176,7 @@ void Echonest::Song::parseInformation( QNetworkReply* reply ) throw( ParseError 
 {
     Echonest::Parser::checkForErrors( reply );
     
-    QByteArray data = reply->readAll();
-    qDebug() << data;
-    QXmlStreamReader xml( data );
+    QXmlStreamReader xml( reply->readAll() );
     
     Echonest::Parser::readStatus( xml );
     // we'll just take the new data. it is given as a list even though it can only have 1 song as we specify the song id
@@ -206,7 +204,7 @@ QVector< Echonest::Song > Echonest::Song::parseSearch( QNetworkReply* reply ) th
     
     Echonest::Parser::readStatus( xml );
     QVector<Echonest::Song> songs = Echonest::Parser::parseSongList( xml );
-    Qt::Alignment a;
+
     return songs;
     
 }

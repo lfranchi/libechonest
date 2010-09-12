@@ -60,6 +60,7 @@ void SongTest::testSearch1()
         QVERIFY( song.title().toLower() == QLatin1String( "float on" ) );
         QVERIFY( song.artistName().toLower() == QLatin1String( "modest mouse" ) );
         QVERIFY( song.artistLocation().toLower() == QLatin1String( "issaquah, wa" ) );
+        // make sure we got the new info
         QVERIFY( song.hotttnesss() != -1 );
         
     }
