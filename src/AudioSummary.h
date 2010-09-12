@@ -14,42 +14,47 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
 
-#ifndef ECHONEST_TRACK_P_H
-#define ECHONEST_TRACK_P_H
+
+#ifndef ECHONEST_AUDIOSUMMARY_H
+#define ECHONEST_AUDIOSUMMARY_H
+
+#include "echonest_export.h"
 
 #include <QSharedData>
-#include <QString>
+#include <QDebug>
 
-class TrackData : public QSharedData
-{
-public:
-    TrackData() {}
-    
-    TrackData(const TrackData& other)
+class QNetworkReply;
+class AudioSummaryData;
+
+namespace Echonest{
+
+    /**
+     * This encapsulates the audio summary of an Echo Nest track or song.
+     * 
+     */
+    class ECHONEST_EXPORT AudioSummary
     {
-        analyzer_version = other.analyzer_version;
-        artist = other.artist;
-        bitrate = other.bitrate;
-        id = other.id;
-        md5 = other.md5;
-        release = other.release;
-        samplerate = other.samplerate;
-        status = other.status;
-        title = other.title;
         
-    }
+    public:
+        AudioSummary();
+        
+        
+        
+        /**
+         * Queries The Echo Nest for the next playable song in this
+         *  dynamic playlist.
+         */
+        Song fetchNextSong();
+        
+        // Generate a static playlist, or initiate a dynamic playlist
+        //         static DynamicPlaylist getPlaylist( Playlist::Type type )
+        
+    private:
+        QSharedDataPointer<DynamicPlaylistData> d;
+    };
     
-    QString artist;
-    QString analyzer_version;
-    int bitrate;
-    QString id;
-    QString md5;
-    QString release;
-    QString audio_md5;
-    int samplerate;
-    QString status;
-    QString title; //                   ex. 'Interiors' or None
+    QDebug operator<<(QDebug d, const Echonest::DynamicPlaylist& playlist);
     
-};
-
+    
+} // namespace
 #endif

@@ -14,42 +14,40 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
 
-#ifndef ECHONEST_TRACK_P_H
-#define ECHONEST_TRACK_P_H
+#ifndef ECHONEST_UTIL_H
+#define ECHONEST_UTIL_H
 
-#include <QSharedData>
-#include <QString>
+/**
+ * Some shared declarations
+ */
+#include "Artist.h"
 
-class TrackData : public QSharedData
+namespace Echonest
 {
-public:
-    TrackData() {}
-    
-    TrackData(const TrackData& other)
-    {
-        analyzer_version = other.analyzer_version;
-        artist = other.artist;
-        bitrate = other.bitrate;
-        id = other.id;
-        md5 = other.md5;
-        release = other.release;
-        samplerate = other.samplerate;
-        status = other.status;
-        title = other.title;
         
-    }
-    
-    QString artist;
-    QString analyzer_version;
-    int bitrate;
-    QString id;
-    QString md5;
-    QString release;
-    QString audio_md5;
-    int samplerate;
-    QString status;
-    QString title; //                   ex. 'Interiors' or None
-    
-};
+    typedef struct
+    {
+        qreal confidence;
+        qreal duration;
+        qreal start;
+    } AudioChunk;
+
+    typedef AudioChunk Bar;
+    typedef AudioChunk Beat;
+    typedef AudioChunk Section;
+    typedef AudioChunk Tatum;
+
+    typedef struct
+    {
+        qreal confidence;
+        qreal duration;
+        qreal loudness_max;
+        qreal loudness_max_time;
+        qreal loudness_start;
+        QVector< qreal > pitches;
+        qreal start;
+        QVector< qreal > timbre;
+    } Segment;
+}
 
 #endif

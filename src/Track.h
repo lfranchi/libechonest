@@ -70,7 +70,6 @@ public:
   
   int analysisChannels() const;
   qreal analysisSampleRate() const;
-  QString analyzerVersion() const;
   
   int bitrate() const;
   qreal duration() const;

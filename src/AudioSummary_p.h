@@ -14,42 +14,63 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
 
-#ifndef ECHONEST_TRACK_P_H
-#define ECHONEST_TRACK_P_H
+#include "Util.h"
 
 #include <QSharedData>
 #include <QString>
+#include <QUrl>
+#include <QVector>
 
-class TrackData : public QSharedData
+class AudioSummaryData : public QSharedData
 {
 public:
-    TrackData() {}
-    
-    TrackData(const TrackData& other)
+    AudioSummaryData() {}
+    AudioSummaryData(const AudioSummaryData& other)
     {
-        analyzer_version = other.analyzer_version;
-        artist = other.artist;
-        bitrate = other.bitrate;
-        id = other.id;
-        md5 = other.md5;
-        release = other.release;
-        samplerate = other.samplerate;
-        status = other.status;
-        title = other.title;
-        
+        sessionId = other.sessionId;
+        currentSong = other.currentSong;
     }
     
-    QString artist;
+    // basic data that always exists in an Audio Summary object
+    int key;
+    qreal tempo;
+    int mode;
+    int time_signature;
+    qreal duration;
+    qreal loudness;
+    
+    QUrl analysis_url; // used to fetch the following pieces of data
+    
+    // meta section
+    qreal analysis_time;
     QString analyzer_version;
-    int bitrate;
-    QString id;
-    QString md5;
-    QString release;
-    QString audio_md5;
-    int samplerate;
-    QString status;
-    QString title; //                   ex. 'Interiors' or None
+    QString detailed_status;
+    int status;
+    qreal timestamp;
+    
+    // track section
+    qreal analysis_sample_rate;
+    qreal duration;
+    qreal end_of_fade_in;
+    int key;
+    qreal key_confidence;
+    qreal loudness;
+    int mode;
+    qreal mode_confidence;
+    qint64 num_samples;
+    QString sample_md5;
+    qreal start_of_fade_out;
+    qreal tempo;
+    qreal tempo_confidence;
+    int time_signature;
+    qreal time_signature_confidence;
+    
+    QVector< Echonest::Bar > bars;
+    QVector< Echonest::Beat > beats;
+    QVector< Echonest::Section > sections;
+    QVector< Echonest::Tatum > tatums;
+    
+    QVector< Echonest::Segment > segments;
     
 };
 
-#endif
