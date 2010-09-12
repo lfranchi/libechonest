@@ -22,6 +22,8 @@
 #include <QByteArray>
 #include <QUrl>
 
+#include <stdexcept>
+
 class QNetworkAccessManager;
 
 namespace Echonest{
@@ -31,6 +33,15 @@ namespace Echonest{
     
     /// Creates the base URL for GET requests.
     QUrl baseGetQuery( const QByteArray& type, const QByteArray& method );
+    
+    enum ErrorType {
+        
+    }
+    
+    class ParseError : public std::runtime_error
+    {
+        explicit ParseError(const std::string& __arg);
+    };
     
     class ConfigPrivate;
     /**
