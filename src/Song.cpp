@@ -23,6 +23,8 @@
 #include <QDebug>
 
 #include <QtNetwork/QNetworkReply>
+#include "Parsing_p.h"
+#include <qxmlstream.h>
 
 Echonest::Song::Song()
     : d( new SongData )
@@ -107,15 +109,19 @@ QNetworkReply* Echonest::Song::search( const Echonest::Song::SearchParams& param
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
-QHash< Echonest::Song::SongInformationFlag, QVariant > Echonest::Song::parseInformation( QNetworkReply* reply )
+QHash< Echonest::Song::SongInformationFlag, QVariant > Echonest::Song::parseInformation( QNetworkReply* reply ) throw( ParseError )
 {
 
 }
 
-QVector< Echonest::Song > Echonest::Song::parseSearch( QNetworkReply* reply )
+QVector< Echonest::Song > Echonest::Song::parseSearch( QNetworkReply* reply ) throw( ParseError )
 {
+    Echonest::Parser::checkForErrors( reply );
     
-    qDebug() << reply->readAll();
+    QXmlStreamReader xml( reply->readAll() );
+    
+    Echonest::Parser::readStatus( (xml) );
+//     qDebug() << reply->readAll();
     
     QVector<Echonest::Song> songs;
     

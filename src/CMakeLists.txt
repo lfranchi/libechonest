@@ -7,6 +7,7 @@ set( LIBECHONEST_TYPES_SRC
         Artist.cpp
         Playlist.cpp
         Config.cpp
+        Parsing.cpp
 )
 
 set( LIBECHONEST_TYPES_H

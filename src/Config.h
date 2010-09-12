@@ -22,7 +22,7 @@
 #include <QByteArray>
 #include <QUrl>
 
-#include <stdexcept>
+#include <exception>
 
 class QNetworkAccessManager;
 
@@ -35,12 +35,36 @@ namespace Echonest{
     QUrl baseGetQuery( const QByteArray& type, const QByteArray& method );
     
     enum ErrorType {
+        /**
+         * Echo Nest API errors
+         */
+        UnknownError = 1000,
+        MissingAPIKey = 1001,
+        NotAllowed = 1002,
+        RateLimitExceeded = 1003,
+        MissingParameter = 1004,
+        InvalidParameter = 1005,
         
-    }
+        /// libechonest errors
+        UnfinishedQuery = 1006, /// An unfinished QNetworkReply* was passed to the parse function
+        EmptyResult = 1007,
+        UnknownParseError = 1008
+        
+        /**
+         * If the error code is 0 < x < 399, it is a standard QNetworkReply::NetworkError
+         */
+    };
     
-    class ParseError : public std::runtime_error
+    class ParseError : public std::exception
     {
-        explicit ParseError(const std::string& __arg);
+    public:
+        ParseError( ErrorType error );
+        virtual ~ParseError() throw();
+    
+        ErrorType errorType() const;
+        
+    private:
+        ErrorType type;
     };
     
     class ConfigPrivate;

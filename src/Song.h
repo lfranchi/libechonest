@@ -26,6 +26,7 @@
 #include <QHash>
 #include <QVariant>
 #include <QVector>
+#include "Config.h"
 
 class QNetworkReply;
 
@@ -131,12 +132,12 @@ public:
    *   ArtistFamiliarity <--> qreal
    *   ArtistLocation    <--> ArtistLocation object
    */
-  static QHash< SongInformationFlag, QVariant > parseInformation( QNetworkReply* reply );
+  static QHash< SongInformationFlag, QVariant > parseInformation( QNetworkReply* reply ) throw( ParseError );
   
   /**
    * Parse the result of the search() call.
    */
-  static QVector<Song> parseSearch( QNetworkReply* reply );
+  static QVector<Song> parseSearch( QNetworkReply* reply ) throw( ParseError );
   
   /**
    * Identify a song from a given Echo Nest fingerprint hash code

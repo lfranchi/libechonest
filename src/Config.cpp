@@ -39,6 +39,19 @@ QUrl Echonest::baseGetQuery(const QByteArray& type, const QByteArray& method)
     return url;
 }
 
+Echonest::ParseError::ParseError(Echonest::ErrorType error): exception()
+{
+    type = error;
+}
+
+Echonest::ParseError::~ParseError() throw()
+{}
+
+Echonest::ErrorType Echonest::ParseError::errorType() const
+{
+    return type;
+}
+
 
 class Echonest::ConfigPrivate {
 public:
