@@ -17,7 +17,7 @@
 #include "Song.h"
 
 #include "Config.h"
-#include "Types_p.h"
+#include "Song_p.h"
 
 #include <QNetworkReply>
 #include <QDebug>
@@ -38,6 +38,24 @@ Echonest::Song::Song(const QString& id, const QString& title, const QString& art
     d->artistId = artistId;
     d->artistName = artistName;
 }
+
+Echonest::Song::Song(const Echonest::Song& other)
+    : d( other.d )
+{
+
+}
+
+
+Echonest::Song::~Song()
+{
+    
+}
+
+Echonest::Song& Echonest::Song::operator=(const Echonest::Song& song)
+{
+    d = song.d;
+}
+
 
 
 QString Echonest::Song::id() const
@@ -81,6 +99,56 @@ void Echonest::Song::setArtistName(const QString& artistName)
     d->artistName = artistName;
 }
 
+QVector< Echonest::Track > Echonest::Song::tracks() const
+{
+    return d->tracks;
+}
+
+void Echonest::Song::setTracks(const QVector< Echonest::Track >& tracks)
+{
+    d->tracks = tracks;
+}
+
+qreal Echonest::Song::hotttnesss() const
+{
+    return d->hotttnesss;
+}
+
+void Echonest::Song::setHotttnesss(qreal hotttnesss)
+{
+    d->hotttnesss = hotttnesss;
+}
+
+qreal Echonest::Song::artistHotttnesss() const
+{
+    return d->artistHotttnesss;
+}
+
+void Echonest::Song::setArtistHotttnesss(qreal artistHotttnesss)
+{
+    d->artistHotttnesss = artistHotttnesss;
+}
+
+qreal Echonest::Song::artistFamiliarity() const
+{
+    return d->artistFamiliarity;
+}
+
+void Echonest::Song::setArtistFamiliarity(qreal artistFamiliarity)
+{
+    d->artistFamiliarity = artistFamiliarity;
+}
+
+QString Echonest::Song::artistLocation() const
+{
+    return d->artistLocation;
+}
+
+void Echonest::Song::setArtistLocation(const QString& artistLocation)
+{
+    d->artistLocation = ArtistLocation;
+}
+
 QNetworkReply* Echonest::Song::fetchInformation( Echonest::Song::SongInformation parts ) const
 {
     QUrl url = Echonest::baseGetQuery( "song", "profile" );
@@ -103,7 +171,7 @@ QNetworkReply* Echonest::Song::search( const Echonest::Song::SearchParams& param
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
-QHash< Echonest::Song::SongInformationFlag, QVariant > Echonest::Song::parseInformation( QNetworkReply* reply ) throw( ParseError )
+void Echonest::Song::parseInformation( QNetworkReply* reply ) throw( ParseError )
 {
 
 }

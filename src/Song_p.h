@@ -14,25 +14,53 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
 
-#ifndef ECHONEST_TYPES_P_H
-#define ECHONEST_TYPES_P_H
+#ifndef ECHONEST_SONG_P_H
+#define ECHONEST_SONG_P_H
+
+#include "Track.h"
 
 #include <QSharedData>
 #include <QString>
+#include <QVector>
 
-class ArtistData : public QSharedData
+class SongData : public QSharedData
 {
 public:
-    ArtistData() {}
-    ArtistData( const QString& id, const QString& name ) : id( id ), name( name ) {}
-    ArtistData(const ArtistData& other)
+    SongData() {}
+    SongData( const QString& id, const QString& title, const QString& artistName, const QString& artistId )
+    : id( id ), title( title ), artistName( artistName ), artistId( artistId ) {}
+    
+    SongData(const SongData& other)
     {
         id = other.id;
-        name = other.name;
+        title = other.title;
+        artistName = other.artistName;
+        artistId = other.artistId;
+        
+//         audioSummary = other.AudioSummary;
+        tracks = other.tracks;
+        hotttnesss = other.hotttnesss;
+        artistHotttnesss = other.artistHotttnesss;
+        artistFamiliarity = other.artistFamiliarity;
+        artistLocation = other.artistLocation;
     }
     
+    ~SongData() {}
+    
     QString id;
-    QString name;
+    QString title;
+    QString artistName;
+    QString artistId;
+    
+    // The rest are optional that require manual fetching to populate
+    //     AudioSummary audioSummary;
+    QVector<Echonest::Track> tracks;
+    qreal hotttnesss;
+    qreal artistHotttnesss;
+    qreal artistFamiliarity;
+    QString artistLocation;
+    
+    
 };
 
 #endif

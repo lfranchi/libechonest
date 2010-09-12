@@ -36,7 +36,9 @@ namespace Echonest{
         
     public:
         Artist();
-        explicit Artist( const QByteArray& xmlData );
+        Artist( const QString& id, const QString& name );
+        Artist( const Artist& other );
+        Artist& operator=( const Artist& artist );
         
         QString id() const;
         void setId( const QString& id );

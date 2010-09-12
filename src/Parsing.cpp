@@ -93,6 +93,8 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
             song.setArtistId( xml.readElementText() );
         else if( xml.name() == "artist_name" && xml.tokenType() == QXmlStreamReader::StartElement )
             song.setArtistName( xml.readElementText() );
+        else if( xml.name() == "artist_hotttness" && xml.tokenType() == QXmlStreamReader::StartElement )
+//             song.setArtistHotttness( xml.readElementText().toDouble() );
         xml.readNext();
     }
     xml.readNext(); // skip past the last </song>

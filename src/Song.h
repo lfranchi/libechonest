@@ -19,7 +19,6 @@
 #define ECHONEST_SONG_H
 
 #include "echonest_export.h"
-#include "Types_p.h"
 #include "Track.h"
 
 #include <QSharedData>
@@ -30,7 +29,7 @@
 #include "Config.h"
 
 class QNetworkReply;
-
+class SongData;
 namespace Echonest{
 
   
@@ -84,6 +83,9 @@ public:
   
   Song();
   Song( const QString& id, const QString& title, const QString& artistId, const QString& artistName );
+  Song( const Song& other );
+  Song& operator=(const Song& song);
+  ~Song();
   
   /**
    * The following pieces of data are present in all Song objects, and do not require
@@ -101,11 +103,54 @@ public:
   QString artistId() const;
   void setArtistId( const QString& artistId );
   
+
   /** 
-   * The following require fetching from The Echo Nest, so return a QNetworkReply*
-   *  that is ready for parsing when the finished() signal is emitted.
-   *
-   * To parse the resulting data, call the Song::parseReply() function.
+   * The following require fetching from The Echo Nest, so call
+   *    fetchInformation() with the type of data you want first.
+   * 
+   * If you ask for this information before calling parseInformation()
+   *  with the respective data, the result is undefined.
+   */
+  
+  /**
+   * The full audio summary and analysis of this song.
+   */
+  //   AudioSummary audioSummary() const;
+  /**
+   * The associated Track objects with acoustic track information
+   */
+  QVector< Track > tracks() const;
+  void setTracks( const QVector< Track >& tracks );
+  
+  /**
+   * The "hotttnesss" metric of this song.
+   */
+  qreal hotttnesss() const;
+  void setHotttnesss( qreal hotttnesss );
+  
+  /**
+   * The "hotttnesss" metric of this song's artist.
+   */
+  qreal artistHotttnesss() const;
+  void setArtistHotttnesss( qreal artistHotttnesss );
+  
+  /**
+   * The familiarity metric of this song's artist.
+   */
+  qreal artistFamiliarity() const;
+  void setArtistFamiliarity( qreal artistFamiliarity );
+  
+  /**
+   * The location of this artist.
+   */
+  QString artistLocation() const;
+  void setArtistLocation( const QString& artistLocation );
+  
+  /**
+   *  This fetch the data from The Echo Nest for the requested data, so it
+   *   returns a QNetworkReply*. When the finished() signal is emitted 
+   *   from the QNetworkReply object call parseInformation() to save the
+   *   data back to this Song object.
    * 
    */
   QNetworkReply* fetchInformation( SongInformation parts ) const;
@@ -123,17 +168,10 @@ public:
   
   /**
    * Parse the result of the fetchInformation() call.
-   * For each requested SongInformationFlag in the original request, a corresponding
-   *  key/value pair will be populated. The value depends on the type of request:
-   * 
-   *   AudioSummary      <--> AudioSummary object
-   *   Tracks            <--> QVector< Track >
-   *   Hotttnesss        <--> qreal
-   *   ArtistHotttnesss  <--> qreal
-   *   ArtistFamiliarity <--> qreal
-   *   ArtistLocation    <--> ArtistLocation object
+   * For each requested SongInformationFlag in the original request, the respective
+   *  data will be saved to this Song object.
    */
-  static QHash< SongInformationFlag, QVariant > parseInformation( QNetworkReply* reply ) throw( ParseError );
+  void parseInformation( QNetworkReply* reply ) throw( ParseError );
   
   /**
    * Parse the result of the search() call.

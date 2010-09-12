@@ -29,8 +29,6 @@ class TrackData;
 
 namespace Echonest 
 {
-
-class TrackDataPrivate;
   
 /**
  * Upload-based Echo Nest Track API. If you want to search The Echo Nest for songs, use the Song API. 
@@ -50,8 +48,15 @@ public:
       Complete = 2,
       Error = 4
   };
-    
-  explicit Track( const QByteArray& xmlData );
+   
+  Track();
+  Track( const QString& title, const QString& artist, const QString& id, const QString& md5,const QString& release, const QString& sampleMD5,
+         int analysisChannels, qreal analysisSampleRate, const QString& analyzerVersion, int bitrate, qreal duration, qreal endOfFadeIn, int key,
+         qreal keyConfidence, qreal loudness, int mode, qreal modeConfidence, int numSamples, int samplerate, qreal startOfFadeOut, qreal tempo,
+         qreal tempoConfidence, const QString&  status );
+  Track( const Track& other );
+  Track& operator=( const Track& track );
+  ~Track();
   
   QString artist() const;
   QString title() const;
@@ -85,6 +90,7 @@ public:
   
 private:
     AnalysisStatus statusToEnum( const QString& status ) const;
+    QString statusToString( AnalysisStatus status ) const;
     
     QSharedDataPointer<TrackData> d;
 };

@@ -16,14 +16,60 @@
 
 #include "Track.h"
 
-#include "Types_p.h"
+#include "Track_p.h"
 
-Echonest::Track::Track( const QByteArray& xmlData )
-  : d( 0 )
+Echonest::Track::Track()
+  :  d( new TrackData )
 {
-  // parse with QXmlStreamReader
-  // d = new TrackData( ... )
+
 }
+
+
+Echonest::Track::Track( const QString& title, const QString& artist, const QString& id, const QString& md5, const QString& release, 
+                        const QString& sampleMD5, int analysisChannels, qreal analysisSampleRate, const QString& analyzerVersion, 
+                        int bitrate, qreal duration, qreal endOfFadeIn, int key, qreal keyConfidence, qreal loudness, int mode,
+                        qreal modeConfidence, int numSamples, int samplerate, qreal startOfFadeOut, qreal tempo, qreal tempoConfidence, const QString& analysisStatus )
+    : d( new TrackData )
+{
+    d->title = title;
+    d->artist = artist;
+    d->id = id;
+    d->md5 = md5;
+    d->release = release;
+    d->sample_md5 = sampleMD5;
+    d->analysis_channels = analysisChannels;
+    d->analysis_sample_rate = analysisSampleRate;
+    d->analyzer_version = analyzerVersion;
+    d->bitrate = bitrate;
+    d->duration = duration;
+    d->end_of_fade_in = endOfFadeIn;
+    d->key = key;
+    d->key_confidence = keyConfidence;
+    d->loudness = loudness;
+    d->mode = mode;
+    d->mode_confidence = modeConfidence;
+    d->num_samples = numSamples;
+    d->samplerate = samplerate;
+    d->start_of_fade_out = startOfFadeOut;
+    d->tempo = tempo;
+    d->tempo_confidence = tempoConfidence;
+    d->status = analysisStatus;
+}
+
+Echonest::Track::Track(const Echonest::Track& other)
+    : d( other.d )
+{ }
+
+Echonest::Track::~Track()
+{
+}
+
+
+Echonest::Track& Echonest::Track::operator=(const Echonest::Track& track)
+{
+    d = track.d;
+}
+
 
 QString Echonest::Track::artist() const
 {
@@ -153,6 +199,23 @@ Echonest::Track::AnalysisStatus Echonest::Track::statusToEnum(const QString& sta
         return Echonest::Track::Error;
     }
 }
+
+QString Echonest::Track::statusToString(Echonest::Track::AnalysisStatus status) const
+{
+    switch( status )
+    {
+    case Echonest::Track::Unknown:
+        return QLatin1String( "unknown" );
+    case Echonest::Track::Pending:
+        return QLatin1String( "pending" );
+    case Echonest::Track::Complete:
+        return QLatin1String( "complete" );
+    case Echonest::Track::Error:
+        return QLatin1String( "error" );
+    }
+            
+}
+
 
 QDebug Echonest::operator<<(QDebug d, const Echonest::Track& track)
 {

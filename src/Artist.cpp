@@ -15,18 +15,29 @@
  ****************************************************************************************/
 
 #include "Artist.h"
-#include "Types_p.h"
+#include "Artist_p.h"
 
 Echonest::Artist::Artist()
     : d( new ArtistData )
 {
 }
 
-Echonest::Artist::Artist( const QByteArray& xmlData )
+Echonest::Artist::Artist( const QString& id, const QString& name )
     : d( new ArtistData )
 {
-    // parse xml
+    d->id = id;
+    d->name = name;
 }
+
+Echonest::Artist::Artist(const Echonest::Artist& other)
+    : d( other.d )
+{}
+
+Echonest::Artist& Echonest::Artist::operator=(const Echonest::Artist& artist)
+{
+    d = artist.d;
+}
+
 
 QString Echonest::Artist::id() const
 {

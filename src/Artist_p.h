@@ -14,8 +14,8 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
 
-#ifndef ECHONEST_TYPES_P_H
-#define ECHONEST_TYPES_P_H
+#ifndef ECHONEST_ARTIST_P_H
+#define ECHONEST_ARTIST_P_H
 
 #include <QSharedData>
 #include <QString>
@@ -36,3 +36,4 @@ public:
 };
 
 #endif
+ 
