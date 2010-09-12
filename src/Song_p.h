@@ -26,10 +26,8 @@
 class SongData : public QSharedData
 {
 public:
-    SongData() {}
-    SongData( const QString& id, const QString& title, const QString& artistName, const QString& artistId )
-    : id( id ), title( title ), artistName( artistName ), artistId( artistId ) {}
-    
+    SongData() : hotttnesss( -1 ), artistHotttnesss( -1 ), artistFamiliarity( -1 ) {}
+   
     SongData(const SongData& other)
     {
         id = other.id;

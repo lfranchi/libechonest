@@ -93,8 +93,22 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
             song.setArtistId( xml.readElementText() );
         else if( xml.name() == "artist_name" && xml.tokenType() == QXmlStreamReader::StartElement )
             song.setArtistName( xml.readElementText() );
-        else if( xml.name() == "artist_hotttness" && xml.tokenType() == QXmlStreamReader::StartElement )
-//             song.setArtistHotttness( xml.readElementText().toDouble() );
+        else if( xml.name() == "song_hotttnesss" && xml.tokenType() == QXmlStreamReader::StartElement )
+            song.setHotttnesss( xml.readElementText().toDouble() );
+        else if( xml.name() == "artist_hotttnesss" && xml.tokenType() == QXmlStreamReader::StartElement )
+            song.setArtistHotttnesss( xml.readElementText().toDouble() );
+        else if( xml.name() == "artist_familiarity" && xml.tokenType() == QXmlStreamReader::StartElement )
+            song.setArtistFamiliarity( xml.readElementText().toDouble() );
+        else if( xml.name() == "artist_location" && xml.tokenType() == QXmlStreamReader::StartElement ) {
+            while( !( xml.name() ==  "location" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
+                xml.readNextStartElement();
+                if( xml.name() == "location" )
+                    song.setArtistLocation( xml.readElementText() );
+            }
+            xml.readNext();
+        }
+        // TODO tracks
+        // TODO audio_summary
         xml.readNext();
     }
     xml.readNext(); // skip past the last </song>

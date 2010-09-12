@@ -34,7 +34,7 @@ void SongTest::testSearch1()
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Artist, QLatin1String("Modest Mouse") ) );
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Title, QLatin1String("Float On") ) );
     
-    QNetworkReply* reply = Echonest::Song::search( params, Echonest::Song::ArtistHotttnesss );
+    QNetworkReply* reply = Echonest::Song::search( params, Echonest::Song::ArtistHotttnesss  | Echonest::Song::ArtistLocation | Echonest::Song::ArtistFamiliarity );
     
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -46,6 +46,22 @@ void SongTest::testSearch1()
     Q_FOREACH( Echonest::Song song, songs ) {
         QVERIFY( song.title().toLower() == QLatin1String( "float on" ) );
         QVERIFY( song.artistName().toLower() == QLatin1String( "modest mouse" ) );
+        QVERIFY( song.artistLocation().toLower() == QLatin1String( "issaquah, wa" ) );
+        QVERIFY( song.hotttnesss() == -1 );
+//         qDebug() << song.hotttnesss() << song.artistHotttnesss() << song.artistFamiliarity() << song.artistLocation();
+        
+        // now fetch some more info and make sure everything is still sane
+        QNetworkReply* moreInfo = song.fetchInformation( Echonest::Song::Hotttnesss );
+        QEventLoop loop;
+        loop.connect( moreInfo, SIGNAL(finished()), SLOT(quit()) );
+        loop.exec();
+        song.parseInformation( moreInfo );
+        
+        QVERIFY( song.title().toLower() == QLatin1String( "float on" ) );
+        QVERIFY( song.artistName().toLower() == QLatin1String( "modest mouse" ) );
+        QVERIFY( song.artistLocation().toLower() == QLatin1String( "issaquah, wa" ) );
+        QVERIFY( song.hotttnesss() != -1 );
+        
     }
 }
 

@@ -42,12 +42,12 @@ class ECHONEST_EXPORT Song
   
 public:
   enum SongInformationFlag {
-      AudioSummary = 0x0,
-      Tracks = 0x1,
-      Hotttnesss = 0x2,
-      ArtistHotttnesss = 0x4,
-      ArtistFamiliarity = 0x8,
-      ArtistLocation = 0x16
+      AudioSummary = 0x01,
+      Tracks = 0x02,
+      Hotttnesss = 0x04,
+      ArtistHotttnesss = 0x08,
+      ArtistFamiliarity = 0x10,
+      ArtistLocation = 0x20
   };
   Q_DECLARE_FLAGS( SongInformation, SongInformationFlag )
 

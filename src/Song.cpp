@@ -146,7 +146,7 @@ QString Echonest::Song::artistLocation() const
 
 void Echonest::Song::setArtistLocation(const QString& artistLocation)
 {
-    d->artistLocation = ArtistLocation;
+    d->artistLocation = artistLocation;
 }
 
 QNetworkReply* Echonest::Song::fetchInformation( Echonest::Song::SongInformation parts ) const
@@ -155,6 +155,7 @@ QNetworkReply* Echonest::Song::fetchInformation( Echonest::Song::SongInformation
     url.addEncodedQueryItem( "id", d->id.toUtf8() );
     addQueryInformation( url, parts );
     
+    qDebug() << "Creating fetchINformation URL" << url;
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
@@ -173,11 +174,6 @@ QNetworkReply* Echonest::Song::search( const Echonest::Song::SearchParams& param
 
 void Echonest::Song::parseInformation( QNetworkReply* reply ) throw( ParseError )
 {
-
-}
-
-QVector< Echonest::Song > Echonest::Song::parseSearch( QNetworkReply* reply ) throw( ParseError )
-{
     Echonest::Parser::checkForErrors( reply );
     
     QByteArray data = reply->readAll();
@@ -185,8 +181,32 @@ QVector< Echonest::Song > Echonest::Song::parseSearch( QNetworkReply* reply ) th
     QXmlStreamReader xml( data );
     
     Echonest::Parser::readStatus( xml );
-    QVector<Echonest::Song> songs = Echonest::Parser::parseSongList( xml );
+    // we'll just take the new data. it is given as a list even though it can only have 1 song as we specify the song id
+    QVector< Echonest::Song > songs = Echonest::Parser::parseSongList( xml );
+    if( !songs.size() == 1 )
+        throw new ParseError( Echonest::UnknownParseError );
+    // copy any non-default values
+    Echonest::Song newSong = songs.at( 0 );
+    if( newSong.hotttnesss() >= 0 )
+        setHotttnesss( newSong.hotttnesss() );
+    if( newSong.artistHotttnesss() >= 0 )
+        setArtistHotttnesss( newSong.artistHotttnesss() );
+    if( newSong.artistFamiliarity() >= 0 )
+        setArtistFamiliarity( newSong.artistFamiliarity() );
+    if( !newSong.artistLocation().isEmpty() )
+        setArtistLocation( newSong.artistLocation() );
     
+}
+
+QVector< Echonest::Song > Echonest::Song::parseSearch( QNetworkReply* reply ) throw( ParseError )
+{
+    Echonest::Parser::checkForErrors( reply );
+    
+    QXmlStreamReader xml( reply->readAll() );
+    
+    Echonest::Parser::readStatus( xml );
+    QVector<Echonest::Song> songs = Echonest::Parser::parseSongList( xml );
+    Qt::Alignment a;
     return songs;
     
 }
