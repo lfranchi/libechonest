@@ -22,7 +22,10 @@
 
 #include <QSharedData>
 #include <QDebug>
+#include "Util.h"
+#include "Util.h"
 
+class QNetworkReply;
 class QNetworkReply;
 class AudioSummaryData;
 
@@ -31,29 +34,185 @@ namespace Echonest{
     /**
      * This encapsulates the audio summary of an Echo Nest track or song.
      * 
+     * It has two batches of data: the more generic acoustic information about the
+     *  song is always populated, and additional detailed information about the song
+     *  such as bars, beats, segments, tatus, and sections, can be fetched as well as
+     *  an additional step.
+     * 
+     * This class is implicitly shared.
      */
     class ECHONEST_EXPORT AudioSummary
     {
-        
     public:
         AudioSummary();
+        AudioSummary( const AudioSummary& other );
+        ~AudioSummary();
         
+        AudioSummary& operator=( const AudioSummary& audio );
         
+        int key() const;
+        void setKey( int key );
         
         /**
-         * Queries The Echo Nest for the next playable song in this
-         *  dynamic playlist.
+         * The track's tempo.
          */
-        Song fetchNextSong();
+        qreal tempo() const;
+        void setTempo( qreal tempo );
         
-        // Generate a static playlist, or initiate a dynamic playlist
-        //         static DynamicPlaylist getPlaylist( Playlist::Type type )
+        /**
+         * The track's time signature, or -1 if it there is one, or 1 if it is 
+         *   too complex.
+         */
+        int timeSignature() const;
+        void setTimeSignature( int timeSignature );
         
-    private:
-        QSharedDataPointer<DynamicPlaylistData> d;
+        /**
+         * The duration of the song, in msecs.
+         */
+        qint64 duration() const;
+        void setDuration( qint64 duration );
+        
+        /**
+         * The loudness of the song, in dB.
+         */
+        qreal loudness() const;
+        void setLoudness( qreal loudness );
+        
+        /**
+         * If you wish to use any of the more detailed track analysis data,
+         *  use this method to begin the fetch. One the returned QNetworkReply*
+         *  has emitted the finished() signal, call parseFullAnalysis.
+         */
+        QNetworkReply* fetchFullAnalysis() const;
+        
+        /**
+         * Parses the result of a fetchFullAnalysis() call. This contains
+         *  information su ch as mode, fadein/fadeout, confidence metrics, 
+         *  and the division of the song into bars, beats, sections, and segments.
+         */
+        void parseFullAnalysis( QNetworkReply* reply );
+        
+        /// The following methods *ALL REQUIRE THAT parseFullAnalysis be called first*
+        
+        /**
+         * How long it took to analyze this track.
+         */
+        qreal analysisTime() const;
+        void setAnalysisTime( qreal time );
+        
+        /**
+         * The version of the analyzer used on this track.
+         */
+        QString analyzerVersion() const;
+        void setAnalyzerVersion( QString version );
+        
+        /**
+         * Detailed status information about the analysis
+         */
+        Analysis::AnalysisStatus detailedStatus() const;
+        void setDetailedStatus( Analysis::AnalysisStatus status );
+        
+        /**
+         * The status code of the analysis
+         */
+        int analysisStatus() const;
+        void setAnalysisStatus( int status );
+        
+        /**
+         * The timestamp of the analysis.
+         */
+        qreal timestamp() const;
+        void setTimestamp( qreal timestamp );
+        
+        /**
+         * The sample rate of the track.
+         */
+        qreal sampleRate() const;
+        void setSampleRate( qreal sampleRate );
+        
+        /**
+         * The end of the track's fade in in msec.
+         */
+        qreal endOfFadeIn() const;
+        void setEndOfFadeIn( qreal time );
+        
+        /**
+         * The start of the fade out in msec.
+         */
+        qreal startOfFadeOut() const;
+        void setStartOfFadeOut( qreal time );
+        
+        /**
+         * The confidence of the key item.
+         */
+        qreal keyConfidence() const;
+        void setKeyConfidence( qreal confidence );
+        
+        /**
+         * The confidence of the mode item.
+         */
+        qreal modeConfidence() const;
+        void setModeConfidence( qreal confidence );
+        
+        /**
+         * The confidence of the tempo item.
+         */
+        qreal tempoConfidence() const;
+        void setTempoConfidence( qreal confidence );
+        
+        /**
+         * The confidence of the time signature item.
+         */
+        qreal timeSignatureConfidence() const;
+        void setTimeSignatureConfidence( qreal confidence );
+        
+        /**
+         * The number of samples in this track.
+         */
+        qint64 numSamples() const;
+        void setNumSamples( qint64 num );
+        
+        /**
+         * The MD5 of the sample.
+         */
+        QString sampleMD5() const;
+        void setSampleMD5( const QString& md5 );
+        
+        /**
+         * List of bars that are in the track.
+         */
+        BarList bars() const;
+        void setBars( const BarList& bars );
+        
+        /**
+         * List of beats in the track.
+         */
+        BeatList beats() const;
+        void setBeats( const BeatList& beats );
+        
+        /**
+         * List of sections in the track.
+         */
+        SectionList sections() const;
+        void setSections( const SectionList& sections );
+        
+        /**
+         * List of tatums in the track
+         */
+        TatumList tatums() const;
+        void setTatums( const TatumList& tatums );
+        
+        /**
+         * List of segments in the track with associated acoustic data.
+         */
+        SegmentList segments() const;
+        void setSegments( const SegmentList& segments );
+        
+    private:        
+        QSharedDataPointer<AudioSummaryData> d;
     };
     
-    QDebug operator<<(QDebug d, const Echonest::DynamicPlaylist& playlist);
+    QDebug operator<<(QDebug d, const Echonest::AudioSummary& summary);
     
     
 } // namespace

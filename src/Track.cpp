@@ -21,44 +21,11 @@
 Echonest::Track::Track()
   :  d( new TrackData )
 {
-
-}
-
-
-Echonest::Track::Track( const QString& title, const QString& artist, const QString& id, const QString& md5, const QString& release, 
-                        const QString& sampleMD5, int analysisChannels, qreal analysisSampleRate, const QString& analyzerVersion, 
-                        int bitrate, qreal duration, qreal endOfFadeIn, int key, qreal keyConfidence, qreal loudness, int mode,
-                        qreal modeConfidence, int numSamples, int samplerate, qreal startOfFadeOut, qreal tempo, qreal tempoConfidence, const QString& analysisStatus )
-    : d( new TrackData )
-{
-    d->title = title;
-    d->artist = artist;
-    d->id = id;
-    d->md5 = md5;
-    d->release = release;
-    d->sample_md5 = sampleMD5;
-    d->analysis_channels = analysisChannels;
-    d->analysis_sample_rate = analysisSampleRate;
-    d->analyzer_version = analyzerVersion;
-    d->bitrate = bitrate;
-    d->duration = duration;
-    d->end_of_fade_in = endOfFadeIn;
-    d->key = key;
-    d->key_confidence = keyConfidence;
-    d->loudness = loudness;
-    d->mode = mode;
-    d->mode_confidence = modeConfidence;
-    d->num_samples = numSamples;
-    d->samplerate = samplerate;
-    d->start_of_fade_out = startOfFadeOut;
-    d->tempo = tempo;
-    d->tempo_confidence = tempoConfidence;
-    d->status = analysisStatus;
 }
 
 Echonest::Track::Track(const Echonest::Track& other)
     : d( other.d )
-{ }
+{}
 
 Echonest::Track::~Track()
 {
@@ -68,6 +35,7 @@ Echonest::Track::~Track()
 Echonest::Track& Echonest::Track::operator=(const Echonest::Track& track)
 {
     d = track.d;
+    return *this;
 }
 
 
@@ -76,9 +44,20 @@ QString Echonest::Track::artist() const
   return d->artist;
 }
 
+void Echonest::Track::setArtist(const QString& artist)
+{
+    d->artist = artist;
+}
+
+
 QString Echonest::Track::title() const
 {
   return d->title;
+}
+
+void Echonest::Track::setTitle(const QString& title)
+{
+    d->title = title;
 }
 
 QString Echonest::Track::id() const
@@ -86,30 +65,30 @@ QString Echonest::Track::id() const
     return d->id;
 }
 
+void Echonest::Track::setId(const QString& id)
+{
+    d->id = id;
+}
+
 QString Echonest::Track::md5() const
 {
     return d->md5;
 }
+
+void Echonest::Track::setMD5(const QString& md5)
+{
+    d->md5 = md5;
+}
+
 
 QString Echonest::Track::release() const
 {
     return d->release;
 }
 
-QString Echonest::Track::sampleMD5() const
+void Echonest::Track::setRelease(const QString& release)
 {
-    return d->sample_md5;
-}
-
-
-int Echonest::Track::analysisChannels() const
-{
-    return d->analysis_channels;
-}
-
-qreal Echonest::Track::analysisSampleRate() const
-{
-    return d->analysis_sample_rate;
+    d->release = release;
 }
 
 QString Echonest::Track::analyzerVersion() const
@@ -117,49 +96,19 @@ QString Echonest::Track::analyzerVersion() const
     return d->analyzer_version;
 }
 
+void Echonest::Track::setAnalyzerVersion(const QString& analyzerVersion)
+{
+    d->analyzer_version = analyzerVersion;
+}
+
 int Echonest::Track::bitrate() const
 {
     return d->bitrate;
 }
 
-qreal Echonest::Track::duration() const
+void Echonest::Track::setBitrate(int bitrate)
 {
-    return d->duration;
-}
-
-qreal Echonest::Track::endOfFadeIn() const
-{
-    return d->end_of_fade_in;
-}
-
-int Echonest::Track::key() const
-{
-    return d->key;
-}
-
-qreal Echonest::Track::keyConfidence() const
-{
-    return d->key_confidence;
-}
-
-qreal Echonest::Track::loudness() const
-{
-    return d->loudness;
-}
-
-int Echonest::Track::mode() const
-{
-    return d->mode;
-}
-
-qreal Echonest::Track::modeConfidence() const
-{
-    return d->mode_confidence;
-}
-
-int Echonest::Track::numSamples() const
-{
-    return d->num_samples;
+    d->bitrate = bitrate;
 }
 
 int Echonest::Track::samplerate() const
@@ -167,53 +116,40 @@ int Echonest::Track::samplerate() const
     return d->samplerate;
 }
 
-qreal Echonest::Track::startOfFadeOut() const
+void Echonest::Track::setSamplerate(int samplerate)
 {
-    return d->start_of_fade_out;
+    d->samplerate = samplerate;
 }
 
-qreal Echonest::Track::tempo() const
+QString Echonest::Track::audioMD5() const
 {
-    return d->tempo;
+    return d->audio_md5;
 }
 
-qreal Echonest::Track::tempoConfidence() const
+void Echonest::Track::setAudioMD5(const QString& md5)
 {
-    return d->tempo_confidence;
+    d->audio_md5 = md5;
 }
 
-Echonest::Track::AnalysisStatus Echonest::Track::status() const
+
+Echonest::Analysis::AnalysisStatus Echonest::Track::status() const
 {
-    return statusToEnum( d->status );
+    return Echonest::statusToEnum( d->status );
 }
 
-Echonest::Track::AnalysisStatus Echonest::Track::statusToEnum(const QString& status) const
+void Echonest::Track::setStatus( Echonest::Analysis::AnalysisStatus status )
 {
-    if( status == QLatin1String("unknown") ) {
-        return Echonest::Track::Unknown;
-    } else if( status == QLatin1String("pending") ) {
-        return Echonest::Track::Pending;
-    } else if( status == QLatin1String("complete") ) {
-        return Echonest::Track::Complete;
-    } else if( status == QLatin1String("error" )) {
-        return Echonest::Track::Error;
-    }
+    d->status = Echonest::statusToString( status );
 }
 
-QString Echonest::Track::statusToString(Echonest::Track::AnalysisStatus status) const
+Echonest::AudioSummary Echonest::Track::audioSummary() const
 {
-    switch( status )
-    {
-    case Echonest::Track::Unknown:
-        return QLatin1String( "unknown" );
-    case Echonest::Track::Pending:
-        return QLatin1String( "pending" );
-    case Echonest::Track::Complete:
-        return QLatin1String( "complete" );
-    case Echonest::Track::Error:
-        return QLatin1String( "error" );
-    }
-            
+    return d->audio_summary;
+}
+
+void Echonest::Track::setAudioSummary(const Echonest::AudioSummary& summary)
+{
+    d->audio_summary = summary;
 }
 
 

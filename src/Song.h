@@ -36,6 +36,8 @@ namespace Echonest{
 /**
  * This encapsulates an Echo Nest song---use it if you wish to get information about a song,
  *   search for a song, etc.
+ * 
+ * This class is implicitly shared.
  */
 class ECHONEST_EXPORT Song
 {

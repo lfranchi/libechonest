@@ -27,8 +27,39 @@ public:
     AudioSummaryData() {}
     AudioSummaryData(const AudioSummaryData& other)
     {
-        sessionId = other.sessionId;
-        currentSong = other.currentSong;
+        key = other.key;
+        tempo = other.tempo;
+        mode = other.mode;
+        time_signature = other.time_signature;
+        duration = other.duration;
+        loudness = other.loudness;
+        samplerate = other.samplerate;
+        
+        analysis_url = other.analysis_url;
+        
+        analysis_time = other.analysis_time;
+        analyzer_version = other.analyzer_version;
+        detailed_status = other.detailed_status;
+        status = other.status;
+        timestamp = other.timestamp;
+        
+        end_of_fade_in = other.end_of_fade_in;
+        key_confidence = other.key_confidence;
+        loudness = other.loudness;
+        mode_confidence = other.mode_confidence;
+        num_samples = other.num_samples;
+        sample_md5 = other.sample_md5;
+        start_of_fade_out = other.start_of_fade_out;
+        tempo_confidence = other.tempo_confidence;
+        time_signature = other.time_signature;
+        time_signature_confidence = other.time_signature_confidence;
+        
+        bars = other.bars;
+        beats = other.beats;
+        sections = other.sections;
+        tatums = other.tatums;
+        segments = other.segments;
+        
     }
     
     // basic data that always exists in an Audio Summary object
@@ -36,8 +67,9 @@ public:
     qreal tempo;
     int mode;
     int time_signature;
-    qreal duration;
+    qint64 duration;
     qreal loudness;
+    int samplerate;
     
     QUrl analysis_url; // used to fetch the following pieces of data
     
@@ -49,28 +81,20 @@ public:
     qreal timestamp;
     
     // track section
-    qreal analysis_sample_rate;
-    qreal duration;
     qreal end_of_fade_in;
-    int key;
     qreal key_confidence;
-    qreal loudness;
-    int mode;
     qreal mode_confidence;
     qint64 num_samples;
     QString sample_md5;
     qreal start_of_fade_out;
-    qreal tempo;
     qreal tempo_confidence;
-    int time_signature;
     qreal time_signature_confidence;
     
-    QVector< Echonest::Bar > bars;
-    QVector< Echonest::Beat > beats;
-    QVector< Echonest::Section > sections;
-    QVector< Echonest::Tatum > tatums;
+    Echonest::BarList bars;
+    Echonest::BeatList beats;
+    Echonest::SectionList sections;
+    Echonest::TatumList tatums;
     
-    QVector< Echonest::Segment > segments;
+    Echonest::SegmentList segments;
     
 };
-

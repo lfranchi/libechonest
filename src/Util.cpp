@@ -14,60 +14,34 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
 
-#ifndef ECHONEST_UTIL_H
-#define ECHONEST_UTIL_H
+#include "Util.h"
 
-#include <QVector>
+#include <QString>
 
-
-/**
- * Some shared declarations
- */
-
-namespace Echonest
+Echonest::Analysis::AnalysisStatus Echonest::statusToEnum(const QString& status)
 {
-    namespace Analysis
-    {    
-    enum AnalysisStatus {
-        Unknown = 0,
-        Pending = 1,
-        Complete = 2,
-        Error = 4
-    };
+    if( status == QLatin1String("unknown") ) {
+        return Echonest::Analysis::Unknown;
+    } else if( status == QLatin1String("pending") ) {
+        return Echonest::Analysis::Pending;
+    } else if( status == QLatin1String("complete") ) {
+        return Echonest::Analysis::Complete;
+    } else if( status == QLatin1String("error" )) {
+        return Echonest::Analysis::Error;
     }
-    typedef struct
-    {
-        qreal confidence;
-        qreal duration;
-        qreal start;
-    } AudioChunk;
-
-    typedef AudioChunk Bar;
-    typedef AudioChunk Beat;
-    typedef AudioChunk Section;
-    typedef AudioChunk Tatum;
-
-    typedef struct
-    {
-        qreal confidence;
-        qreal duration;
-        qreal loudness_max;
-        qreal loudness_max_time;
-        qreal loudness_start;
-        QVector< qreal > pitches;
-        qreal start;
-        QVector< qreal > timbre;
-    } Segment;
-    
-    
-    typedef QVector< Bar > BarList;
-    typedef QVector< Beat > BeatList;
-    typedef QVector< Section > SectionList;
-    typedef QVector< Tatum > TatumList;
-    typedef QVector< Segment > SegmentList;
-    
-    Analysis::AnalysisStatus statusToEnum( const QString& status );
-    QString statusToString( Analysis::AnalysisStatus status );
 }
 
-#endif
+QString Echonest::statusToString(Echonest::Analysis::AnalysisStatus status)
+{
+    switch( status )
+    {
+        case Echonest::Analysis::Unknown:
+            return QLatin1String( "unknown" );
+        case Echonest::Analysis::Pending:
+            return QLatin1String( "pending" );
+        case Echonest::Analysis::Complete:
+            return QLatin1String( "complete" );
+        case Echonest::Analysis::Error:
+            return QLatin1String( "error" );
+    }
+}

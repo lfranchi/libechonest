@@ -9,6 +9,7 @@ set( LIBECHONEST_TYPES_SRC
         Config.cpp
         Parsing.cpp
         AudioSummary.cpp
+        Util.cpp
 )
 
 set( LIBECHONEST_TYPES_H

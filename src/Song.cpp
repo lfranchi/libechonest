@@ -54,6 +54,7 @@ Echonest::Song::~Song()
 Echonest::Song& Echonest::Song::operator=(const Echonest::Song& song)
 {
     d = song.d;
+    return *this;
 }
 
 

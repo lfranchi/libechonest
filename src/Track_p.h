@@ -17,6 +17,8 @@
 #ifndef ECHONEST_TRACK_P_H
 #define ECHONEST_TRACK_P_H
 
+#include "AudioSummary.h"
+
 #include <QSharedData>
 #include <QString>
 
@@ -48,7 +50,9 @@ public:
     QString audio_md5;
     int samplerate;
     QString status;
-    QString title; //                   ex. 'Interiors' or None
+    QString title;
+    
+    Echonest::AudioSummary audio_summary;
     
 };
 

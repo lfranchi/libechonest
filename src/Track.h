@@ -18,7 +18,9 @@
 #ifndef ECHONEST_TRACK_H
 #define ECHONEST_TRACK_H
 
+#include "AudioSummary.h"
 #include "echonest_export.h"
+#include "Util.h"
 
 #include <QObject>
 #include <QString>
@@ -35,61 +37,90 @@ namespace Echonest
  *  If you want to upload your own files and retrieve the acoustic information about them, use this Track
  *   class. You can also fetch acoustic information from a track if you have the Track ID or MD5 of the file.
  * 
- * A Track encapsulates the audio analysis from The Echo Nest
+ * A Track encapsulates the audio analysis from The Echo Nest.
+ * 
+ * This class is implicitly shared.
  * 
  */
 class ECHONEST_EXPORT Track
 {
 public:
-    
-  enum AnalysisStatus {
-      Unknown = 0,
-      Pending = 1,
-      Complete = 2,
-      Error = 4
-  };
-   
+ 
   Track();
-  Track( const QString& title, const QString& artist, const QString& id, const QString& md5,const QString& release, const QString& sampleMD5,
-         int analysisChannels, qreal analysisSampleRate, const QString& analyzerVersion, int bitrate, qreal duration, qreal endOfFadeIn, int key,
-         qreal keyConfidence, qreal loudness, int mode, qreal modeConfidence, int numSamples, int samplerate, qreal startOfFadeOut, qreal tempo,
-         qreal tempoConfidence, const QString&  status );
   Track( const Track& other );
   Track& operator=( const Track& track );
   ~Track();
   
+  /**
+   * The track's artist.
+   */
   QString artist() const;
+  void setArtist( const QString& artist );
+  
+  /**
+   * The track's title.
+   */
   QString title() const;
+  void setTitle( const QString& title );
   
+  /**
+   * The Echo Nest artist ID for this track.
+   */
   QString id() const;
+  void setId( const QString& id );
+  
+  /**
+   * The MD5 hash of the track.
+   */
   QString md5() const;
-  QString release() const; // in EN lingo, means albumn ame
-  QString sampleMD5() const;
+  void setMD5( const QString& md5 );
   
-  // TODO bars, beats, meta, sections, segments, tatums (the hard stuff! :)
+  /**
+   * The album name of this track.
+   */
+  QString release() const;
+  void setRelease( const QString& release );
+    
+  /**
+   * The MD5 hashsum of the audio data.
+   */
+  QString audioMD5() const;
+  void setAudioMD5( const QString& md5 );
   
-  int analysisChannels() const;
-  qreal analysisSampleRate() const;
+  /**
+   * The analyzer version that was used in this track's analysis.
+   */
+  QString analyzerVersion() const;
+  void setAnalyzerVersion( const QString& analyzerVersion );
   
-  int bitrate() const;
-  qreal duration() const;
-  qreal endOfFadeIn() const;
-  int key() const;
-  qreal keyConfidence() const;
-  qreal loudness() const;
-  int mode() const;
-  qreal modeConfidence() const;
-  int numSamples() const;
+  /**
+   * The samplerate of the track
+   */
   int samplerate() const;
-  qreal startOfFadeOut() const;
-  qreal tempo() const;
-  qreal tempoConfidence() const;
+  void setSamplerate( int samplerate );
   
-  AnalysisStatus status() const;  
+  /**
+   * The bitrate of the track
+   */
+  int bitrate() const;  
+  void setBitrate( int );
+    
+  /**
+   * The analysis status
+   */
+  Analysis::AnalysisStatus status() const;  
+  void setStatus( Analysis::AnalysisStatus );
+  
+  
+  /**
+   * The full audio summary of the track. This contains information about the track's bars,
+   *  beats, sections, and detailed segment information as well as more metadata about the song's
+   *  acoustic properties.
+   */
+  AudioSummary audioSummary() const;
+  void setAudioSummary( const AudioSummary& summary );
   
 private:
-    AnalysisStatus statusToEnum( const QString& status ) const;
-    QString statusToString( AnalysisStatus status ) const;
     
     QSharedDataPointer<TrackData> d;
 };
