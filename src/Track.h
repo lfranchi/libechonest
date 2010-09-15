@@ -26,7 +26,10 @@
 #include <QString>
 #include <QDebug>
 #include <QSharedData>
+#include <QUrl>
+#include "Config.h"
 
+class QNetworkReply;
 class TrackData;
 
 namespace Echonest 
@@ -111,15 +114,64 @@ public:
   Analysis::AnalysisStatus status() const;  
   void setStatus( Analysis::AnalysisStatus );
   
-  
   /**
    * The full audio summary of the track. This contains information about the track's bars,
    *  beats, sections, and detailed segment information as well as more metadata about the song's
    *  acoustic properties.
+   * 
+   *  Information about how to interpret the results of the audio summary can be found here:
+   *    http://developer.echonest.com/docs/v4/_static/AnalyzeDocumentation_2.2.pdf
    */
   AudioSummary audioSummary() const;
   void setAudioSummary( const AudioSummary& summary );
   
+    /**
+   * Get a track object from the md5 hash of a song's contents.
+   * 
+   * Call parseProfile() to get the track itself once the 
+   *   QNetworkReply() emits the finished() signal.
+   */
+  static QNetworkReply* profileFromMD5( const QByteArray& md5 );
+  
+  /**
+   * Get a track object from an Echo Nest track id.
+   * 
+   * Call parseProfile() to get the track itself once the 
+   *   QNetworkReply() emits the finished() signal.
+   */
+  static QNetworkReply* profileFromTrackId( const QByteArray& id );
+  
+  /**
+   * Upload a track to The Echo Nest for analysis. The file can either be
+   *  a local filetype and include the file data as a parameter, or a url to a file on the internet.
+   * 
+   * When the QNetworkReply emits its finished() signal, you can call parseProfile()
+   *  to get the resulting Track object. Be sure to check the status of the new track,
+   *  as it might be 'pending', which means it is still being analyzed and must be asked 
+   *  for again later.
+   * 
+   * Note that in the case of uploading a local file, the data QByteArray must stay in scope for the
+   *  whole completion of the upload operation.
+   */
+  static QNetworkReply* uploadLocalFile( const QUrl& localFile, const QByteArray& data, bool waitForResult = true );
+  static QNetworkReply* uploadURL( const QUrl& remoteURL, bool waitForResult = true );
+  
+  /**
+   * Analyze a previously uploaded track with the current version of the analyzer. 
+   * It can be referenced by either track ID or file md5.
+   */
+  static QNetworkReply* analyzeTrackId( const QByteArray& id, bool wait = true );
+  static QNetworkReply* analyzeTrackMD5( const QByteArray& id, bool wait = true );
+  
+  /**
+   * Parse the result of a track request, and turn it into a
+   *  Track object.
+   * 
+   * Call this function after the QNetworkReply* object returned
+   *  from the parse*, upload*, and analyze* emits its finished() signal
+   */
+  static Track parseProfile( QNetworkReply* ) throw( ParseError );
+    
 private:
     
     QSharedDataPointer<TrackData> d;

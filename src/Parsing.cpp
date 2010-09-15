@@ -115,3 +115,8 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
     
     return song;
 }
+
+Echonest::Track Echonest::Parser::parseTrack( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    return Echonest::Track();
+}

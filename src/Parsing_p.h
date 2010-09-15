@@ -43,6 +43,9 @@ namespace Parser
    
     // parses a <song></song> block
     Song parseSong( QXmlStreamReader& xml ) throw( ParseError );
+    
+    // parses a <track></track> block
+    Track parseTrack( QXmlStreamReader& xml ) throw( ParseError );
 }
 }
 
