@@ -10,6 +10,7 @@ set( LIBECHONEST_TYPES_SRC
         Parsing.cpp
         AudioSummary.cpp
         Util.cpp
+        ArtistTypes.cpp
 )
 
 set( LIBECHONEST_TYPES_H
@@ -19,6 +20,7 @@ set( LIBECHONEST_TYPES_H
         Playlist.h
         Config.h
         AudioSummary.h
+        ArtistTypes.h
 )
 
 QT4_WRAP_CPP( ${LIBECHONEST_TYPES_H} )

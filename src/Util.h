@@ -18,7 +18,7 @@
 #define ECHONEST_UTIL_H
 
 #include <QVector>
-
+#include <QUrl>
 
 /**
  * Some shared declarations
@@ -66,6 +66,12 @@ namespace Echonest
     typedef QVector< Section > SectionList;
     typedef QVector< Tatum > TatumList;
     typedef QVector< Segment > SegmentList;
+    
+    typedef struct {
+        QUrl url;
+        QString attribution;
+        QString type;
+    } License;
     
     Analysis::AnalysisStatus statusToEnum( const QString& status );
     QString statusToString( Analysis::AnalysisStatus status );

@@ -17,14 +17,18 @@
 #ifndef ECHONEST_ARTIST_P_H
 #define ECHONEST_ARTIST_P_H
 
+#include "Song.h"
+#include "ArtistTypes.h"
+
 #include <QSharedData>
 #include <QString>
+#include <QVector>
 
 class ArtistData : public QSharedData
 {
 public:
     ArtistData() {}
-    ArtistData( const QString& id, const QString& name ) : id( id ), name( name ) {}
+    ArtistData( const QByteArray& id, const QString& name ) : id( id ), name( name ) {}
     ArtistData(const ArtistData& other)
     {
         id = other.id;
@@ -32,10 +36,31 @@ public:
     }
     
     // The following exist in all valid Artist objects
-    QString id;
+    QByteArray id;
     QString name;
     
     //The following are populated on demand, and may not exist
+    QVector<Echonest::AudioFile> audio;
+    QVector<Echonest::Biography> biographies;
+    QVector<Echonest::Blog> blogs;
+    
+    qreal familiarity;
+    qreal hotttnesss;
+    
+    QVector<Echonest::ArtistImage> images;
+    QVector<Echonest::NewsArticle> news;
+    QVector<Echonest::Review> reviews;
+    QVector<Echonest::Song> songs;
+    QVector<Echonest::Artist> similar;
+    QVector<Echonest::Term> terms;
+    QVector<Echonest::Video> videos;
+    
+    QUrl lastfm_url;
+    QUrl aolmusic_url;
+    QUrl myspace_url;
+    QUrl amazon_url;
+    QUrl itunes_url;
+    QUrl mb_url;
 };
 
 #endif

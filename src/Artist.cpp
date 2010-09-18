@@ -22,7 +22,7 @@ Echonest::Artist::Artist()
 {
 }
 
-Echonest::Artist::Artist( const QString& id, const QString& name )
+Echonest::Artist::Artist( const QByteArray& id, const QString& name )
     : d( new ArtistData )
 {
     d->id = id;
@@ -39,7 +39,7 @@ Echonest::Artist& Echonest::Artist::operator=(const Echonest::Artist& artist)
 }
 
 
-QString Echonest::Artist::id() const
+QByteArray Echonest::Artist::id() const
 {
     return d->id;
 }
@@ -49,7 +49,7 @@ QString Echonest::Artist::name() const
     return d->name;
 }
 
-void Echonest::Artist::setId(const QString& id)
+void Echonest::Artist::setId(const QByteArray& id)
 {
     d->id = id;
 }
@@ -126,6 +126,6 @@ QNetworkReply* Echonest::Artist::fetchVideo() const
 
 QDebug Echonest::operator<<(QDebug d, const Echonest::Artist& artist)
 {
-    d << QString::fromLatin1( "Artist(%1, %2)" ).arg( artist.name() ).arg( artist.id() );
+    d << QString::fromLatin1( "Artist(%1, %2)" ).arg( artist.name() ).arg( QString::fromLatin1(artist.id()) );
 }
 

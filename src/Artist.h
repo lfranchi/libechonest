@@ -36,12 +36,12 @@ namespace Echonest{
         
     public:
         Artist();
-        Artist( const QString& id, const QString& name );
+        Artist( const QByteArray& id, const QString& name );
         Artist( const Artist& other );
         Artist& operator=( const Artist& artist );
         
-        QString id() const;
-        void setId( const QString& id );
+        QByteArray id() const;
+        void setId( const QByteArray& id );
         
         QString name() const;
         void setName( const QString& name );
