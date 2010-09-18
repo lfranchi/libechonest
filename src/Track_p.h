@@ -44,10 +44,10 @@ public:
     QString artist;
     QString analyzer_version;
     int bitrate;
-    QString id;
-    QString md5;
+    QByteArray id;
+    QByteArray md5;
     QString release;
-    QString audio_md5;
+    QByteArray audio_md5;
     int samplerate;
     QString status;
     QString title;

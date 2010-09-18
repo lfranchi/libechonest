@@ -45,10 +45,10 @@ public:
     
     ~SongData() {}
     
-    QString id;
+    QByteArray id;
     QString title;
     QString artistName;
-    QString artistId;
+    QByteArray artistId;
     
     // The rest are optional that require manual fetching to populate
     //     AudioSummary audioSummary;

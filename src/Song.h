@@ -84,7 +84,7 @@ public:
   typedef QVector< SearchParamData > SearchParams;
   
   Song();
-  Song( const QString& id, const QString& title, const QString& artistId, const QString& artistName );
+  Song( const QByteArray& id, const QString& title, const QByteArray& artistId, const QString& artistName );
   Song( const Song& other );
   Song& operator=(const Song& song);
   ~Song();
@@ -93,8 +93,8 @@ public:
    * The following pieces of data are present in all Song objects, and do not require
    *   on-demand fetching.
    */
-  QString id() const;
-  void setId( const QString& id );
+  QByteArray id() const;
+  void setId( const QByteArray& id );
   
   QString title() const;
   void setTitle( const QString& title );
@@ -102,8 +102,8 @@ public:
   QString artistName() const;
   void setArtistName( const QString& artistName );
   
-  QString artistId() const;
-  void setArtistId( const QString& artistId );
+  QByteArray artistId() const;
+  void setArtistId( const QByteArray& artistId );
   
 
   /** 

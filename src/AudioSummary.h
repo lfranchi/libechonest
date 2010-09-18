@@ -60,6 +60,12 @@ namespace Echonest{
         void setTempo( qreal tempo );
         
         /**
+         * The track's mode.
+         */
+        int mode() const;
+        void setMode( int mode );
+        
+        /**
          * The track's time signature, or -1 if it there is one, or 1 if it is 
          *   too complex.
          */
@@ -69,8 +75,8 @@ namespace Echonest{
         /**
          * The duration of the song, in msecs.
          */
-        qint64 duration() const;
-        void setDuration( qint64 duration );
+        qreal duration() const;
+        void setDuration( qreal duration );
         
         /**
          * The loudness of the song, in dB.
@@ -87,7 +93,7 @@ namespace Echonest{
         
         /**
          * Parses the result of a fetchFullAnalysis() call. This contains
-         *  information su ch as mode, fadein/fadeout, confidence metrics, 
+         *  information such as mode, fadein/fadeout, confidence metrics, 
          *  and the division of the song into bars, beats, sections, and segments.
          */
         void parseFullAnalysis( QNetworkReply* reply );
@@ -207,6 +213,8 @@ namespace Echonest{
          */
         SegmentList segments() const;
         void setSegments( const SegmentList& segments );
+        
+        void setAnalysisUrl( const QString& analysisUrl );
         
     private:        
         QSharedDataPointer<AudioSummaryData> d;

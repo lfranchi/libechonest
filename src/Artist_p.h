@@ -31,8 +31,11 @@ public:
         name = other.name;
     }
     
+    // The following exist in all valid Artist objects
     QString id;
     QString name;
+    
+    //The following are populated on demand, and may not exist
 };
 
 #endif

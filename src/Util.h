@@ -28,13 +28,14 @@ namespace Echonest
 {
     namespace Analysis
     {    
-    enum AnalysisStatus {
-        Unknown = 0,
-        Pending = 1,
-        Complete = 2,
-        Error = 4
-    };
+        enum AnalysisStatus {
+            Unknown = 0,
+            Pending = 1,
+            Complete = 2,
+            Error = 4
+        };
     }
+    
     typedef struct
     {
         qreal confidence;

@@ -16,6 +16,8 @@
 
 #include "Parsing_p.h"
 
+#include "Util.h"
+
 #include <QNetworkReply>
 
 void Echonest::Parser::checkForErrors( QNetworkReply* reply ) throw( Echonest::ParseError )
@@ -86,11 +88,11 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
     Echonest::Song song;   
     while( !( xml.name() == "song" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
         if( xml.name() == "id" && xml.tokenType() == QXmlStreamReader::StartElement )
-            song.setId( xml.readElementText() );
+            song.setId( xml.readElementText().toLatin1() );
         else if( xml.name() == "title" && xml.tokenType() == QXmlStreamReader::StartElement )
             song.setTitle( xml.readElementText() );
         else if( xml.name() == "artist_id" && xml.tokenType() == QXmlStreamReader::StartElement )
-            song.setArtistId( xml.readElementText() );
+            song.setArtistId( xml.readElementText().toLatin1() );
         else if( xml.name() == "artist_name" && xml.tokenType() == QXmlStreamReader::StartElement )
             song.setArtistName( xml.readElementText() );
         else if( xml.name() == "song_hotttnesss" && xml.tokenType() == QXmlStreamReader::StartElement )
@@ -118,5 +120,71 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
 
 Echonest::Track Echonest::Parser::parseTrack( QXmlStreamReader& xml ) throw( Echonest::ParseError )
 {
-    return Echonest::Track();
+    if( xml.name() != "track" ) {
+        throw new ParseError( Echonest::UnknownParseError );
+    }
+    
+    Echonest::Track track;
+    while( !( xml.name() == "track" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
+        if( xml.name() == "id" && xml.tokenType() == QXmlStreamReader::StartElement )
+            track.setId( xml.readElementText().toLatin1() );
+        else if( xml.name() == "title" && xml.tokenType() == QXmlStreamReader::StartElement )
+            track.setTitle( xml.readElementText() );
+        else if( xml.name() == "artist" && xml.tokenType() == QXmlStreamReader::StartElement )
+            track.setArtist( xml.readElementText() );
+        else if( xml.name() == "status" && xml.tokenType() == QXmlStreamReader::StartElement )
+            track.setStatus( Echonest::statusToEnum( xml.readElementText() ) );
+        else if( xml.name() == "analyzer_version" && xml.tokenType() == QXmlStreamReader::StartElement )
+            track.setAnalyzerVersion( xml.readElementText() );
+        else if( xml.name() == "release" && xml.tokenType() == QXmlStreamReader::StartElement )
+            track.setRelease( xml.readElementText() );
+        else if( xml.name() == "audio_md5" && xml.tokenType() == QXmlStreamReader::StartElement )
+            track.setAudioMD5( xml.readElementText().toLatin1() );
+        else if( xml.name() == "bitrate" && xml.tokenType() == QXmlStreamReader::StartElement )
+            track.setBitrate( xml.readElementText().toInt() );
+        else if( xml.name() == "samplerate" && xml.tokenType() == QXmlStreamReader::StartElement )
+            track.setSamplerate( xml.readElementText().toInt() );
+        else if( xml.name() == "md5" && xml.tokenType() == QXmlStreamReader::StartElement )
+            track.setMD5( xml.readElementText().toLatin1() );
+        else if( xml.name() == "audio_summary" && xml.tokenType() == QXmlStreamReader::StartElement ) {
+            track.setAudioSummary( parseAudioSummary( xml ) );
+            continue;
+        }
+        xml.readNext();
+    }
+    xml.readNext(); // skip past the last
+    
+    return track;
 }
+
+
+Echonest::AudioSummary Echonest::Parser::parseAudioSummary( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    if( xml.name() != "audio_summary" ) {
+        throw new ParseError( Echonest::UnknownParseError );
+    }
+    
+    Echonest::AudioSummary summary;
+    while( !( xml.name() == "audio_summary" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
+        if( xml.name() == "key" && xml.tokenType() == QXmlStreamReader::StartElement )
+            summary.setKey( xml.readElementText().toInt() );
+        else if( xml.name() == "analysis_url" && xml.tokenType() == QXmlStreamReader::StartElement )
+            summary.setAnalysisUrl( xml.readElementText() );
+        else if( xml.name() == "tempo" && xml.tokenType() == QXmlStreamReader::StartElement )
+            summary.setTempo( xml.readElementText().toDouble() );
+        else if( xml.name() == "mode" && xml.tokenType() == QXmlStreamReader::StartElement )
+            summary.setMode( xml.readElementText().toInt() );
+        else if( xml.name() == "time_signature" && xml.tokenType() == QXmlStreamReader::StartElement )
+            summary.setTimeSignature( xml.readElementText().toInt() );
+        else if( xml.name() == "duration" && xml.tokenType() == QXmlStreamReader::StartElement )
+            summary.setDuration( xml.readElementText().toDouble() );
+        else if( xml.name() == "loudness" && xml.tokenType() == QXmlStreamReader::StartElement )
+            summary.setLoudness( xml.readElementText().toDouble() );
+        
+        xml.readNext();
+    }
+    xml.readNext(); // skip past the lasts
+    
+    return summary;
+}
+

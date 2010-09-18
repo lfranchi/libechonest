@@ -64,22 +64,22 @@ void Echonest::Track::setTitle(const QString& title)
     d->title = title;
 }
 
-QString Echonest::Track::id() const
+QByteArray Echonest::Track::id() const
 {
     return d->id;
 }
 
-void Echonest::Track::setId(const QString& id)
+void Echonest::Track::setId(const QByteArray& id)
 {
     d->id = id;
 }
 
-QString Echonest::Track::md5() const
+QByteArray Echonest::Track::md5() const
 {
     return d->md5;
 }
 
-void Echonest::Track::setMD5(const QString& md5)
+void Echonest::Track::setMD5(const QByteArray& md5)
 {
     d->md5 = md5;
 }
@@ -125,12 +125,12 @@ void Echonest::Track::setSamplerate(int samplerate)
     d->samplerate = samplerate;
 }
 
-QString Echonest::Track::audioMD5() const
+QByteArray Echonest::Track::audioMD5() const
 {
     return d->audio_md5;
 }
 
-void Echonest::Track::setAudioMD5(const QString& md5)
+void Echonest::Track::setAudioMD5(const QByteArray& md5)
 {
     d->audio_md5 = md5;
 }
@@ -180,13 +180,14 @@ QNetworkReply* Echonest::Track::uploadLocalFile( const QUrl& localFile, const QB
 {
     QUrl url = Echonest::baseGetQuery( "track", "upload" );
     QFileInfo info( localFile.path() );
-    url.addEncodedQueryItem( "filetype", info.suffix().toUtf8() );
-    url.addEncodedQueryItem( "url", localFile.path().toUtf8() );
+    url.addQueryItem( QLatin1String( "filetype" ), info.suffix() );
     url.addEncodedQueryItem( "bucket", "audio_summary" );
     url.addEncodedQueryItem( "wait", ( waitForResult ? "true" : "false" ) );
+    QNetworkRequest request( url );
     
-    qDebug() << "Uploading local file to" << url;
-    return Echonest::Config::instance()->nam()->post( QNetworkRequest( url ), data );
+    request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "application/octet-stream" ) );
+//     qDebug() << "Uploading local file to" << url;
+    return Echonest::Config::instance()->nam()->post( request, data );
 }
 
 QNetworkReply* Echonest::Track::uploadURL( const QUrl& remoteURL, bool waitForResult )
@@ -226,7 +227,9 @@ Echonest::Track Echonest::Track::parseProfile( QNetworkReply* finishedReply ) th
 {
     Echonest::Parser::checkForErrors( finishedReply );
     
-    QXmlStreamReader xml( finishedReply->readAll() );
+    QByteArray data = finishedReply->readAll();
+    qDebug() << data;
+    QXmlStreamReader xml( data );
     
     Echonest::Parser::readStatus( xml );
     Echonest::Track track = Echonest::Parser::parseTrack( xml );

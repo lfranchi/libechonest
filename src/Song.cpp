@@ -30,7 +30,7 @@ Echonest::Song::Song()
     : d( new SongData )
 {}
 
-Echonest::Song::Song(const QString& id, const QString& title, const QString& artistId, const QString& artistName)
+Echonest::Song::Song(const QByteArray& id, const QString& title, const QByteArray& artistId, const QString& artistName)
     :d( new SongData )
 {
     d->id = id;
@@ -59,12 +59,12 @@ Echonest::Song& Echonest::Song::operator=(const Echonest::Song& song)
 
 
 
-QString Echonest::Song::id() const
+QByteArray Echonest::Song::id() const
 {
     return d->id;
 }
 
-void Echonest::Song::setId(const QString& id)
+void Echonest::Song::setId(const QByteArray& id)
 {
     d->id = id;
 }
@@ -80,12 +80,12 @@ void Echonest::Song::setTitle(const QString& title)
     d->title = title;
 }
 
-QString Echonest::Song::artistId() const
+QByteArray Echonest::Song::artistId() const
 {
     return d->artistId;
 }
 
-void Echonest::Song::setArtistId(const QString& artistId)
+void Echonest::Song::setArtistId(const QByteArray& artistId)
 {
     d->artistId = artistId;
 }
@@ -153,7 +153,7 @@ void Echonest::Song::setArtistLocation(const QString& artistLocation)
 QNetworkReply* Echonest::Song::fetchInformation( Echonest::Song::SongInformation parts ) const
 {
     QUrl url = Echonest::baseGetQuery( "song", "profile" );
-    url.addEncodedQueryItem( "id", d->id.toUtf8() );
+    url.addEncodedQueryItem( "id", d->id );
     addQueryInformation( url, parts );
     
     qDebug() << "Creating fetchInformation URL" << url;
@@ -287,7 +287,7 @@ void Echonest::Song::addQueryInformation(QUrl& url, Echonest::Song::SongInformat
 
 QString Echonest::Song::toString() const
 {
-    return QString::fromLatin1( "Song(%1, %2, %3, %4)" ).arg( title() ).arg( artistName() ).arg( id() ).arg( artistId() );
+    return QString::fromLatin1( "Song(%1, %2, %3, %4)" ).arg( title() ).arg( artistName() ).arg( QString::fromLatin1( id() ) ).arg( QString::fromLatin1( artistId() ) );
 }
 
 

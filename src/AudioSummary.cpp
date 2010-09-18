@@ -17,6 +17,8 @@
 #include "AudioSummary.h"
 
 #include "AudioSummary_p.h"
+#include <QNetworkReply>
+#include "Config.h"
 
 Echonest::AudioSummary::AudioSummary()
     : d( new AudioSummaryData )
@@ -105,12 +107,12 @@ void Echonest::AudioSummary::setDetailedStatus(Echonest::Analysis::AnalysisStatu
     d->detailed_status = Echonest::statusToString( status );
 }
 
-qint64 Echonest::AudioSummary::duration() const
+qreal Echonest::AudioSummary::duration() const
 {
     return d->duration;
 }
 
-void Echonest::AudioSummary::setDuration(qint64 duration)
+void Echonest::AudioSummary::setDuration(qreal duration)
 {
     d->duration = duration;
 }
@@ -128,7 +130,7 @@ void Echonest::AudioSummary::setEndOfFadeIn(qreal time)
 
 QNetworkReply* Echonest::AudioSummary::fetchFullAnalysis() const
 {
-
+    return Echonest::Config::instance()->nam()->get( QNetworkRequest( QUrl( d->analysis_url ) ) );
 }
 
 int Echonest::AudioSummary::key() const
@@ -183,7 +185,7 @@ void Echonest::AudioSummary::setNumSamples(qint64 num)
 
 void Echonest::AudioSummary::parseFullAnalysis(QNetworkReply* reply)
 {
-
+    
 }
 
 QString Echonest::AudioSummary::sampleMD5() const
@@ -294,4 +296,19 @@ void Echonest::AudioSummary::setTimestamp(qreal timestamp)
 qreal Echonest::AudioSummary::timestamp() const
 {
     return d->timestamp;
+}
+
+int Echonest::AudioSummary::mode() const
+{
+    return d->mode;
+}
+
+void Echonest::AudioSummary::setAnalysisUrl(const QString& analysisUrl)
+{
+    d->analysis_url = analysisUrl;
+}
+
+void Echonest::AudioSummary::setMode(int mode)
+{
+    d->mode = mode;
 }

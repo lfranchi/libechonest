@@ -69,14 +69,14 @@ public:
   /**
    * The Echo Nest artist ID for this track.
    */
-  QString id() const;
-  void setId( const QString& id );
+  QByteArray id() const;
+  void setId( const QByteArray& id );
   
   /**
    * The MD5 hash of the track.
    */
-  QString md5() const;
-  void setMD5( const QString& md5 );
+  QByteArray md5() const;
+  void setMD5( const QByteArray& md5 );
   
   /**
    * The album name of this track.
@@ -87,8 +87,8 @@ public:
   /**
    * The MD5 hashsum of the audio data.
    */
-  QString audioMD5() const;
-  void setAudioMD5( const QString& md5 );
+  QByteArray audioMD5() const;
+  void setAudioMD5( const QByteArray& md5 );
   
   /**
    * The analyzer version that was used in this track's analysis.

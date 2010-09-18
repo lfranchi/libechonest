@@ -46,6 +46,9 @@ namespace Parser
     
     // parses a <track></track> block
     Track parseTrack( QXmlStreamReader& xml ) throw( ParseError );
+    
+    // parses an <audio_summary> chunk
+    AudioSummary parseAudioSummary( QXmlStreamReader& xml ) throw( ParseError );
 }
 }
 

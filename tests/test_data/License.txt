@@ -1,0 +1,13 @@
+
+Track      |   License URL
+----------------------------------------------
+ 01        |   http://artlibre.org/licence.php/lal.html
+ 02        |   http://artlibre.org/licence.php/lal.html
+ 03        |   http://artlibre.org/licence.php/lal.html
+ 04        |   http://artlibre.org/licence.php/lal.html
+ 05        |   http://artlibre.org/licence.php/lal.html
+ 06        |   http://artlibre.org/licence.php/lal.html
+ 07        |   http://artlibre.org/licence.php/lal.html
+ 08        |   http://artlibre.org/licence.php/lal.html
+ 09        |   http://artlibre.org/licence.php/lal.html
+ artwork   |   http://artlibre.org/licence.php/lal.html

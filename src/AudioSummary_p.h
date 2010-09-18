@@ -67,7 +67,7 @@ public:
     qreal tempo;
     int mode;
     int time_signature;
-    qint64 duration;
+    qreal duration;
     qreal loudness;
     int samplerate;
     
