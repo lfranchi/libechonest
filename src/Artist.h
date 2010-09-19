@@ -22,6 +22,7 @@
 
 #include <QDebug>
 #include <QSharedData>
+#include <QUrl>
 
 class QNetworkReply;
 class ArtistData;
@@ -30,11 +31,72 @@ namespace Echonest{
     /**
      * This encapsulates an Echo Nest artist---it always holds the basic info of artist id and
      *  artist name, and can be queried for more data.
+     * 
+     * It is also possible to fetch more information from a given artist name or ID by creating an Artist
+     *  object yourself and calling the fetch() functions directly.
      */
     class ECHONEST_EXPORT Artist
     {
         
     public:
+        enum ArtistInformationFlag {
+            NoInformation = 0x0000,
+            Audio = 0x0001,
+            Biographies = 0x0002,
+            Blogs = 0x0004,
+            Familiarity = 0x0008,
+            Hotttnesss = 0x0010,
+            Images = 0x0020,
+            News = 0x0040,
+            Reviews = 0x0080,
+            Terms = 0x0100,
+            Urls = 0x200,
+            Videos = 0x0400,
+            MusicBrainzEntries = 0x0800,
+            SevenDigitalEntries = 0x1000,
+            PlaymeEntries = 0x2000
+        };
+        Q_DECLARE_FLAGS( ArtistInformation, ArtistInformationFlag )
+        
+        enum TermSorting {
+            Weight,
+            Frequency
+        } ;
+        
+        /**
+         *  The following are the various search parameters to the search() and similar() functions.
+         * 
+         *  Not all are acceptable for each API call, check the API documentation at 
+         *   http://developer.echonest.com/docs/v4/artist.html#search for details.
+         * 
+         *  - id                     QVector< QByteArray >             A list of the artist IDs to be searched  (e.g. [ARH6W4X1187B99274F, musicbrainz:artist:a74b1b7f-71a5-4011-9441-d0b5e4122711 ,ARH6W4X1187B99274F^2])
+         *  - name                   QVector< QString >                A list of artist names to be searched (e.g. [Weezer, the beatles ,the beatles^0.5])
+         *  - description            QVector< QString >                A list of descriptors [ alt-rock,-emo,harp^2 ]
+         *  - results                0 < results < 200, (Default=15)   The number of results desired
+         *  - min_results            0 < results < 200, (Default=0)    Indicates the minimum number of results to be returned regardless of constraints
+         *  - max_familiarity        0.0 < familiarity < 1.0           The maximum familiarity for returned artists
+         *  - min_familiarity        0.0 < familiarity < 1.0           The minimum familiarity for returned artists
+         *  - max_hotttnesss         0.0 < hotttnesss < 1.0            The maximum hotttnesss for returned artists
+         *  - min_hotttness          0.0 < hotttnesss < 1.0            The minimum hotttnesss for returned artists
+         *  - reverse                [true, false]                     If true, return artists that are disimilar to the seeds
+         *   -sort                   QString                           How to sort the results. Options: familiarity-asc, hotttnesss-asc, familiarity-desc, hotttnesss-desc.
+         */
+        enum SearchParam {
+            Id,
+            Name,
+            Results,
+            Description,
+            FuzzyMatch,
+            MaxFamiliarity,
+            MinFamiliarity,
+            MaxHotttnesss,
+            MinHotttnesss,
+            Reverse,
+            Sort
+        };
+        typedef QPair< Echonest::Artist::SearchParam, QVariant > SearchParamData;
+        typedef QVector< SearchParamData > SearchParams;
+        
         Artist();
         Artist( const QByteArray& id, const QString& name );
         Artist( const Artist& other );
@@ -50,28 +112,136 @@ namespace Echonest{
          * The following require fetching from The Echo Nest, so return a QNetworkReply*
          *  that is ready for parsing when the finished() signal is emitted.
          * 
+         * Call parseProfile() on the Artist object to populate it with the result of the
+         *  query.
+         * 
          */
-        QNetworkReply* fetchAudio() const;
-        QNetworkReply* fetchBiographies() const;
-        QNetworkReply* fetchBlogs() const;
-        QNetworkReply* fetchFamiliarity() const;
-        QNetworkReply* fetchHotttnesss() const;
-        QNetworkReply* fetchImages() const;
-        QNetworkReply* fetchNews() const;
-        QNetworkReply* fetchProfile() const;
-        QNetworkReply* fetchSongs() const;
-        QNetworkReply* fetchSimilar() const;
-        QNetworkReply* fetchTerms() const;
-        QNetworkReply* fetchUrls() const;
-        QNetworkReply* fetchVideo() const;
         
+        /**
+         * Fetch a list of audio documents found on the web that are related to this artist.
+         * 
+         * @param numResults Limit how many results are returned
+         * @param offset The offset of the results, if paging through results in increments.
+         */
+        QNetworkReply* fetchAudio( int numResults = 0, int offset = -1 ) const;
+        
+        /**
+         * Fetch a list of biographies for this artist from various places on the web.
+         */
+        QNetworkReply* fetchBiographies( int numResults = 0, int offset = -1, const QString& license = QString() ) const;
+        
+        /**
+         * Fetch a list of blog articles relating to this artist.
+         */
+        QNetworkReply* fetchBlogs( int numResults = 0, int offset = -1, bool highRelevanceOnly = false ) const;
+        
+        /**
+         * Fetch The Echo Nest's numerical estimate of how familiar this artist is to the world.
+         */
+        QNetworkReply* fetchFamiliarity() const;
+        
+        /**
+         * Fetch the numerical description of how hot this artist is.
+         * 
+         * Currently the only supported type is 'normal'
+         */
+        QNetworkReply* fetchHotttnesss( const QString& type = QLatin1String( "normal" ) ) const;
+        
+        /**
+         * Fetch a list of images related to this artist.
+         */
+        QNetworkReply* fetchImages( int numResults = 0, int offset = -1, const QString& license = QString() ) const;
+        
+        /**
+         * Fetch a list of news articles found on the web related to this artist.
+         */
+        QNetworkReply* fetchNews( int numResults = 0, int offset = -1, bool highRelevanceOnly = false ) const;
+        
+        /**
+         * Fetch any number of pieces of artist information all at once.
+         */
+        QNetworkReply* fetchProfile( ArtistInformation information ) const;
+        
+        /**
+         * Fetch reviews related to the artist.
+         */
+        QNetworkReply* fetchReviews( int numResults = 0, int offset = -1 ) const;
+        
+        /**
+         * Fetch a list of songs created by this artist.
+         * 
+         * The idspace can be used to specify what idspace to return the results in, if none is specifed, The Echo Nest song identifiers
+         *   are used. If limitToIdSpace is true, then only results in the requested idspace are returned.
+         */
+        QNetworkReply* fetchSongs( ArtistInformation idspace = NoInformation, bool limitToIdSpace = false ) const;
+        
+        /**
+         * Fetch a list of the most descriptive terms for this artist.
+         */
+        QNetworkReply* fetchTerms( TermSorting sorting = Frequency ) const;
+        
+        /**
+         * Fetch links to the artist's official site, MusicBrainz site, MySpace site, Wikipedia article, Amazon list, and iTunes page.
+         */
+        QNetworkReply* fetchUrls() const;
+        
+        /**
+         * Fetch a list of video documents found on the web related to an artist.
+         */
+        QNetworkReply* fetchVideo( int numResults = 0, int offset = -1 ) const;
+        
+        /**
+         * Fetch a list of similar artists given one or more artists for comparison.
+         * 
+         * Up to five artist names or ids can be included for the similarity search.
+         * 
+         * 
+         * So they are passed as a list of [paramname, paramvalue] to be included in the query.
+         * 
+         * Boosting: This method can take multiple seed artists. You an give a seed artist more or less weight by boosting the artist. A boost is an 
+         *  affinity for a seed that gives it more or less weight when making calculations based on the argument. In case seeds are not meant to be equally 
+         *  valued, the boost can help clarify where along a spectrum each argument falls. The boost is a positive floating point value, where 1 gives the normal 
+         *  weight. It is signified by appending a caret and weight to the argument.
+         * 
+         * See http://developer.echonest.com/docs/v4/artist.html#similar for boosting examples.
+         */        
+        static QNetworkReply* fetchSimilar( const SearchParams& params, int numResults = 0, int offset = -1, ArtistInformation information = NoInformation );
+        
+        /**
+         * Search for artists.
+         * 
+         * Warning: If limit is set to true, at least one idspace must also be provided.
+         * 
+         * One of name or description is required, but only one can be used in a query at one time
+         * 
+         */
+        static QNetworkReply* search( const SearchParams& params, ArtistInformation information = NoInformation, bool limit = false );
+        
+        /**
+         * Fetch a list of the current top artists in terms of hotttnesss.
+         * 
+         * Warning If limit is set to true, at least one idspace must also be provided in the bucket parameter.
+         * 
+         */
+        static QNetworkReply* topHottt( ArtistInformation information = NoInformation, int numResults = 0, int offset = -1, bool limit = false );
+        
+        /**
+         * Fetch a list of the top overall terms.
+         */
+        static QNetworkReply* topTerms( int numResults = 15 );
         
     private:
+        QUrl setupQuery( const QByteArray& methodName, int numResults = 0, int start = -1 ) const;
+        
+        static QByteArray searchParamToString( SearchParam param );
+        static void addQueryInformation( QUrl& url, ArtistInformation parts );
+        
         QSharedDataPointer<ArtistData> d;
     };
     
     QDebug operator<<(QDebug d, const Echonest::Artist& artist);
     
+    Q_DECLARE_OPERATORS_FOR_FLAGS(Artist::ArtistInformation)
     
 } // namespace
 #endif

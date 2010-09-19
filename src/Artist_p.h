@@ -24,6 +24,10 @@
 #include <QString>
 #include <QVector>
 
+namespace Echonest {
+    class Artist;
+}
+
 class ArtistData : public QSharedData
 {
 public:
