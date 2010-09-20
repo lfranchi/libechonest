@@ -38,6 +38,11 @@ Echonest::Artist& Echonest::Artist::operator=(const Echonest::Artist& artist)
     d = artist.d;
 }
 
+Echonest::Artist::~Artist()
+{
+
+}
+
 
 QByteArray Echonest::Artist::id() const
 {
@@ -65,10 +70,11 @@ QNetworkReply* Echonest::Artist::fetchAudio(int numResults, int offset) const
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
-QNetworkReply* Echonest::Artist::fetchBiographies(int numResults, int offset, const QString& license) const
+QNetworkReply* Echonest::Artist::fetchBiographies(const QString& license, int numResults, int offset) const
 {
     QUrl url = setupQuery( "biogaphies", numResults, offset );
-    url.addQueryItem( QLatin1String( "license" ), license );
+    if( !license.isEmpty() )
+        url.addQueryItem( QLatin1String( "license" ), license );
     
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }

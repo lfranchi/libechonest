@@ -101,6 +101,7 @@ namespace Echonest{
         Artist( const QByteArray& id, const QString& name );
         Artist( const Artist& other );
         Artist& operator=( const Artist& artist );
+        ~Artist();
         
         QByteArray id() const;
         void setId( const QByteArray& id );
@@ -128,7 +129,7 @@ namespace Echonest{
         /**
          * Fetch a list of biographies for this artist from various places on the web.
          */
-        QNetworkReply* fetchBiographies( int numResults = 0, int offset = -1, const QString& license = QString() ) const;
+        QNetworkReply* fetchBiographies( const QString& license = QString(), int numResults = 0, int offset = -1 ) const;
         
         /**
          * Fetch a list of blog articles relating to this artist.

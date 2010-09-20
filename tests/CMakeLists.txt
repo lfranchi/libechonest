@@ -16,5 +16,6 @@ macro(add_echonest_test _source)
     add_test(${_name}-test ${EXECUTABLE_OUTPUT_PATH}/${_name})
 endmacro(add_echonest_test)
 
+add_echonest_test( ArtistTest.cpp )
 add_echonest_test( SongTest.cpp )
 add_echonest_test( TrackTest.cpp )
