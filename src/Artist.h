@@ -94,8 +94,8 @@ namespace Echonest{
             Reverse,
             Sort
         };
-        typedef QPair< Echonest::Artist::SearchParam, QVariant > SearchParamData;
-        typedef QVector< SearchParamData > SearchParams;
+        typedef QPair< Echonest::Artist::SearchParam, QVariant > SearchParamEntry;
+        typedef QVector< SearchParamEntry > SearchParams;
         
         Artist();
         Artist( const QByteArray& id, const QString& name );
@@ -134,7 +134,7 @@ namespace Echonest{
         /**
          * Fetch a list of blog articles relating to this artist.
          */
-        QNetworkReply* fetchBlogs( int numResults = 0, int offset = -1, bool highRelevanceOnly = false ) const;
+        QNetworkReply* fetchBlogs(  bool highRelevanceOnly = false, int numResults = 0, int offset = -1 ) const;
         
         /**
          * Fetch The Echo Nest's numerical estimate of how familiar this artist is to the world.
@@ -151,12 +151,12 @@ namespace Echonest{
         /**
          * Fetch a list of images related to this artist.
          */
-        QNetworkReply* fetchImages( int numResults = 0, int offset = -1, const QString& license = QString() ) const;
+        QNetworkReply* fetchImages( const QString& license = QString(), int numResults = 0, int offset = -1 ) const;
         
         /**
          * Fetch a list of news articles found on the web related to this artist.
          */
-        QNetworkReply* fetchNews( int numResults = 0, int offset = -1, bool highRelevanceOnly = false ) const;
+        QNetworkReply* fetchNews( bool highRelevanceOnly = false, int numResults = 0, int offset = -1 ) const;
         
         /**
          * Fetch any number of pieces of artist information all at once.
