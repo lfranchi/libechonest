@@ -206,7 +206,7 @@ namespace Echonest{
          * 
          * See http://developer.echonest.com/docs/v4/artist.html#similar for boosting examples.
          */        
-        static QNetworkReply* fetchSimilar( const SearchParams& params, int numResults = 0, int offset = -1, ArtistInformation information = NoInformation );
+        static QNetworkReply* fetchSimilar( const SearchParams& params, ArtistInformation information = NoInformation,  int numResults = 0, int offset = -1 );
         
         /**
          * Search for artists.

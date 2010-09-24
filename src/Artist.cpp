@@ -137,7 +137,7 @@ QNetworkReply* Echonest::Artist::fetchReviews(int numResults, int offset) const
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
-QNetworkReply* Echonest::Artist::fetchSimilar(const Echonest::Artist::SearchParams& params, int numResults, int offset, Echonest::Artist::ArtistInformation information)
+QNetworkReply* Echonest::Artist::fetchSimilar(const Echonest::Artist::SearchParams& params, Echonest::Artist::ArtistInformation information, int numResults, int offset )
 {
     QUrl url = Echonest::baseGetQuery( "artist", "similar" );
     addQueryInformation( url, information );
@@ -149,7 +149,7 @@ QNetworkReply* Echonest::Artist::fetchSimilar(const Echonest::Artist::SearchPara
         
     Echonest::Artist::SearchParams::const_iterator iter = params.constBegin();
     for( ; iter < params.constEnd(); ++iter )
-        url.addQueryItem( QLatin1String( searchParamToString( iter->first ) ), iter->second.toString() );
+        url.addQueryItem( QLatin1String( searchParamToString( iter->first ) ), iter->second.toString().replace( QLatin1Char( ' ' ), QLatin1Char( '+' ) ) );
     
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -158,7 +158,8 @@ QNetworkReply* Echonest::Artist::fetchSongs( Echonest::Artist::ArtistInformation
 {
     QUrl url = setupQuery( "songs", 0, -1 );
     addQueryInformation( url, idspace );
-    url.addEncodedQueryItem( "limit", limitToIdSpace ? "true" : "false" );
+    if( limitToIdSpace )
+        url.addEncodedQueryItem( "limit", "true" );
     
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -184,7 +185,7 @@ QNetworkReply* Echonest::Artist::fetchUrls() const
 
 QNetworkReply* Echonest::Artist::fetchVideo(int numResults, int offset) const
 {
-    QUrl url = setupQuery( "urls", numResults, offset );
+    QUrl url = setupQuery( "video", numResults, offset );
     
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }

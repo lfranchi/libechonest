@@ -183,37 +183,86 @@ void ArtistTest::testSearchUrl()
 
 void ArtistTest::testSimilarUrl()
 {
+    Artist::SearchParams params;
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "The Beatles" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Rilo Kiley" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Queen" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::MinHotttnesss, 0.5 ) );
+    
+    QNetworkReply* reply = Artist::fetchSimilar( params, Artist::Hotttnesss | Artist::Familiarity | Artist::Audio );
+    
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/similar?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=audio&bucket=familiarity&bucket=hotttnesss&name=The+Beatles&name=Rilo+Kiley&name=Queen&min_hotttnesss=0.5" ) );
 
+    params.clear();
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Devo" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "The New Pornographers" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Lady Gaga" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::MinFamiliarity, 0.5 ) );
+    
+    reply = Artist::fetchSimilar( params, Artist::Biographies | Artist::News | Artist::Audio, 10 );
+    
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/similar?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=audio&bucket=biographies&bucket=news&results=10&name=Devo&name=The+New+Pornographers&name=Lady+Gaga&min_familiarity=0.5" ) );
 }
+
 
 void ArtistTest::testSongsUrl()
 {
-
+    Artist testArtist;
+    testArtist.setId( "DummyDudeID" );
+    
+    QNetworkReply* reply = testArtist.fetchSongs();
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/songs?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID" ) );
 }
 
 void ArtistTest::testTopHotttUrl()
 {
-
+    QNetworkReply* reply = Artist::topHottt( Artist::Hotttnesss );
+    
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/top_hottt?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=hotttnesss&limit=false" ) );
 }
 
 void ArtistTest::testTermsUrl()
 {
-
+    Artist testArtist;
+    testArtist.setId( "DummyDudeID" );
+    
+    QNetworkReply* reply = testArtist.fetchTerms();
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/terms?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID&sorting=frequency" ) );
+    
+    reply = testArtist.fetchTerms( Echonest::Artist::Weight );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/terms?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID&sorting=weight" ) );
 }
 
 void ArtistTest::testTopTermsUrl()
 {
-
+    
+    QNetworkReply* reply = Artist::topTerms( 5 );
+    
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/top_terms?api_key=JGJCRKWLXLBZIFAZB&format=xml&results=5" ) );
 }
 
 void ArtistTest::testUrlsUrl()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "Goo Goo Dolls" ) );
+    
+    QNetworkReply* reply = testArtist.fetchUrls();
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/urls?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=Goo+Goo+Dolls" ) );
 }
 
 void ArtistTest::testVideosUrl()
 {
-
+    Artist testArtist;
+    testArtist.setId( "DummyDudeID" );
+    
+    QNetworkReply* reply = testArtist.fetchVideo();
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/video?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID" ) );
+    
+    testArtist.setId( QByteArray() );
+    testArtist.setName( QLatin1String( "OHAI ARTIST" ) );
+    reply = testArtist.fetchVideo( 10, 5 );
+    
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/video?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=OHAI+ARTIST&results=10&start=5" ) );
 }
 
 QTEST_MAIN(ArtistTest)
