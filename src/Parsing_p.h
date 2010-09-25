@@ -21,6 +21,7 @@
 
 #include <QXmlStreamReader>
 #include "Song.h"
+#include "Artist.h"
 
 class QNetworkReply;
 
@@ -49,6 +50,27 @@ namespace Parser
     
     // parses an <audio_summary> chunk
     AudioSummary parseAudioSummary( QXmlStreamReader& xml ) throw( ParseError );
+    
+    // parses the contents of an artist fetch result, expects to be positioned after the readStatus() call
+    // it could be a profile query, in which case it has a bunch of different artist attributes
+    // or it could be a single fetch, in which case it starts with result number and offset.
+    // the results are saved back into the artist
+    int parseArtistInfoOrProfile( QXmlStreamReader&, Echonest::Artist& artist ) throw( ParseError );
+    
+    // parse the individual artist attributes
+    void parseArtistInfo( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
+    
+    // parse each type of artist attribute
+    void parseBiographies( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
+    void parseImages( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
+    void parseNews( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
+    void parseReviews( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
+    void parseTerms( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
+    void parseUrls( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
+    void parseVideos( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
+    void parseForeignIds( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
+    
+    License parseLicense( QXmlStreamReader& xml ) throw( ParseError );
 }
 }
 

@@ -365,5 +365,14 @@ namespace Echonest{
     QDebug operator<<(QDebug d, const Echonest::Term& term);
     QDebug operator<<(QDebug d, const Echonest::Video& video);
     
+    typedef QVector< AudioFile > AudioList;
+    typedef QVector< Biography > BiographyList;
+    typedef QVector< Blog > BlogList;
+    typedef QVector< ArtistImage > ArtistImageList;
+    typedef QVector< NewsArticle > NewsList;
+    typedef QVector< Review > ReviewList;
+    typedef QVector< Term > TermList;
+    typedef QVector< Video > VideoList;
+   
 } // namespace
 #endif

@@ -16,6 +16,8 @@
 
 #include "Artist.h"
 #include "Artist_p.h"
+#include "ArtistTypes.h"
+#include "Parsing_p.h"
 
 Echonest::Artist::Artist()
     : d( new ArtistData )
@@ -63,6 +65,169 @@ void Echonest::Artist::setName(const QString& name)
 {
     d->name = name;
 }
+
+Echonest::AudioList Echonest::Artist::audio() const
+{
+    return d->audio;
+}
+
+void Echonest::Artist::setAudio(const Echonest::AudioList& audio)
+{
+    d->audio = audio;
+}
+
+
+Echonest::BiographyList Echonest::Artist::biographies() const
+{
+    return d->biographies;
+}
+
+void Echonest::Artist::setBiographies(const Echonest::BiographyList& bios )
+{
+    d->biographies = bios;
+}
+
+Echonest::BlogList Echonest::Artist::blogs() const
+{
+    return d->blogs;
+}
+
+void Echonest::Artist::setBlogs(const Echonest::BlogList& blogs )
+{
+    d->blogs = blogs;
+}
+
+qreal Echonest::Artist::familiarity() const
+{
+    return d->familiarity;
+}
+
+void Echonest::Artist::setFamiliarity(qreal familiar)
+{
+    d->familiarity = familiar;
+}
+
+qreal Echonest::Artist::hotttnesss() const
+{
+    return d->hotttnesss;
+}
+
+void Echonest::Artist::setHotttnesss(qreal hotttnesss)
+{
+    d->hotttnesss = hotttnesss;
+}
+
+Echonest::ArtistImageList Echonest::Artist::images() const
+{
+    return d->images;
+}
+
+void Echonest::Artist::setImages(const Echonest::ArtistImageList& imgs)
+{
+    d->images = imgs;
+}
+
+Echonest::NewsList Echonest::Artist::news() const
+{
+    return d->news;
+}
+
+void Echonest::Artist::setNews(const Echonest::NewsList& news)
+{
+    d->news = news;
+}
+
+Echonest::ReviewList Echonest::Artist::reviews() const
+{
+    return d->reviews;
+}
+
+void Echonest::Artist::setReviews(const Echonest::ReviewList& reviews)
+{
+    d->reviews = reviews;
+}
+
+Echonest::SongList Echonest::Artist::songs() const
+{
+    return d->songs;
+}
+
+void Echonest::Artist::setSongs(const Echonest::SongList& songs)
+{
+    d->songs = songs;
+}
+
+Echonest::TermList Echonest::Artist::terms() const
+{
+    return d->terms;
+}
+
+void Echonest::Artist::setTerms(const Echonest::TermList& terms)
+{
+    d->terms = terms;
+}
+
+QUrl Echonest::Artist::amazonUrl() const
+{
+    return d->amazon_url;
+}
+
+void Echonest::Artist::setVideos(const Echonest::VideoList& videos)
+{
+    d->videos = videos;
+}
+
+void Echonest::Artist::setAmazonUrl(const QUrl& url)
+{
+    d->amazon_url = url;
+}
+
+
+QUrl Echonest::Artist::aolMusicUrl() const
+{
+    return d->aolmusic_url;
+}
+
+void Echonest::Artist::setAolMusicUrl(const QUrl& url)
+{
+    d->aolmusic_url = url;
+}
+
+QUrl Echonest::Artist::itunesUrl() const
+{
+    return d->itunes_url;
+}
+
+void Echonest::Artist::setItunesUrl( const QUrl& url )
+{
+    d->itunes_url = url;
+}
+
+QUrl Echonest::Artist::lastFmUrl() const
+{
+    return d->lastfm_url;
+}
+
+void Echonest::Artist::setLastFmUrl(const QUrl& url )
+{
+    d->lastfm_url = url;
+}
+
+QUrl Echonest::Artist::myspaceUrl() const
+{
+    return d->myspace_url;
+}
+
+void Echonest::Artist::setMyspaceUrl( const QUrl& url )
+{
+    d->myspace_url = url;
+}
+
+Echonest::VideoList Echonest::Artist::videos() const
+{
+    return d->videos;
+}
+
 
 QNetworkReply* Echonest::Artist::fetchAudio(int numResults, int offset) const
 {
@@ -225,6 +390,40 @@ QNetworkReply* Echonest::Artist::topTerms(int numResults)
     
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
+
+int Echonest::Artist::parseProfile( QNetworkReply* reply ) throw( Echonest::ParseError )
+{
+    Echonest::Parser::checkForErrors( reply );
+    
+    QXmlStreamReader xml( reply->readAll() );
+    
+    Echonest::Parser::readStatus( xml );
+    
+    int numResults = Echonest::Parser::parseArtistInfoOrProfile( xml, *this );
+    
+    return numResults;
+}
+
+Echonest::Artists Echonest::Artist::parseSearch( QNetworkReply* reply ) throw( Echonest::ParseError )
+{
+
+}
+
+Echonest::Artists Echonest::Artist::parseSimilar( QNetworkReply* reply ) throw( Echonest::ParseError )
+{
+
+}
+
+Echonest::Artists Echonest::Artist::parseTopHottt( QNetworkReply* reply ) throw( Echonest::ParseError )
+{
+
+}
+
+Echonest::TermList Echonest::Artist::parseTopTerms( QNetworkReply* reply ) throw( Echonest::ParseError )
+{
+
+}
+
 
 QUrl Echonest::Artist::setupQuery( const QByteArray& methodName, int numResults, int start ) const
 {

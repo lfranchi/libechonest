@@ -44,20 +44,20 @@ public:
     QString name;
     
     //The following are populated on demand, and may not exist
-    QVector<Echonest::AudioFile> audio;
-    QVector<Echonest::Biography> biographies;
-    QVector<Echonest::Blog> blogs;
+    Echonest::AudioList audio;
+    Echonest::BiographyList biographies;
+    Echonest::BlogList blogs;
     
     qreal familiarity;
     qreal hotttnesss;
     
-    QVector<Echonest::ArtistImage> images;
-    QVector<Echonest::NewsArticle> news;
-    QVector<Echonest::Review> reviews;
-    QVector<Echonest::Song> songs;
+    Echonest::ArtistImageList images;
+    Echonest::NewsList news;
+    Echonest::ReviewList reviews;
+    Echonest::SongList songs;
     QVector<Echonest::Artist> similar;
-    QVector<Echonest::Term> terms;
-    QVector<Echonest::Video> videos;
+    Echonest::TermList terms;
+    Echonest::VideoList videos;
     
     QUrl lastfm_url;
     QUrl aolmusic_url;

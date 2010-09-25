@@ -23,10 +23,19 @@
 #include <QDebug>
 #include <QSharedData>
 #include <QUrl>
+#include "Config.h"
+#include "ArtistTypes.h"
+#include "Song.h"
 
 class QNetworkReply;
 class ArtistData;
+class Term;
 namespace Echonest{
+
+    class Biography;
+    
+    class Artist;
+    typedef QVector< Artist > Artists;
     
     /**
      * This encapsulates an Echo Nest artist---it always holds the basic info of artist id and
@@ -119,6 +128,86 @@ namespace Echonest{
          */
         
         /**
+         * A list of audio files on the web for this artist.
+         */
+        AudioList audio() const;
+        void setAudio( const AudioList& );
+        
+        /**
+         * A list of biographies for this artist.
+         */
+        BiographyList biographies() const;
+        void setBiographies( const BiographyList& );
+        
+        /**
+         * Blogs about this artist, around the web.
+         */
+        BlogList blogs() const;
+        void setBlogs( const BlogList& );
+        
+        /**
+         * How familiar this artist is.
+         */
+        qreal familiarity() const;
+        void setFamiliarity( qreal familiar );
+        
+        /**
+         * The hotttness of this artist.
+         */
+        qreal hotttnesss() const;
+        void setHotttnesss( qreal hotttnesss );
+        
+        /**
+         * Images related to this artist.
+         */
+        ArtistImageList images() const;
+        void setImages( const ArtistImageList& );
+        
+        /**
+         * News about this artist.
+         */
+        NewsList news() const;
+        void setNews( const NewsList& );
+        
+        /**
+         * Reviews of this artist
+         */
+        ReviewList reviews() const;
+        void setReviews( const ReviewList& );
+        
+        /**
+         * Echo Nest song objects belonging to this artist.
+         */
+        SongList songs() const;
+        void setSongs( const SongList& );
+        
+        /**
+         * Terms describing this artist.
+         */
+        TermList terms() const;
+        void setTerms( const TermList& );
+        
+        /**
+         * Urls pointing to this artists' basic information around the web.
+         */
+        QUrl lastFmUrl() const;
+        void setLastFmUrl( const QUrl& );
+        QUrl aolMusicUrl() const;
+        void setAolMusicUrl( const QUrl& );
+        QUrl amazonUrl() const;
+        void setAmazonUrl( const QUrl& );
+        QUrl itunesUrl() const;
+        void setItunesUrl( const QUrl& );
+        QUrl myspaceUrl() const;
+        void setMyspaceUrl( const QUrl& );
+       
+        /**
+         * Videos related to this artist.
+         */
+        VideoList videos() const;
+        void setVideos( const VideoList& );
+        
+        /**
          * Fetch a list of audio documents found on the web that are related to this artist.
          * 
          * @param numResults Limit how many results are returned
@@ -191,6 +280,15 @@ namespace Echonest{
          */
         QNetworkReply* fetchVideo( int numResults = 0, int offset = -1 ) const;
         
+        
+        /**
+         * Parse a completed QNetworkReply* that has fetched more information about this artist.
+         *  This will update the artist object with the new values that have been fetched.
+         * 
+         * @return The number of results available on the server.
+         */
+        int parseProfile( QNetworkReply* ) throw( ParseError );
+        
         /**
          * Fetch a list of similar artists given one or more artists for comparison.
          * 
@@ -205,6 +303,8 @@ namespace Echonest{
          *  weight. It is signified by appending a caret and weight to the argument.
          * 
          * See http://developer.echonest.com/docs/v4/artist.html#similar for boosting examples.
+         * 
+         * Call parseSimilar() once the returned QNetworkReply* has emitted its finished() signal
          */        
         static QNetworkReply* fetchSimilar( const SearchParams& params, ArtistInformation information = NoInformation,  int numResults = 0, int offset = -1 );
         
@@ -231,6 +331,27 @@ namespace Echonest{
          */
         static QNetworkReply* topTerms( int numResults = 15 );
         
+        /**
+         * Parse the result of a fetchSimilar() call, which returns a list of artists similar to the
+         *  original pair.
+         */
+        Artists parseSimilar( QNetworkReply* ) throw( ParseError );
+        
+        /**
+         * Parse the result of an artist search.
+         */
+        Artists parseSearch( QNetworkReply* ) throw( ParseError );
+        
+        /**
+         * Parse the result of a top hottness query.
+         */
+        Artists parseTopHottt( QNetworkReply* ) throw( ParseError );
+        
+        /**
+         * Parse the result of a top terms query.
+         */
+        TermList parseTopTerms( QNetworkReply* ) throw( ParseError );
+        
     private:
         QUrl setupQuery( const QByteArray& methodName, int numResults = 0, int start = -1 ) const;
         
@@ -243,6 +364,5 @@ namespace Echonest{
     QDebug operator<<(QDebug d, const Echonest::Artist& artist);
     
     Q_DECLARE_OPERATORS_FOR_FLAGS(Artist::ArtistInformation)
-    
 } // namespace
 #endif

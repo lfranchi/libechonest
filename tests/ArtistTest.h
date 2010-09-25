@@ -27,6 +27,7 @@ private slots:
     
     void testAudioUrl();
     void testBiographiesUrl();
+    void testBiographies();
     void testBlogsUrl();
     void testFamiliarityUrl();
     void testHotttnesssUrl();

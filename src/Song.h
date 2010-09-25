@@ -199,6 +199,7 @@ private:
   QSharedDataPointer<SongData> d;
 };
 
+typedef QVector< Song > SongList;
 
 QDebug operator<<(QDebug d, const Song &song);
 
