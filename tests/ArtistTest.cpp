@@ -54,6 +54,11 @@ void ArtistTest::testAudioUrl()
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/audio?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=ARTIST_ID&results=100" ) );
 }
 
+void ArtistTest::testAudio()
+{
+
+}
+
 void ArtistTest::testBiographiesUrl()
 {
     Artist testArtist;
@@ -61,27 +66,31 @@ void ArtistTest::testBiographiesUrl()
 
     QNetworkReply* reply = testArtist.fetchBiographies();
     
-    QEventLoop loop;
-    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-    loop.exec();
-    testArtist.parseProfile( reply );
-//     
-//     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/biographies?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=FooArtist" ) );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/biographies?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=ARH6W4X1187B99274F" ) );
         
-//     reply = testArtist.fetchBiographies( QLatin1String( "echo-source") );
-//     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/biographies?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=FooArtist&license=echo-source" ) );
-    
-//     reply = testArtist.fetchBiographies( QLatin1String( "cc-by-sa" ), 1, 5 );
-//     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/biographies?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=FooArtist&results=1&start=5&license=cc-by-sa" ) );
-    
+    reply = testArtist.fetchBiographies( QLatin1String( "echo-source") );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/biographies?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=ARH6W4X1187B99274F&license=echo-source" ) );
+
+    reply = testArtist.fetchBiographies( QLatin1String( "cc-by-sa" ), 1, 5 );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/biographies?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=ARH6W4X1187B99274F&results=1&start=5&license=cc-by-sa" ) );
 }
 
 void ArtistTest::testBiographies()
 {
     Artist testArtist;
-    testArtist.setName( QLatin1String( "FooArtist" ) );
+    testArtist.setId( "ARH6W4X1187B99274F" );
     
     QNetworkReply* reply = testArtist.fetchBiographies();
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    qDebug() << testArtist.biographies().size();
+    QVERIFY( testArtist.biographies().size() == 12 );
+    
+    qDebug() << testArtist.biographies().at( 0 ).license().type << testArtist.biographies().at( 0 ).site() << testArtist.biographies().at( 0 ).text() << testArtist.biographies().at( 0 ).url();   
     
 }
 
@@ -100,6 +109,12 @@ void ArtistTest::testBlogsUrl()
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/blogs?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=FooId&results=10&high_relevance=true" ) );
 }
 
+void ArtistTest::testBlogs()
+{
+
+}
+
+
 void ArtistTest::testFamiliarityUrl()
 {
     Artist testArtist;
@@ -109,6 +124,11 @@ void ArtistTest::testFamiliarityUrl()
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/familiarity?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=FooId" ) );
 }
 
+void ArtistTest::testFamiliarity()
+{
+
+}
+
 void ArtistTest::testHotttnesssUrl()
 {
     Artist testArtist;
@@ -116,6 +136,11 @@ void ArtistTest::testHotttnesssUrl()
     
     QNetworkReply* reply = testArtist.fetchHotttnesss();
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/hotttnesss?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=FooArtist" ) );
+}
+
+void ArtistTest::testHotttnesss()
+{
+
 }
 
 void ArtistTest::testImagesUrl()
@@ -134,6 +159,11 @@ void ArtistTest::testImagesUrl()
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/images?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=FooArtist&results=1&start=5&license=cc-by-sa" ) );
 }
 
+void ArtistTest::testImages()
+{
+
+}
+
 void ArtistTest::testNewsUrl()
 {
     Artist testArtist;
@@ -146,6 +176,11 @@ void ArtistTest::testNewsUrl()
     testArtist.setName( QLatin1String( "NoChange" ) );
     reply = testArtist.fetchNews( true, 10 );
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/news?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=FooId&results=10&high_relevance=true" ) );
+}
+
+void ArtistTest::testNews()
+{
+
 }
 
 void ArtistTest::testProfileUrl()
@@ -165,6 +200,11 @@ void ArtistTest::testProfileUrl()
     
 }
 
+void ArtistTest::testProfile()
+{
+
+}
+
 void ArtistTest::testReviewsUrl()
 {
     Artist testArtist;
@@ -172,6 +212,11 @@ void ArtistTest::testReviewsUrl()
     
     QNetworkReply* reply = testArtist.fetchReviews();
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/reviews?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=FooId" ) );
+}
+
+void ArtistTest::testReviews()
+{
+
 }
 
 void ArtistTest::testSearchUrl()
@@ -194,6 +239,11 @@ void ArtistTest::testSearchUrl()
     QVERIFY( searchResult->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/search?api_key=JGJCRKWLXLBZIFAZB&format=xml&max_familiarity=12.221&min_hotttnesss=0.52&description=alternative+rock&fuzzy_match=true&limit=true&bucket=audio&bucket=video" ) );
     
     
+}
+
+void ArtistTest::testSearch()
+{
+
 }
 
 void ArtistTest::testSimilarUrl()
@@ -219,6 +269,11 @@ void ArtistTest::testSimilarUrl()
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/similar?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=audio&bucket=biographies&bucket=news&results=10&name=Devo&name=The+New+Pornographers&name=Lady+Gaga&min_familiarity=0.5" ) );
 }
 
+void ArtistTest::testSimilar()
+{
+
+}
+
 
 void ArtistTest::testSongsUrl()
 {
@@ -229,11 +284,21 @@ void ArtistTest::testSongsUrl()
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/songs?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID" ) );
 }
 
+void ArtistTest::testSongs()
+{
+
+}
+
 void ArtistTest::testTopHotttUrl()
 {
     QNetworkReply* reply = Artist::topHottt( Artist::Hotttnesss );
     
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/top_hottt?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=hotttnesss&limit=false" ) );
+}
+
+void ArtistTest::testTerms()
+{
+
 }
 
 void ArtistTest::testTermsUrl()
@@ -248,12 +313,22 @@ void ArtistTest::testTermsUrl()
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/terms?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID&sorting=weight" ) );
 }
 
+void ArtistTest::testTopHottt()
+{
+
+}
+
 void ArtistTest::testTopTermsUrl()
 {
     
     QNetworkReply* reply = Artist::topTerms( 5 );
     
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/top_terms?api_key=JGJCRKWLXLBZIFAZB&format=xml&results=5" ) );
+}
+
+void ArtistTest::testTopTerms()
+{
+
 }
 
 void ArtistTest::testUrlsUrl()
@@ -263,6 +338,11 @@ void ArtistTest::testUrlsUrl()
     
     QNetworkReply* reply = testArtist.fetchUrls();
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/urls?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=Goo+Goo+Dolls" ) );
+}
+
+void ArtistTest::testUrls()
+{
+
 }
 
 void ArtistTest::testVideosUrl()
@@ -279,6 +359,12 @@ void ArtistTest::testVideosUrl()
     
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/video?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=OHAI+ARTIST&results=10&start=5" ) );
 }
+
+void ArtistTest::testVideos()
+{
+
+}
+
 
 QTEST_MAIN(ArtistTest)
 

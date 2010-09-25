@@ -193,6 +193,7 @@ int Echonest::Parser::parseArtistInfoOrProfile( QXmlStreamReader& xml , Echonest
 {
     if( xml.name() == "start" ) { // this is an individual info query, so lets read it
         xml.readNextStartElement();
+        xml.readNext();
         if( xml.name() != "total" )
             throw new ParseError( Echonest::UnknownParseError );
         
@@ -239,9 +240,11 @@ void Echonest::Parser::parseBiographies( QXmlStreamReader& xml, Echonest::Artist
     
     xml.readNextStartElement();
     Echonest::BiographyList bios;
-    while( xml.name() == "biography" && xml.tokenType() == QXmlStreamReader::StartElement ) {
+    while( xml.name() != "biographies" || xml.tokenType() != QXmlStreamReader::EndElement ) {
         Echonest::Biography bio;
-        while( xml.name() != "biography" || xml.tokenType() != QXmlStreamReader::EndElement ) {
+        do {
+            xml.readNext();
+            
             if( xml.name() == "text" )
                 bio.setText( xml.readElementText() );
             else if( xml.name() == "site" )
@@ -251,16 +254,35 @@ void Echonest::Parser::parseBiographies( QXmlStreamReader& xml, Echonest::Artist
             else if( xml.name() == "license" )
                 bio.setLicense( parseLicense( xml) );
             
-            xml.readNext();
-        }
+        } while( xml.name() != "biography" || xml.tokenType() != QXmlStreamReader::EndElement );
         bios.append( bio );
+        xml.readNext();
     }
     artist.setBiographies( bios );
 }
 
 void Echonest::Parser::parseImages( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
 {
+    if( xml.name() != "images" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw new Echonest::ParseError( Echonest::UnknownParseError );
     
+    xml.readNextStartElement();
+    Echonest::ArtistImageList imgs;
+    while( xml.name() != "images" || xml.tokenType() != QXmlStreamReader::EndElement ) {
+        Echonest::ArtistImage img;
+        do {
+            xml.readNext();
+            
+            if( xml.name() == "url" )
+                img.setUrl( QUrl( xml.readElementText() ) );
+            else if( xml.name() == "license" )
+                img.setLicense( parseLicense( xml) );
+            
+        } while( xml.name() != "image" || xml.tokenType() != QXmlStreamReader::EndElement );
+        imgs.append( img );
+        xml.readNext();
+    }
+    artist.setImages( imgs );
 }
 
 void Echonest::Parser::parseNews( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
@@ -299,7 +321,7 @@ Echonest::License Echonest::Parser::parseLicense( QXmlStreamReader& xml ) throw(
         throw new Echonest::ParseError( Echonest::UnknownParseError );
     
     Echonest::License license;
-    while( xml.name() != "license" && xml.tokenType() != QXmlStreamReader::EndElement ) {
+    while( xml.name() != "license" || xml.tokenType() != QXmlStreamReader::EndElement ) {
         if( xml.name() == "type" )
             license.type == xml.readElementText();
         else if( xml.name() == "attribution" )

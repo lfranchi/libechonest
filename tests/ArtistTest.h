@@ -26,23 +26,39 @@ private slots:
     void initTestCase();
     
     void testAudioUrl();
+    void testAudio();
     void testBiographiesUrl();
     void testBiographies();
     void testBlogsUrl();
+    void testBlogs();
     void testFamiliarityUrl();
+    void testFamiliarity();
     void testHotttnesssUrl();
+    void testHotttnesss();
     void testImagesUrl();
+    void testImages();
     void testNewsUrl();
+    void testNews();
     void testProfileUrl();
+    void testProfile();
     void testReviewsUrl();
+    void testReviews();
     void testSearchUrl();
+    void testSearch();
     void testSongsUrl();
+    void testSongs();
     void testSimilarUrl();
+    void testSimilar();
     void testTermsUrl();
+    void testTerms();
     void testTopHotttUrl();
+    void testTopHottt();
     void testTopTermsUrl();
+    void testTopTerms();
     void testUrlsUrl();
+    void testUrls();
     void testVideosUrl();
+    void testVideos();
 };
 
 #endif
