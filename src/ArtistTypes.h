@@ -48,6 +48,12 @@ namespace Echonest{
         ~AudioFile();
         
         /**
+         * The title of the audio file.
+         */
+        QString title() const;
+        void setTitle( const QString& title );
+        
+        /**
          * The artist name that this audio file is related to.
          */
         QString artist() const;
@@ -76,6 +82,12 @@ namespace Echonest{
          */
         QDateTime date() const;
         void setDate( const QDateTime& );
+        
+        /**
+         * The released album name of this audio file.
+         */
+        QString release() const;
+        void setRelease( const QString& release );
         
         /**
          * The unique identifier for this artist audio file.

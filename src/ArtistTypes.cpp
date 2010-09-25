@@ -82,6 +82,16 @@ Echonest::AudioFile::~AudioFile()
 
 }
 
+void Echonest::AudioFile::setTitle(const QString& title)
+{
+    d->title = title;
+}
+
+QString Echonest::AudioFile::title() const
+{
+    return d->title;
+}
+
 
 QString Echonest::AudioFile::artist() const
 {
@@ -101,6 +111,16 @@ QDateTime Echonest::AudioFile::date() const
 void Echonest::AudioFile::setDate(const QDateTime& date)
 {
     d->date = date;
+}
+
+QString Echonest::AudioFile::release() const
+{
+    return d->release;
+}
+
+void Echonest::AudioFile::setRelease(const QString& release)
+{
+    d->release = release;
 }
 
 QByteArray Echonest::AudioFile::id() const

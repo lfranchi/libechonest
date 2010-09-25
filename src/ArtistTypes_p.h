@@ -30,19 +30,23 @@ class AudioFileData : public QSharedData
 public:
     AudioFileData() {}
     AudioFileData( const AudioFileData& other ) {
+        title = other.title;
         artist = other.artist;
         url = other.url;
         length = other.length;
         link = other.link;
         date = other.date;
         id = other.id;
+        release = other.release;
     }
     
+    QString title;
     QString artist;
     QUrl url;
     qreal length;
     QUrl link;
     QDateTime date;
+    QString release;
     QByteArray id;
 };
 

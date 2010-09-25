@@ -20,6 +20,7 @@
 
 #include <QNetworkReply>
 #include "Artist.h"
+#include <QDateTime>
 
 void Echonest::Parser::checkForErrors( QNetworkReply* reply ) throw( Echonest::ParseError )
 {   
@@ -202,13 +203,24 @@ int Echonest::Parser::parseArtistInfoOrProfile( QXmlStreamReader& xml , Echonest
         xml.readNextStartElement();
         
         parseArtistInfo( xml, artist );
+        
+        return results;
+    } else { // this is either a profile query, or a familiarity or hotttness query, so save all the data we find
+        while( !( xml.name() == "artist" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
+            parseArtistInfo( xml, artist );
+            xml.readNextStartElement();
+        }
     }
+    
+    return 0;
 }
 
 void Echonest::Parser::parseArtistInfo( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
 {
     // parse each sort of artist information
-    if( xml.name() == "biographies" ) {
+    if( xml.name() == "audio" ) {
+        parseAudio( xml, artist );
+    } else if( xml.name() == "biographies" ) {
         parseBiographies( xml, artist );
     } else if( xml.name() == "familiarity" ) {
         artist.setFamiliarity( xml.readElementText().toDouble() );
@@ -217,7 +229,9 @@ void Echonest::Parser::parseArtistInfo( QXmlStreamReader& xml, Echonest::Artist&
     }  else if( xml.name() == "images" ) {
         parseImages( xml, artist );
     }  else if( xml.name() == "news" ) {
-        parseNews( xml, artist );
+        parseNewsOrBlogs( xml, artist, true );
+    }  else if( xml.name() == "blogs" ) {
+        parseNewsOrBlogs( xml, artist, false );
     }  else if( xml.name() == "reviews" ) {
         parseReviews( xml, artist );
     }  else if( xml.name() == "terms" ) {
@@ -233,6 +247,43 @@ void Echonest::Parser::parseArtistInfo( QXmlStreamReader& xml, Echonest::Artist&
 
 
 // parse each type of artist attribute
+
+void Echonest::Parser::parseAudio( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
+{
+    if( xml.name() != "audio" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw new Echonest::ParseError( Echonest::UnknownParseError );
+    
+    xml.readNextStartElement();
+    Echonest::AudioList audioList;
+    while( xml.name() != "audio" || xml.tokenType() != QXmlStreamReader::EndElement ) {
+        Echonest::AudioFile audio;
+        do {
+            xml.readNext();
+            
+            if( xml.name() == "title" )
+                audio.setTitle( xml.readElementText() );
+            else if( xml.name() == "url" )
+                audio.setUrl( QUrl( xml.readElementText() ) );
+            else if( xml.name() == "artist" )
+                audio.setArtist(  xml.readElementText() );
+            else if( xml.name() == "date" )
+                audio.setDate( QDateTime::fromString( xml.readElementText(), Qt::ISODate ) );
+            else if( xml.name() == "length" )
+                audio.setLength( xml.readElementText().toDouble() );
+            else if( xml.name() == "link" )
+                audio.setLink( QUrl( xml.readElementText() ) );
+            else if( xml.name() == "release" )
+                audio.setRelease( xml.readElementText() );
+            else if( xml.name() == "id" )
+                audio.setId( xml.readElementText().toLatin1() );
+            
+        } while( xml.name() != "audio" || xml.tokenType() != QXmlStreamReader::EndElement );
+        audioList.append( audio );
+        xml.readNext();
+    }
+    artist.setAudio( audioList );
+}
+
 void Echonest::Parser::parseBiographies( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
 {
     if( xml.name() != "biographies" || xml.tokenType() != QXmlStreamReader::StartElement )
@@ -261,6 +312,7 @@ void Echonest::Parser::parseBiographies( QXmlStreamReader& xml, Echonest::Artist
     artist.setBiographies( bios );
 }
 
+
 void Echonest::Parser::parseImages( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
 {
     if( xml.name() != "images" || xml.tokenType() != QXmlStreamReader::StartElement )
@@ -285,9 +337,41 @@ void Echonest::Parser::parseImages( QXmlStreamReader& xml, Echonest::Artist& art
     artist.setImages( imgs );
 }
 
-void Echonest::Parser::parseNews( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
+void Echonest::Parser::parseNewsOrBlogs( QXmlStreamReader& xml, Echonest::Artist& artist, bool news  ) throw( Echonest::ParseError )
 {
+    if( news && ( xml.name() != "news" || xml.tokenType() != QXmlStreamReader::StartElement ) )
+        throw new Echonest::ParseError( Echonest::UnknownParseError );
+    else if( !news && ( xml.name() != "blogs" || xml.tokenType() != QXmlStreamReader::StartElement ) )
+        throw new Echonest::ParseError( Echonest::UnknownParseError );
     
+    xml.readNextStartElement();
+    Echonest::NewsList newsList;
+    while( !( ( xml.name() == "news" || xml.name() == "blogs" ) && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
+        Echonest::NewsArticle news;
+        do {
+            xml.readNextStartElement();
+            
+            if( xml.name() == "name" )
+                news.setName( xml.readElementText() );
+            else if( xml.name() == "url" )
+                news.setUrl( QUrl( xml.readElementText() ) );
+            else if( xml.name() == "summary" )
+                news.setSummary(  xml.readElementText() );
+            else if( xml.name() == "date_found" )
+                news.setDateFound( QDateTime::fromString( xml.readElementText(), Qt::ISODate ) );
+            else if( xml.name() == "id" )
+                news.setId( xml.readElementText().toLatin1() );
+            else if( xml.name() == "date_posted" )
+                news.setDatePosted( QDateTime::fromString( xml.readElementText(), Qt::ISODate ) );
+            
+        } while( !( ( xml.name() == "news" || xml.name() == "blog" ) && xml.tokenType() == QXmlStreamReader::EndElement ) );
+        newsList.append( news );
+        xml.readNext();
+    }
+    if( news )
+        artist.setNews( newsList );
+    else
+        artist.setBlogs( newsList );
 }
 
 void Echonest::Parser::parseReviews( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
@@ -323,11 +407,11 @@ Echonest::License Echonest::Parser::parseLicense( QXmlStreamReader& xml ) throw(
     Echonest::License license;
     while( xml.name() != "license" || xml.tokenType() != QXmlStreamReader::EndElement ) {
         if( xml.name() == "type" )
-            license.type == xml.readElementText();
+            license.type = xml.readElementText();
         else if( xml.name() == "attribution" )
-            license.attribution == xml.readElementText();
+            license.attribution = xml.readElementText();
         else if( xml.name() == "url" )
-            license.url == QUrl( xml.readElementText() );
+            license.url = QUrl( xml.readElementText() );
         
         xml.readNext();
     }

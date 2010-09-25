@@ -56,7 +56,21 @@ void ArtistTest::testAudioUrl()
 
 void ArtistTest::testAudio()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "Goo Goo Dolls") );
+    
+    QNetworkReply* reply = testArtist.fetchAudio( 5, 5 );
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    qDebug() << testArtist.audio().size();
+    QVERIFY( testArtist.audio().size() == 5 );
+    
+    qDebug() << testArtist.audio().at(0).artist() << testArtist.audio().at(0).date() << testArtist.audio().at(0).id() << testArtist.audio().at(0).length() << testArtist.audio().at(0).release() << 
+                testArtist.audio().at(0).title() << testArtist.audio().at(0).url() << testArtist.audio().at(0).title() << testArtist.audio().at(0).link();
 }
 
 void ArtistTest::testBiographiesUrl()
@@ -90,7 +104,7 @@ void ArtistTest::testBiographies()
     qDebug() << testArtist.biographies().size();
     QVERIFY( testArtist.biographies().size() == 12 );
     
-    qDebug() << testArtist.biographies().at( 0 ).license().type << testArtist.biographies().at( 0 ).site() << testArtist.biographies().at( 0 ).text() << testArtist.biographies().at( 0 ).url();   
+//     qDebug() << testArtist.biographies().at( 0 ).license().type << testArtist.biographies().at( 0 ).site() << testArtist.biographies().at( 0 ).text() << testArtist.biographies().at( 0 ).url();   
     
 }
 
@@ -111,7 +125,21 @@ void ArtistTest::testBlogsUrl()
 
 void ArtistTest::testBlogs()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "Goo Goo Dolls") );
+    
+    QNetworkReply* reply = testArtist.fetchBlogs( true, 5 );
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    qDebug() << testArtist.blogs().size();
+    QVERIFY( testArtist.blogs().size() == 5 );
+    
+    if( !testArtist.blogs().isEmpty() )
+        qDebug() << testArtist.blogs().at(0).dateFound() << testArtist.blogs().at(0).datePosted() << testArtist.blogs().at(0).id() << testArtist.blogs().at(0).name() << testArtist.blogs().at(0).summary() << testArtist.blogs().at(0).url();
 }
 
 
@@ -126,7 +154,18 @@ void ArtistTest::testFamiliarityUrl()
 
 void ArtistTest::testFamiliarity()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "matchbox twenty" ) );
+    
+    QNetworkReply* reply = testArtist.fetchFamiliarity();
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    qDebug() << testArtist.familiarity();
+    QVERIFY( testArtist.familiarity() != -1 );
 }
 
 void ArtistTest::testHotttnesssUrl()
@@ -140,7 +179,18 @@ void ArtistTest::testHotttnesssUrl()
 
 void ArtistTest::testHotttnesss()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "matchbox twenty" ) );
+    
+    QNetworkReply* reply = testArtist.fetchHotttnesss();
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    qDebug() << testArtist.hotttnesss();
+    QVERIFY( testArtist.hotttnesss() != -1 );
 }
 
 void ArtistTest::testImagesUrl()
@@ -161,7 +211,20 @@ void ArtistTest::testImagesUrl()
 
 void ArtistTest::testImages()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "Goo Goo Dolls" ) );
+    
+    QNetworkReply* reply = testArtist.fetchImages( QString(), 10 );
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    qDebug() << testArtist.images().size();
+    QVERIFY( testArtist.images().size() == 10 );
+    
+        qDebug() << testArtist.images().at( 0 ).license().type << testArtist.images().at( 0 ).url();
 }
 
 void ArtistTest::testNewsUrl()
@@ -180,7 +243,21 @@ void ArtistTest::testNewsUrl()
 
 void ArtistTest::testNews()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "Goo Goo Dolls") );
+    
+    QNetworkReply* reply = testArtist.fetchNews( true );
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    qDebug() << testArtist.news().size();
+    //     QVERIFY( testArtist.audio().size() == 5 );
+    
+    if( !testArtist.news().isEmpty() )
+        qDebug() << testArtist.news().at(0).dateFound() << testArtist.news().at(0).datePosted() << testArtist.news().at(0).id() << testArtist.news().at(0).name() << testArtist.news().at(0).summary() << testArtist.news().at(0).url();
 }
 
 void ArtistTest::testProfileUrl()

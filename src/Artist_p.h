@@ -31,8 +31,8 @@ namespace Echonest {
 class ArtistData : public QSharedData
 {
 public:
-    ArtistData() {}
-    ArtistData( const QByteArray& id, const QString& name ) : id( id ), name( name ) {}
+    ArtistData() : familiarity( -1 ), hotttnesss( -1 ) {}
+    ArtistData( const QByteArray& id, const QString& name ) : id( id ), name( name ), familiarity( -1 ), hotttnesss( -1 ) {}
     ArtistData(const ArtistData& other)
     {
         id = other.id;
