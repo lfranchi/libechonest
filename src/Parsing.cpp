@@ -205,6 +205,8 @@ int Echonest::Parser::parseArtistInfoOrProfile( QXmlStreamReader& xml , Echonest
         parseArtistInfo( xml, artist );
         
         return results;
+    } else if( xml.name() == "songs" ) {
+        parseArtistSong( xml, artist );
     } else { // this is either a profile query, or a familiarity or hotttness query, so save all the data we find
         while( !( xml.name() == "artist" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
             parseArtistInfo( xml, artist );
@@ -237,7 +239,9 @@ void Echonest::Parser::parseArtistInfo( QXmlStreamReader& xml, Echonest::Artist&
     }  else if( xml.name() == "terms" ) {
         parseTerms( xml, artist );
     }  else if( xml.name() == "urls" ) {
-        parseUrls( xml, artist );
+        parseTerms( xml, artist );
+    }  else if( xml.name() == "songs" ) {
+        parseArtistSong( xml, artist );
     }  else if( xml.name() == "videos" ) {
         parseVideos( xml, artist );
     }  else if( xml.name() == "foreign_ids" ) {
@@ -376,7 +380,55 @@ void Echonest::Parser::parseNewsOrBlogs( QXmlStreamReader& xml, Echonest::Artist
 
 void Echonest::Parser::parseReviews( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
 {
+    if( xml.name() != "reviews" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw new Echonest::ParseError( Echonest::UnknownParseError );
     
+    xml.readNextStartElement();
+    Echonest::ReviewList reviews;
+    while( xml.name() != "reviews" || xml.tokenType() != QXmlStreamReader::EndElement ) {
+        Echonest::Review review;
+        do {
+            xml.readNextStartElement();
+            
+            if( xml.name() == "url" )
+                review.setUrl( QUrl( xml.readElementText() ) );
+            else if( xml.name() == "name" )
+                review.setName( xml.readElementText() );
+            else if( xml.name() == "summary" )
+                review.setSummary( xml.readElementText() );
+            else if( xml.name() == "date_found" )
+                review.setDateFound( QDateTime::fromString( xml.readElementText(), Qt::ISODate ) );
+            else if( xml.name() == "image" )
+                review.setImageUrl( QUrl( xml.readElementText() ) );
+            else if( xml.name() == "release" )
+                review.setRelease( xml.readElementText() );
+            else if( xml.name() == "id" )
+                review.setId( xml.readElementText().toLatin1() );
+            
+        } while( xml.name() != "review" || xml.tokenType() != QXmlStreamReader::EndElement );
+        reviews.append( review );
+        xml.readNext();
+    }
+    artist.setReviews( reviews );
+}
+
+void Echonest::Parser::parseArtistSong( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
+{
+    if( xml.name() != "songs" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw new Echonest::ParseError( Echonest::UnknownParseError );
+    
+    xml.readNextStartElement();
+    Echonest::SongList songs;
+    while( xml.name() != "songs" || xml.tokenType() != QXmlStreamReader::EndElement ) {
+        if( xml.name() == "song" && xml.isStartElement() ) 
+        {
+            Echonest::Song song;
+            song.setId( xml.readElementText().toLatin1() );
+            songs.append( song );
+        }
+        xml.readNextStartElement();
+    }
+    artist.setSongs( songs );
 }
 
 void Echonest::Parser::parseTerms( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )

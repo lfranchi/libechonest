@@ -293,7 +293,22 @@ void ArtistTest::testReviewsUrl()
 
 void ArtistTest::testReviews()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "Balmorhea" ) );
+    
+    QNetworkReply* reply = testArtist.fetchReviews( 7 );  
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    qDebug() << testArtist.reviews().size();
+    QVERIFY( testArtist.reviews().size() == 7 );
+    
+    if( !testArtist.reviews().isEmpty() ) {
+        qDebug() << testArtist.reviews().at(0).dateFound() << testArtist.reviews().at(0).dateReviewed() << testArtist.reviews().at(0).id() << testArtist.reviews().at(0).imageUrl() << testArtist.reviews().at(0).name() << testArtist.reviews().at(0).release()
+            << testArtist.reviews().at(0).summary() << testArtist.reviews().at(0).url();
+    }
 }
 
 void ArtistTest::testSearchUrl()
@@ -363,7 +378,19 @@ void ArtistTest::testSongsUrl()
 
 void ArtistTest::testSongs()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "Balmorhea" ) );
+    
+    QNetworkReply* reply = testArtist.fetchSongs();  
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    qDebug() << testArtist.songs().size();
+    QVERIFY( testArtist.songs().size() > 0 );
+    
+    qDebug() << testArtist.songs();
 }
 
 void ArtistTest::testTopHotttUrl()
