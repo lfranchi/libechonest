@@ -435,7 +435,7 @@ Echonest::Artists Echonest::Artist::parseSimilar( QNetworkReply* reply ) throw( 
 
 Echonest::Artists Echonest::Artist::parseTopHottt( QNetworkReply* reply ) throw( Echonest::ParseError )
 {
-
+    return parseSearch( reply );
 }
 
 Echonest::TermList Echonest::Artist::parseTopTerms( QNetworkReply* reply ) throw( Echonest::ParseError )

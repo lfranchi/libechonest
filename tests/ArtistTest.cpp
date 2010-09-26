@@ -538,7 +538,33 @@ void ArtistTest::testTermsUrl()
 
 void ArtistTest::testTopHottt()
 {
-
+    QNetworkReply* reply = Artist::topHottt();
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    
+    Artists artists = Artist::parseTopHottt( reply );
+    
+    qDebug() << artists.size() << artists;
+    QVERIFY( artists.size() > 0 );
+    
+    reply = Artist::topHottt( Artist::Hotttnesss | Artist::Familiarity, 20 );
+    
+    QEventLoop loop2;
+    loop2.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop2.exec();
+    
+    artists = Artist::parseTopHottt( reply );
+    
+    qDebug() << artists.size() << artists;
+    QVERIFY( artists.size() == 20 );
+    
+    Q_FOREACH( const Artist& artist, artists ) {
+        QVERIFY( artist.familiarity() > 0 );
+        QVERIFY( artist.hotttnesss() > 0 );
+    }
+    
 }
 
 void ArtistTest::testTopTermsUrl()
