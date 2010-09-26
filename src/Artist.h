@@ -200,6 +200,8 @@ namespace Echonest{
         void setItunesUrl( const QUrl& );
         QUrl myspaceUrl() const;
         void setMyspaceUrl( const QUrl& );
+        QUrl musicbrainzUrl() const;
+        void setMusicbrainzUrl( const QUrl& url );
        
         /**
          * Videos related to this artist.

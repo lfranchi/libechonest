@@ -207,6 +207,8 @@ int Echonest::Parser::parseArtistInfoOrProfile( QXmlStreamReader& xml , Echonest
         return results;
     } else if( xml.name() == "songs" ) {
         parseArtistSong( xml, artist );
+    } else if( xml.name() == "urls" ) { // urls also has no start/total
+        parseUrls( xml, artist );  
     } else { // this is either a profile query, or a familiarity or hotttness query, so save all the data we find
         while( !( xml.name() == "artist" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
             parseArtistInfo( xml, artist );
@@ -242,7 +244,7 @@ void Echonest::Parser::parseArtistInfo( QXmlStreamReader& xml, Echonest::Artist&
         parseTerms( xml, artist );
     }  else if( xml.name() == "songs" ) {
         parseArtistSong( xml, artist );
-    }  else if( xml.name() == "videos" ) {
+    }  else if( xml.name() == "video" ) {
         parseVideos( xml, artist );
     }  else if( xml.name() == "foreign_ids" ) {
         parseForeignIds( xml, artist );
@@ -458,12 +460,60 @@ void Echonest::Parser::parseTerms( QXmlStreamReader& xml, Echonest::Artist& arti
 
 void Echonest::Parser::parseUrls( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
 {
+    if( xml.name() != "urls" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw new Echonest::ParseError( Echonest::UnknownParseError );
     
+    xml.readNextStartElement();
+    xml.readNextStartElement();
+    
+    while( xml.name() != "urls" || !xml.isEndElement() ) {
+        if( xml.name() == "lastfm_url" )
+            artist.setLastFmUrl( QUrl( xml.readElementText() ) );
+        else if( xml.name() == "aolmusic_url" )
+            artist.setAolMusicUrl( QUrl( xml.readElementText() ) );
+        else if( xml.name() == "myspace_url" )
+            artist.setMyspaceUrl( QUrl( xml.readElementText() ) );
+        else if( xml.name() == "amazon_url" )
+            artist.setAmazonUrl( QUrl( xml.readElementText() ) );
+        else if( xml.name() == "itunes_url" )
+            artist.setItunesUrl( QUrl( xml.readElementText() ) );
+        else if( xml.name() == "mb_url" )
+            artist.setMusicbrainzUrl( QUrl( xml.readElementText() ) );
+        
+        xml.readNextStartElement();
+    }
+    xml.readNextStartElement();
 }
 
 void Echonest::Parser::parseVideos( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
 {
- 
+    if( xml.name() != "video" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw new Echonest::ParseError( Echonest::UnknownParseError );
+    
+    Echonest::VideoList videos;
+    while( xml.name() == "video" && xml.tokenType() == QXmlStreamReader::StartElement ) {
+        
+        Echonest::Video video;
+        
+        xml.readNextStartElement();
+        video.setTitle( xml.readElementText() );
+        xml.readNextStartElement();
+        video.setUrl( QUrl( xml.readElementText() ) );
+        xml.readNextStartElement();
+        video.setSite( xml.readElementText() );
+        xml.readNextStartElement();
+        video.setDateFound( QDateTime::fromString( xml.readElementText(), Qt::ISODate ) );
+        xml.readNextStartElement();
+        video.setImageUrl( QUrl( xml.readElementText() ) );
+        xml.readNextStartElement();
+        video.setId( xml.readElementText().toLatin1() );
+        xml.readNextStartElement();
+        
+        videos.append( video );
+        
+        xml.readNextStartElement();
+    }
+    artist.setVideos( videos );
 }
 
 void Echonest::Parser::parseForeignIds( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )

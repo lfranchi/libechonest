@@ -223,6 +223,17 @@ void Echonest::Artist::setMyspaceUrl( const QUrl& url )
     d->myspace_url = url;
 }
 
+QUrl Echonest::Artist::musicbrainzUrl() const
+{
+    return d->mb_url;
+}
+
+void Echonest::Artist::setMusicbrainzUrl(const QUrl& url)
+{
+    d->mb_url = url;
+}
+
+
 Echonest::VideoList Echonest::Artist::videos() const
 {
     return d->videos;

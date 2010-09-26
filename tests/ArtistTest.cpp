@@ -405,15 +405,23 @@ void ArtistTest::testTerms()
     Artist testArtist;
     testArtist.setName( QLatin1String( "Balmorhea" ) );
     
-    QNetworkReply* reply = testArtist.fetchTerms();  
-    qDebug() << reply->url().toString();
+    QNetworkReply* reply = testArtist.fetchTerms();
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     testArtist.parseProfile( reply );
     
-    qDebug() << testArtist.terms().size();
     QVERIFY( testArtist.terms().size() > 0 );
+    
+    qDebug() << testArtist.terms();
+    reply = testArtist.fetchTerms( Echonest::Artist::Weight );
+    QEventLoop loop2;
+    loop2.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop2.exec();
+    testArtist.parseProfile( reply );
+    
+    QVERIFY( testArtist.terms().size() > 0 );
+    
     
     qDebug() << testArtist.terms();
 }
@@ -459,7 +467,22 @@ void ArtistTest::testUrlsUrl()
 
 void ArtistTest::testUrls()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "Balmorhea" ) );
+    
+    QNetworkReply* reply = testArtist.fetchUrls();
+    qDebug() << reply->url().toString();
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    QVERIFY( !testArtist.lastFmUrl().isEmpty() );
+    QVERIFY( !testArtist.aolMusicUrl().isEmpty() );
+    QVERIFY( !testArtist.myspaceUrl().isEmpty() );
+    QVERIFY( !testArtist.amazonUrl().isEmpty() );
+    QVERIFY( !testArtist.itunesUrl().isEmpty() );
+    QVERIFY( !testArtist.musicbrainzUrl().isEmpty() );
 }
 
 void ArtistTest::testVideosUrl()
@@ -479,7 +502,29 @@ void ArtistTest::testVideosUrl()
 
 void ArtistTest::testVideos()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "Balmorhea" ) );
+    
+    QNetworkReply* reply = testArtist.fetchVideo();
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    QVERIFY( testArtist.videos().size() > 0 );
+    
+    qDebug() << testArtist.videos();
+    
+    reply = testArtist.fetchVideo( 5, 2 );
+    QEventLoop loop2;
+    loop2.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop2.exec();
+    testArtist.parseProfile( reply );
+    
+    QVERIFY( testArtist.videos().size() > 0 );
+    
+    
+    qDebug() << testArtist.videos();
 }
 
 
