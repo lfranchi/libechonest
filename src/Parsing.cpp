@@ -195,12 +195,12 @@ int Echonest::Parser::parseArtistInfoOrProfile( QXmlStreamReader& xml , Echonest
     if( xml.name() == "start" ) { // this is an individual info query, so lets read it
         xml.readNextStartElement();
         xml.readNext();
-        if( xml.name() != "total" )
-            throw new ParseError( Echonest::UnknownParseError );
         
-        int results = xml.readElementText().toInt();
-        
-        xml.readNextStartElement();
+        int results = -1;
+        if( xml.name() == "total" ) {
+            results = xml.readElementText().toInt();
+            xml.readNextStartElement();
+        }
         
         parseArtistInfo( xml, artist );
         
@@ -433,7 +433,27 @@ void Echonest::Parser::parseArtistSong( QXmlStreamReader& xml, Echonest::Artist&
 
 void Echonest::Parser::parseTerms( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
 {
+    if( xml.name() != "terms" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw new Echonest::ParseError( Echonest::UnknownParseError );
     
+    Echonest::TermList terms;
+    while( xml.name() == "terms" && xml.tokenType() == QXmlStreamReader::StartElement ) {
+        
+        Echonest::Term term;
+
+        xml.readNextStartElement();
+        term.setFrequency( xml.readElementText().toDouble() );
+        xml.readNextStartElement();
+        term.setName( xml.readElementText() );
+        xml.readNextStartElement();
+        term.setWeight( xml.readElementText().toDouble() );
+        xml.readNextStartElement();
+        
+        terms.append( term );
+        
+        xml.readNextStartElement();
+    }
+    artist.setTerms( terms );
 }
 
 void Echonest::Parser::parseUrls( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )

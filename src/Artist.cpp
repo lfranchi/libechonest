@@ -333,9 +333,9 @@ QNetworkReply* Echonest::Artist::fetchTerms( Echonest::Artist::TermSorting sorti
 {
     QUrl url = setupQuery( "terms", 0, -1 );
     if( sorting == Echonest::Artist::Weight )
-        url.addEncodedQueryItem( "sorting", "weight" );
+        url.addEncodedQueryItem( "sort", "weight" );
     else if( sorting == Echonest::Artist::Frequency )
-            url.addEncodedQueryItem( "sorting", "frequency" );
+        url.addEncodedQueryItem( "sort", "frequency" );
     
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }

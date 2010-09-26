@@ -402,7 +402,20 @@ void ArtistTest::testTopHotttUrl()
 
 void ArtistTest::testTerms()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "Balmorhea" ) );
+    
+    QNetworkReply* reply = testArtist.fetchTerms();  
+    qDebug() << reply->url().toString();
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    qDebug() << testArtist.terms().size();
+    QVERIFY( testArtist.terms().size() > 0 );
+    
+    qDebug() << testArtist.terms();
 }
 
 void ArtistTest::testTermsUrl()
@@ -411,10 +424,10 @@ void ArtistTest::testTermsUrl()
     testArtist.setId( "DummyDudeID" );
     
     QNetworkReply* reply = testArtist.fetchTerms();
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/terms?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID&sorting=frequency" ) );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/terms?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID&sort=frequency" ) );
     
     reply = testArtist.fetchTerms( Echonest::Artist::Weight );
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/terms?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID&sorting=weight" ) );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/terms?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID&sort=weight" ) );
 }
 
 void ArtistTest::testTopHottt()
