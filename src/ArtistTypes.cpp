@@ -537,35 +537,29 @@ void Echonest::Video::setUrl(const QUrl& url)
 
 QDebug Echonest::operator<<(QDebug d, const Echonest::AudioFile& artist)
 {
-    return d.maybeSpace();
+    return d.maybeSpace() << QString::fromLatin1( "Artist [%1, %2]" ).arg( artist.artist() ).arg( QLatin1String( artist.id() ) );
 }
 QDebug Echonest::operator<<(QDebug d, const Echonest::Biography& biblio)
 {
-    
-    return d.maybeSpace();
+    return d.maybeSpace() << QString::fromLatin1( "Bibliography [%1, %2, %3, %4]" ).arg( biblio.site() ).arg( biblio.url().toString() ).arg( biblio.license().type ).arg( biblio.text().left( 100 ) );
 }
 QDebug Echonest::operator<<(QDebug d, const Echonest::Blog& blog)
 {
-    
-    return d.maybeSpace();
+    return d.maybeSpace() << QString::fromLatin1( "Blog [%1, %2, %3, %4, %5, %6]" ).arg( blog.name() ).arg( blog.datePosted().toString() ).arg( blog.dateFound().toString() ).arg( blog.url().toString() ).arg( QLatin1String( blog.id() ) ).arg( blog.summary().left( 100 ) );
 }
 QDebug Echonest::operator<<(QDebug d, const Echonest::ArtistImage& img)
 {
-    
-    return d.maybeSpace();
+    return d.maybeSpace() << QString::fromLatin1( "ArtistImage [%1, %2]" ).arg( img.url().toString() ).arg( img.license().type );
 }
 QDebug Echonest::operator<<(QDebug d, const Echonest::Review& review)
 {
-    
-    return d.maybeSpace();
+    return d.maybeSpace() << QString::fromLatin1( "Review [%1, %2, %3]" ).arg( review.name() ).arg( review.release() ).arg( review.summary().left( 100 ) );
 }
 QDebug Echonest::operator<<(QDebug d, const Echonest::Term& term)
 {
-    
-    return d.maybeSpace();
+    return d.maybeSpace() << QString::fromLatin1( "Term [%1, %2, %3]" ).arg( term.name() ).arg( term.frequency() ).arg( term.weight() );
 }
 QDebug Echonest::operator<<(QDebug d, const Echonest::Video& video)
 {
-    
-    return d.maybeSpace();
+    return d.maybeSpace() << QString::fromLatin1( "Video [%1, %2, %3]" ).arg( video.title() ).arg( video.site() ).arg( video.url().toString() );
 }
