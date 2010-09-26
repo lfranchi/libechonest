@@ -190,6 +190,31 @@ Echonest::AudioSummary Echonest::Parser::parseAudioSummary( QXmlStreamReader& xm
     return summary;
 }
 
+
+Echonest::Artists Echonest::Parser::parseArtists( QXmlStreamReader& xml )
+{
+    // we expect to be in an <artists> start element
+    if( xml.name() != "artists" || !xml.isStartElement() )
+        throw new ParseError( Echonest::UnknownParseError );
+    
+    xml.readNextStartElement();
+    
+    Echonest::Artists artists;
+    while( xml.name() != "artists" || !xml.isEndElement() ) {
+        if( xml.name() != "artist" || !xml.isStartElement() )
+            throw new Echonest::ParseError( Echonest::UnknownParseError );
+        Echonest::Artist artist;
+        while( xml.name() != "artist" || !xml.isEndElement() ) {
+            parseArtistInfo( xml, artist );
+            xml.readNextStartElement();
+        }
+        artists.append( artist );
+        
+        xml.readNext();
+    }
+    return artists;
+}
+
 int Echonest::Parser::parseArtistInfoOrProfile( QXmlStreamReader& xml , Echonest::Artist& artist  ) throw( Echonest::ParseError )
 {
     if( xml.name() == "start" ) { // this is an individual info query, so lets read it
@@ -248,6 +273,10 @@ void Echonest::Parser::parseArtistInfo( QXmlStreamReader& xml, Echonest::Artist&
         parseVideos( xml, artist );
     }  else if( xml.name() == "foreign_ids" ) {
         parseForeignIds( xml, artist );
+    }  else if( xml.name() == "name" ) {
+        artist.setName( xml.readElementText() );
+    }  else if( xml.name() == "id" ) {
+        artist.setId( xml.readElementText().toLatin1() );
     } 
 }
 

@@ -535,9 +535,9 @@ void Echonest::Video::setUrl(const QUrl& url)
     d->url = url;
 }
 
-QDebug Echonest::operator<<(QDebug d, const Echonest::AudioFile& artist)
+QDebug Echonest::operator<<(QDebug d, const Echonest::AudioFile& audio)
 {
-    return d.maybeSpace() << QString::fromLatin1( "Artist [%1, %2]" ).arg( artist.artist() ).arg( QLatin1String( artist.id() ) );
+    return d.maybeSpace() << QString::fromLatin1( "AudioFile [%1, %2, %3, %4]" ).arg( audio.title() ) .arg( audio.artist() ).arg( audio.release() ).arg( audio.url().toString() );
 }
 QDebug Echonest::operator<<(QDebug d, const Echonest::Biography& biblio)
 {

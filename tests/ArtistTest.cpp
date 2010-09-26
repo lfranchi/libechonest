@@ -279,7 +279,16 @@ void ArtistTest::testProfileUrl()
 
 void ArtistTest::testProfile()
 {
-
+    Artist testArtist;
+    testArtist.setName( QLatin1String( "The American Dollar" ) );
+    
+    QNetworkReply* reply = testArtist.fetchProfile( Artist::Audio | Artist::Hotttnesss | Artist::Familiarity | Artist::Videos );
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    qDebug() << testArtist.audio() << testArtist.hotttnesss() << testArtist.familiarity() << testArtist.videos();
 }
 
 void ArtistTest::testReviewsUrl()
@@ -320,6 +329,7 @@ void ArtistTest::testSearchUrl()
     params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
     QNetworkReply* searchResult = Artist::search( params, Artist::Familiarity | Artist::Hotttnesss );
     
+    qDebug() << searchResult->url().toString();
     QVERIFY( searchResult->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/search?api_key=JGJCRKWLXLBZIFAZB&format=xml&description=emo^2&description=female+vocalist^2&description=-happy&fuzzy_match=true&limit=false&bucket=familiarity&bucket=hotttnesss" ) );
     
     params.clear();
@@ -335,7 +345,51 @@ void ArtistTest::testSearchUrl()
 
 void ArtistTest::testSearch()
 {
-
+    Artist::SearchParams params;
+    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "emo^2" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "female vocalist^2" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "-happy" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
+    QNetworkReply* searchResult = Artist::search( params, Artist::Familiarity | Artist::Hotttnesss );
+    
+    QEventLoop loop;
+    loop.connect( searchResult, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    Echonest::Artists artists = Echonest::Artist::parseSearch( searchResult );
+    
+    qDebug() << artists.size();
+    qDebug() << artists;
+    QVERIFY( artists.size() > 0 );
+    Q_FOREACH( const Artist& artist, artists ) {
+        QVERIFY( artist.familiarity() >= 0 );
+        QVERIFY( artist.hotttnesss() >= 0 );
+    }
+    
+    artists.clear();
+    params.clear();
+    params.append( Artist::SearchParamEntry( Artist::MaxFamiliarity, .95 ) );
+    params.append( Artist::SearchParamEntry( Artist::MinFamiliarity, .7 ) );
+    params.append( Artist::SearchParamEntry( Artist::MinHotttnesss, 0.72 ) );
+    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "alternative rock" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "stadium rock" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
+    searchResult = Artist::search( params, Artist::Familiarity | Artist::Hotttnesss | Artist::News | Artist::Blogs );
+    qDebug() << searchResult->url().toString();
+    QEventLoop loop2;
+    loop2.connect( searchResult, SIGNAL(finished()), SLOT(quit()) );
+    loop2.exec();
+    artists = Echonest::Artist::parseSearch( searchResult );
+    
+    qDebug() << artists.size();
+    qDebug() << artists;
+    QVERIFY( artists.size() > 0 );
+    Q_FOREACH( const Artist& artist, artists ) {
+        QVERIFY( artist.familiarity() >= 0 );
+        QVERIFY( artist.hotttnesss() >= 0 );
+        QVERIFY( artist.news().size() > 0 );
+        QVERIFY( artist.blogs().size() > 0 );
+    }
+    
 }
 
 void ArtistTest::testSimilarUrl()
@@ -522,8 +576,6 @@ void ArtistTest::testVideos()
     testArtist.parseProfile( reply );
     
     QVERIFY( testArtist.videos().size() > 0 );
-    
-    
     qDebug() << testArtist.videos();
 }
 

@@ -51,6 +51,9 @@ namespace Parser
     // parses an <audio_summary> chunk
     AudioSummary parseAudioSummary( QXmlStreamReader& xml ) throw( ParseError );
     
+    // parses a list of artists in an <artists></artists> block
+    Echonest::Artists parseArtists( QXmlStreamReader& xml );
+    
     // parses the contents of an artist fetch result, expects to be positioned after the readStatus() call
     // it could be a profile query, in which case it has a bunch of different artist attributes
     // or it could be a single fetch, in which case it starts with result number and offset.

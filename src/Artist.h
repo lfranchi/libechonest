@@ -337,22 +337,22 @@ namespace Echonest{
          * Parse the result of a fetchSimilar() call, which returns a list of artists similar to the
          *  original pair.
          */
-        Artists parseSimilar( QNetworkReply* ) throw( ParseError );
+        static Artists parseSimilar( QNetworkReply* ) throw( ParseError );
         
         /**
          * Parse the result of an artist search.
          */
-        Artists parseSearch( QNetworkReply* ) throw( ParseError );
+        static Artists parseSearch( QNetworkReply* ) throw( ParseError );
         
         /**
          * Parse the result of a top hottness query.
          */
-        Artists parseTopHottt( QNetworkReply* ) throw( ParseError );
+        static Artists parseTopHottt( QNetworkReply* ) throw( ParseError );
         
         /**
          * Parse the result of a top terms query.
          */
-        TermList parseTopTerms( QNetworkReply* ) throw( ParseError );
+        static TermList parseTopTerms( QNetworkReply* ) throw( ParseError );
         
     private:
         QUrl setupQuery( const QByteArray& methodName, int numResults = 0, int start = -1 ) const;

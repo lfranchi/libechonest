@@ -417,7 +417,15 @@ int Echonest::Artist::parseProfile( QNetworkReply* reply ) throw( Echonest::Pars
 
 Echonest::Artists Echonest::Artist::parseSearch( QNetworkReply* reply ) throw( Echonest::ParseError )
 {
-
+    Echonest::Parser::checkForErrors( reply );
+    
+    QXmlStreamReader xml( reply->readAll() );
+    
+    Echonest::Parser::readStatus( xml );
+    
+    Echonest::Artists artists = Echonest::Parser::parseArtists( xml );
+    
+    return artists;
 }
 
 Echonest::Artists Echonest::Artist::parseSimilar( QNetworkReply* reply ) throw( Echonest::ParseError )
@@ -523,6 +531,6 @@ void Echonest::Artist::addQueryInformation(QUrl& url, Echonest::Artist::ArtistIn
 
 QDebug Echonest::operator<<(QDebug d, const Echonest::Artist& artist)
 {
-    d << QString::fromLatin1( "Artist(%1, %2)" ).arg( artist.name() ).arg( QString::fromLatin1(artist.id()) );
+    return d.maybeSpace() << QString::fromLatin1( "Artist(%1, %2)" ).arg( artist.name() ).arg( QString::fromLatin1(artist.id()) );
 }
 
