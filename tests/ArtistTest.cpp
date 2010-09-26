@@ -373,8 +373,8 @@ void ArtistTest::testSearch()
     params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "alternative rock" ) ) );
     params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "stadium rock" ) ) );
     params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
-    searchResult = Artist::search( params, Artist::Familiarity | Artist::Hotttnesss | Artist::News | Artist::Blogs );
-    qDebug() << searchResult->url().toString();
+    searchResult = Artist::search( params, Artist::Familiarity | Artist::Hotttnesss | Artist::News | Artist::Blogs | Artist::Audio );
+    
     QEventLoop loop2;
     loop2.connect( searchResult, SIGNAL(finished()), SLOT(quit()) );
     loop2.exec();
@@ -388,8 +388,8 @@ void ArtistTest::testSearch()
         QVERIFY( artist.hotttnesss() >= 0 );
         QVERIFY( artist.news().size() > 0 );
         QVERIFY( artist.blogs().size() > 0 );
+        QVERIFY( artist.audio().size() > 0 );
     }
-    
 }
 
 void ArtistTest::testSimilarUrl()
@@ -402,6 +402,7 @@ void ArtistTest::testSimilarUrl()
     
     QNetworkReply* reply = Artist::fetchSimilar( params, Artist::Hotttnesss | Artist::Familiarity | Artist::Audio );
     
+    qDebug() << reply->url().toString();
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/similar?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=audio&bucket=familiarity&bucket=hotttnesss&name=The+Beatles&name=Rilo+Kiley&name=Queen&min_hotttnesss=0.5" ) );
 
     params.clear();
@@ -417,7 +418,50 @@ void ArtistTest::testSimilarUrl()
 
 void ArtistTest::testSimilar()
 {
+    Artist::SearchParams params;
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "The Beatles" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Rilo Kiley" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Queen" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::MinHotttnesss, 0.5 ) );
+    
+    QNetworkReply* reply = Artist::fetchSimilar( params, Artist::Hotttnesss | Artist::Familiarity | Artist::Audio );
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    Echonest::Artists artists = Echonest::Artist::parseSimilar( reply );
+    
+    qDebug() << artists.size();
+    qDebug() << artists;
+    QVERIFY( artists.size() > 0 );
+    Q_FOREACH( const Artist& artist, artists ) {
+        QVERIFY( artist.familiarity() >= 0 );
+        QVERIFY( artist.hotttnesss() >= 0 );
+        QVERIFY( artist.audio().size() > 0 );
+    }
+    
+    artists.clear();
+    params.clear();
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Devo" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "The New Pornographers" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Lady Gaga" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::MinFamiliarity, 0.5 ) );
+    
+    reply = Artist::fetchSimilar( params, Artist::Biographies | Artist::News | Artist::Videos, 10 );
 
+    QEventLoop loop2;
+    loop2.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop2.exec();
+    artists = Echonest::Artist::parseSimilar( reply );
+    
+    qDebug() << artists.size();
+    qDebug() << artists;
+    QVERIFY( artists.size() ==  10 );
+    Q_FOREACH( const Artist& artist, artists ) {
+        QVERIFY( artist.biographies().size() >= 0 );
+        QVERIFY( artist.news().size() >= 0 );
+        QVERIFY( artist.videos().size() > 0 );
+    }
 }
 
 
@@ -507,7 +551,16 @@ void ArtistTest::testTopTermsUrl()
 
 void ArtistTest::testTopTerms()
 {
-
+    QNetworkReply* reply = Artist::topTerms( 5 );
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    
+    TermList terms = Artist::parseTopTerms( reply );
+    
+    qDebug() << terms.size() << terms;
+    QVERIFY( terms.size() == 5 );
 }
 
 void ArtistTest::testUrlsUrl()
@@ -525,7 +578,7 @@ void ArtistTest::testUrls()
     testArtist.setName( QLatin1String( "Balmorhea" ) );
     
     QNetworkReply* reply = testArtist.fetchUrls();
-    qDebug() << reply->url().toString();
+
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();

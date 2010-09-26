@@ -467,24 +467,7 @@ void Echonest::Parser::parseTerms( QXmlStreamReader& xml, Echonest::Artist& arti
     if( xml.name() != "terms" || xml.tokenType() != QXmlStreamReader::StartElement )
         throw new Echonest::ParseError( Echonest::UnknownParseError );
     
-    Echonest::TermList terms;
-    while( xml.name() == "terms" && xml.tokenType() == QXmlStreamReader::StartElement ) {
-        
-        Echonest::Term term;
-
-        xml.readNextStartElement();
-        term.setFrequency( xml.readElementText().toDouble() );
-        xml.readNextStartElement();
-        term.setName( xml.readElementText() );
-        xml.readNextStartElement();
-        term.setWeight( xml.readElementText().toDouble() );
-        xml.readNextStartElement();
-        
-        terms.append( term );
-        
-        xml.readNextStartElement();
-    }
-    artist.setTerms( terms );
+    artist.setTerms( parseTermList( xml ) );
 }
 
 void Echonest::Parser::parseUrls( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
@@ -524,20 +507,22 @@ void Echonest::Parser::parseVideos( QXmlStreamReader& xml, Echonest::Artist& art
         
         Echonest::Video video;
         
-        xml.readNextStartElement();
-        video.setTitle( xml.readElementText() );
-        xml.readNextStartElement();
-        video.setUrl( QUrl( xml.readElementText() ) );
-        xml.readNextStartElement();
-        video.setSite( xml.readElementText() );
-        xml.readNextStartElement();
-        video.setDateFound( QDateTime::fromString( xml.readElementText(), Qt::ISODate ) );
-        xml.readNextStartElement();
-        video.setImageUrl( QUrl( xml.readElementText() ) );
-        xml.readNextStartElement();
-        video.setId( xml.readElementText().toLatin1() );
-        xml.readNextStartElement();
-        
+        while( xml.name() != "video" || !xml.isEndElement() ) {
+            if( xml.name() == "title" )
+                video.setTitle( xml.readElementText() );
+            else if( xml.name() == "url" )
+                video.setUrl( QUrl( xml.readElementText() ) );
+            else if( xml.name() == "site" )
+                video.setSite( xml.readElementText() );
+            else if( xml.name() == "date_found" )
+                video.setDateFound( QDateTime::fromString( xml.readElementText(), Qt::ISODate ) );
+            else if( xml.name() == "image_url" )
+                video.setImageUrl( QUrl( xml.readElementText() ) );
+            else if( xml.name() == "id" )
+                video.setId( xml.readElementText().toLatin1() );
+            
+            xml.readNextStartElement();
+        }
         videos.append( video );
         
         xml.readNextStartElement();
@@ -545,9 +530,36 @@ void Echonest::Parser::parseVideos( QXmlStreamReader& xml, Echonest::Artist& art
     artist.setVideos( videos );
 }
 
+Echonest::TermList Echonest::Parser::parseTermList( QXmlStreamReader& xml )
+{
+    if( xml.name() != "terms" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw new Echonest::ParseError( Echonest::UnknownParseError );
+    
+    Echonest::TermList terms;
+    while( xml.name() == "terms" && xml.tokenType() == QXmlStreamReader::StartElement ) {
+        
+        Echonest::Term term;
+        
+        while( xml.name() != "terms" || !xml.isEndElement() ) {
+            if( xml.name() == "frequency" )
+                term.setFrequency( xml.readElementText().toDouble() );
+            else if( xml.name() == "name" )
+                term.setName( xml.readElementText() );
+            else if( xml.name() == "weight" )
+                term.setWeight( xml.readElementText().toDouble() );
+            
+            xml.readNextStartElement();
+        }
+        terms.append( term );
+        
+        xml.readNextStartElement();
+    }
+    return terms;
+}
+
 void Echonest::Parser::parseForeignIds( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
 {
-      
+
 }
 
 Echonest::License Echonest::Parser::parseLicense( QXmlStreamReader& xml ) throw( Echonest::ParseError )

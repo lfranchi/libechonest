@@ -430,7 +430,7 @@ Echonest::Artists Echonest::Artist::parseSearch( QNetworkReply* reply ) throw( E
 
 Echonest::Artists Echonest::Artist::parseSimilar( QNetworkReply* reply ) throw( Echonest::ParseError )
 {
-
+    return parseSearch( reply );
 }
 
 Echonest::Artists Echonest::Artist::parseTopHottt( QNetworkReply* reply ) throw( Echonest::ParseError )
@@ -440,7 +440,15 @@ Echonest::Artists Echonest::Artist::parseTopHottt( QNetworkReply* reply ) throw(
 
 Echonest::TermList Echonest::Artist::parseTopTerms( QNetworkReply* reply ) throw( Echonest::ParseError )
 {
-
+    Echonest::Parser::checkForErrors( reply );
+    
+    QXmlStreamReader xml( reply->readAll() );
+    
+    Echonest::Parser::readStatus( xml );
+    
+    Echonest::TermList terms = Echonest::Parser::parseTermList( xml );
+    
+    return terms;
 }
 
 
