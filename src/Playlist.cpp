@@ -29,12 +29,12 @@ Echonest::DynamicPlaylist::DynamicPlaylist(const QByteArray& xmlData)
     // parse xml
 }
 
-QString Echonest::DynamicPlaylist::id() const
+QString Echonest::DynamicPlaylist::sessionId() const
 {
     return d->sessionId;
 }
 
-void Echonest::DynamicPlaylist::setId(const QString& id)
+void Echonest::DynamicPlaylist::setSessionId(const QString& id)
 {
     d->sessionId = id;
 }
@@ -49,13 +49,24 @@ void Echonest::DynamicPlaylist::setCurrentSong(const Echonest::Song& song)
     d->currentSong = song;
 }
 
-Echonest::Song Echonest::DynamicPlaylist::fetchNextSong()
+QNetworkReply* Echonest::DynamicPlaylist::fetchNextSong(int rating)
+{
+
+}
+
+
+Echonest::Song Echonest::DynamicPlaylist::parseNextSong(QNetworkReply* reply)
+{
+
+}
+
+Echonest::SongList Echonest::DynamicPlaylist::staticPlaylist(const Echonest::DynamicPlaylist::PlaylistParams& params)
 {
 
 }
 
 QDebug Echonest::operator<<(QDebug d, const Echonest::DynamicPlaylist& playlist)
 {
-    d << QString::fromLatin1( "DynamicPlaylist(%1, %2)" ).arg( playlist.id(), playlist.currentSong().toString() );
+    d << QString::fromLatin1( "DynamicPlaylist(%1, %2)" ).arg( playlist.sessionId(), playlist.currentSong().toString() );
     return d.maybeSpace();
 }

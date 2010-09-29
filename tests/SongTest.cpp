@@ -66,30 +66,18 @@ void SongTest::testSearch1()
     }
 }
 
-void SongTest::testSearch2()
+void SongTest::testProfile()
 {
-//     Echonest::Song::SearchParams params;
-//     params.append( Echonest::Song::SearchParamData( Echonest::Song::Key, QLatin1String("7") ) );
-//     params.append( Echonest::Song::SearchParamData( Echonest::Song::Description, QLatin1String("female+vocalist") ) );
-//     
-//     QNetworkReply* reply = Echonest::Song::search( params, Echonest::Song::ArtistHotttnesss );
-//     
-//     QEventLoop loop;
-//     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-//     loop.exec();
-//     
-//     QVector< Echonest::Song > songs = Echonest::Song::parseSearch( reply );
-//     qDebug() << songs << songs.size();
-//     QVERIFY( songs.size() == 2 );
-//     Q_FOREACH( Echonest::Song song, songs ) {
-//         QVERIFY( song.title().toLower() == QLatin1String( "float on" ) );
-//         QVERIFY( song.artistName().toLower() == QLatin1String( "modest mouse" ) );
-//     }
-}
-
-void SongTest::testSearch3()
-{
-
+    Echonest::Song song;
+    song.setId( "SOYMZLR127CF8DD122" );
+    
+    QNetworkReply* reply = song.fetchInformation( Echonest::Song::ArtistHotttnesss | Echonest::Song::ArtistLocation );
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    song.parseInformation( reply );
+    
+    qDebug() << song << song.artistHotttnesss() << song.artistLocation() << song.artistId() << song.artistName();
 }
 
 

@@ -26,8 +26,7 @@ private slots:
     void initTestCase();
     
     void testSearch1();
-    void testSearch2();
-    void testSearch3();
+    void testProfile();
 };
 
 #endif
