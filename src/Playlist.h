@@ -114,8 +114,10 @@ namespace Echonest{
             MinLoudness, /// -100.0 < loudness < 100.0 (dB)  the minimum loudness of any song on the playlist
             ArtistMaxFamiliarity, ///  0.0 < familiarity < 1.0 the maximum artist familiarity for songs in the playlist
             ArtistMinFamiliarity, ///  0.0 < familiarity < 1.0 the minimum artist familiarity for songs in the playlist
+            ArtistMaxHotttnesss, ///  0.0 < hotttnesss < 1.0  the maximum hotttnesss for artists in the playlist
+            ArtistMinHotttnesss, ///  0.0 < hotttnesss < 1.0  the maximum hotttnesss for artists in the playlist
             SongMaxHotttnesss, ///  0.0 < hotttnesss < 1.0  the maximum hotttnesss for songs in the playlist
-            SongMinHotttness, ///  0.0 < hotttnesss < 1.0  the maximum hotttnesss for songs in the playlist
+            SongMinHotttnesss, ///  0.0 < hotttnesss < 1.0  the maximum hotttnesss for songs in the playlist
             ArtistMinLongitude, /// -180.0 < longitude < 180.0      the minimum longitude for the location of artists in the playlist
             ArtistMaxLongitude, /// -180.0 < longitude < 180.0      the maximum longitude for the location of artists in the playlist
             ArtistMinLatitude,  /// -90.0 < latitude < 90.0 the minimum latitude for the location of artists in the playlist
@@ -133,6 +135,9 @@ namespace Echonest{
         typedef QVector< PlaylistParamData > PlaylistParams;
         
         DynamicPlaylist();
+        ~DynamicPlaylist();
+        DynamicPlaylist( const DynamicPlaylist& other );
+        DynamicPlaylist& operator=( const DynamicPlaylist& playlist );
         
         /**
          * Start a dynamic playlist with the given parameters.

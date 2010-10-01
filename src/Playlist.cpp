@@ -24,6 +24,23 @@ Echonest::DynamicPlaylist::DynamicPlaylist()
 
 }
 
+Echonest::DynamicPlaylist::DynamicPlaylist(const Echonest::DynamicPlaylist& other)
+    : d( other.d )
+{
+
+}
+
+Echonest::DynamicPlaylist::~DynamicPlaylist()
+{
+
+}
+
+
+Echonest::DynamicPlaylist& Echonest::DynamicPlaylist::operator=(const Echonest::DynamicPlaylist& playlist)
+{
+    d = playlist.d;
+}
+
 QNetworkReply* Echonest::DynamicPlaylist::start(const Echonest::DynamicPlaylist::PlaylistParams& params)
 {
     // params are the same, if user passes in format parsing will throw, but it should be expected..
@@ -38,7 +55,11 @@ Echonest::Song Echonest::DynamicPlaylist::parseStart(QNetworkReply* reply) throw
     
     Echonest::Parser::readStatus( xml );
     d->sessionId = Echonest::Parser::parsePlaylistSessionId( xml );
-    d->currentSong = Echonest::Parser::parseSong( xml );
+    Echonest::SongList songs = Echonest::Parser::parseSongList( xml );
+    if( !songs.size() == 1 )
+        throw new Echonest::ParseError( UnknownParseError );
+    
+    d->currentSong = songs.front();
     
     return d->currentSong;
 }
@@ -175,9 +196,13 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "artist_max_familiarity";
         case Echonest::DynamicPlaylist::ArtistMinFamiliarity :
             return "artist_min_familiarity";
+        case Echonest::DynamicPlaylist::ArtistMaxHotttnesss :
+            return "artist_max_hotttnesss";
+        case Echonest::DynamicPlaylist::ArtistMinHotttnesss :
+            return "artist_min_hotttnesss";
         case Echonest::DynamicPlaylist::SongMaxHotttnesss :
             return "song_max_hotttnesss";
-        case Echonest::DynamicPlaylist::SongMinHotttness :
+        case Echonest::DynamicPlaylist::SongMinHotttnesss :
             return "song_min_hotttnesss";
         case Echonest::DynamicPlaylist::ArtistMinLongitude :
             return "artist_min_longitude";

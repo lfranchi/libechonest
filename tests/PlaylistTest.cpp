@@ -112,12 +112,118 @@ void PlaylistTest::testStatic2()
 
 void PlaylistTest::testDynamic1()
 {
-
+    DynamicPlaylist::PlaylistParams p;
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "tallest man on earth" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "fleet foxes" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "johnny cash" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "crosby, stills, nash and young" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistRadioType ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::ArtistMinHotttnesss, .6 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::ArtistMaxFamiliarity, .4 ) );
+    
+    DynamicPlaylist playlist;
+    QNetworkReply* reply = playlist.start( p );
+    
+    qDebug() << reply->url().toString();
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/playlist/dynamic?api_key=JGJCRKWLXLBZIFAZB&format=xml&artist=tallest+man+on+earth&artist=fleet+foxes&artist=johnny+cash&artist=crosby,+stills,+nash+and+young&type=artist-radio&artist_min_hotttnesss=0.6&artist_max_familiarity=0.4" ) );
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    Song song = playlist.parseStart( reply );
+    
+    qDebug() << "next:" << song;
+    QVERIFY( !song.id().isEmpty() );
+    QVERIFY( !song.title().isEmpty() );
+    
+    reply = playlist.fetchNextSong( 1 );
+    
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    song = playlist.parseNextSong( reply );
+    
+    qDebug() << "next:" << song;
+    QVERIFY( !song.id().isEmpty() );
+    QVERIFY( !song.title().isEmpty() );
+    
+    reply = playlist.fetchNextSong( 1 );
+    
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    song = playlist.parseNextSong( reply );
+    
+    qDebug() << "next:" << song;
+    QVERIFY( !song.id().isEmpty() );
+    QVERIFY( !song.title().isEmpty() );    
 }
 
 void PlaylistTest::testDynamic2()
 {
-
+    DynamicPlaylist::PlaylistParams p;
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "pink floyd^-1" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "the who" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "queen" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "led zeppelin^2" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "-the beatles" ) ) ); //exclude
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistType ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::ArtistMinHotttnesss, .7 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::ArtistMaxFamiliarity, .3 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::MinLoudness, -10 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Mode, 1 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Song::SongInformation( Song::AudioSummaryInformation | Song::Hotttnesss | Song::ArtistHotttnesss | Song::ArtistFamiliarity ) ) ) );
+    
+    DynamicPlaylist playlist;
+    QNetworkReply* reply = playlist.start( p );
+    
+    qDebug() << reply->url().toString();
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/playlist/dynamic?api_key=JGJCRKWLXLBZIFAZB&format=xml&artist=pink+floyd^-1&artist=the+who&artist=queen&artist=led+zeppelin^2&artist=-the+beatles&type=artist&artist_min_hotttnesss=0.7&artist_max_familiarity=0.3&min_loudness=-10&mode=1&bucket=audio_summary&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity" ) );
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    Song song = playlist.parseStart( reply );
+    
+    qDebug() << "next:" << song;
+    QVERIFY( !song.id().isEmpty() );
+    QVERIFY( !song.title().isEmpty() );
+    
+    reply = playlist.fetchNextSong( 1 );
+    
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    song = playlist.parseNextSong( reply );
+    
+    qDebug() << "next:" << song;
+    QVERIFY( !song.id().isEmpty() );
+    QVERIFY( !song.title().isEmpty() );
+    
+    reply = playlist.fetchNextSong( 1 );
+    
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    song = playlist.parseNextSong( reply );
+    
+    qDebug() << "next:" << song;
+    QVERIFY( !song.id().isEmpty() );
+    QVERIFY( !song.title().isEmpty() );
+    
+    QByteArray oldId = playlist.sessionId();
+    // now reset it
+    p.clear();
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "pink floyd" ) ) );
+    reply = playlist.start( p );
+    qDebug() << reply->url().toString();
+    
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    song = playlist.parseNextSong( reply );
+    qDebug() << "new:" << song << song.artistFamiliarity() << song.artistHotttnesss();
+    
+    QVERIFY( !song.id().isEmpty() );
+    QVERIFY( !song.title().isEmpty() );
+    QVERIFY( song.artistHotttnesss() == -1 ); // make sure we are in a new playlist, and we didn't ask for this info so it shouldn't be there
+    QVERIFY( song.artistFamiliarity() == -1 ); // make sure we are in a new playlist, and we didn't ask for this info so it shouldn't be there
+    
 }
 
 QTEST_MAIN( PlaylistTest )
