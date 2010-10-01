@@ -453,10 +453,16 @@ void Echonest::Parser::parseArtistSong( QXmlStreamReader& xml, Echonest::Artist&
         if( xml.name() == "song" && xml.isStartElement() ) 
         {
             Echonest::Song song;
-            song.setId( xml.readElementText().toLatin1() );
+            while( xml.name() != "song" || !xml.isEndElement() ) {
+                if( xml.name() == "id" && xml.isStartElement() )
+                    song.setId( xml.readElementText().toLatin1() );
+                else if( xml.name() == "title" && xml.isStartElement() )
+                    song.setTitle( xml.readElementText() );
+                xml.readNextStartElement();
+            }
             songs.append( song );
         }
-        xml.readNextStartElement();
+        xml.readNext();
     }
     artist.setSongs( songs );
 }

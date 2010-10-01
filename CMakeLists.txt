@@ -1,5 +1,7 @@
 project( libechonest )
 
+include(CPack)
+
 cmake_minimum_required( VERSION 2.6 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )

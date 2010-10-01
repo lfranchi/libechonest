@@ -480,6 +480,7 @@ void ArtistTest::testSongs()
     testArtist.setName( QLatin1String( "Balmorhea" ) );
     
     QNetworkReply* reply = testArtist.fetchSongs();  
+    qDebug() << reply->url().toString();
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
