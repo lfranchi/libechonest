@@ -1,0 +1,51 @@
+libechonest
+===========
+
+libechonest is a collection of C++/Qt classes designed to make a developer's life 
+easy when trying to use the APIs provided by The Echo Nest. More information about
+the APIs can be found here:
+
+http://developer.echonest.com/docs/v4/
+
+liblastfm is developed by Leo Franchi (lfranchi@kde.org), and is available on gitorious 
+ at http://gitorious.org/libechonest . Merge requests, API comments, and more are appreciated.
+
+Dependencies
+============
+
+    * Qt, only the QtCore and QtNetwork modules (www.qtsoftware.com)
+    * CMake, Kitware's open source build system (http://cmake.org)
+
+Installing
+==========
+
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=/path/to/desired/install .
+make
+make install
+
+Using libechonest
+===============
+The c++ API is meant to be as close to the Echo Nest API as possible. All Echo Nest
+API functions have been copied into their respective c++ equivalents, and string values
+converted to enums where reasonable. 
+
+See the unit tests in tests/ for examples on how to use the classes.
+
+You need an API key from http://developer.echonest.com to use this library. Set your API key
+ with Echonest::Config::instance()->setAPIKey().
+
+You can also set your own custom QNetworkAccessManager-derived class with Config::setNetworkAccessManager();
+
+Your link line needs to include the following:
+
+    -lechonest -lQtCore -lQtNetwork
+
+Thank you for tuning in!
+
+leo
+
+-------
+This README, and liblastfm in general, is inspired from Max Howell's liblastfm,
+ at http://www.github.com/mxcl/liblastfm.
