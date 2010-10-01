@@ -1,7 +1,7 @@
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 
-set( LIBECHONEST_TYPES_SRC
+set( LIBECHONEST_SRC
         Track.cpp
         Song.cpp
         Artist.cpp
@@ -13,7 +13,7 @@ set( LIBECHONEST_TYPES_SRC
         ArtistTypes.cpp
 )
 
-set( LIBECHONEST_TYPES_H
+set( LIBECHONEST_H
         Track.h
         Song.h
         Artist.h
@@ -23,7 +23,10 @@ set( LIBECHONEST_TYPES_H
         ArtistTypes.h
 )
 
-QT4_WRAP_CPP( ${LIBECHONEST_TYPES_H} )
+QT4_WRAP_CPP( ${LIBECHONEST_H} )
 
-add_library( echonest SHARED ${LIBECHONEST_TYPES_SRC} )
+add_library( echonest SHARED ${LIBECHONEST_SRC} )
 target_link_libraries( echonest ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}  )
+install( TARGETS echonest DESTINATION lib )
+
+install( FILES ${LIBECHONEST_H} DESTINATION  include/echonest COMPONENT Devel )
