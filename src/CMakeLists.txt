@@ -27,6 +27,7 @@ QT4_WRAP_CPP( ${LIBECHONEST_H} )
 
 add_library( echonest SHARED ${LIBECHONEST_SRC} )
 target_link_libraries( echonest ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}  )
+set_target_properties( echonest PROPERTIES VERSION ${ECHONEST_LIB_VERSION} SOVERSION ${ECHONEST_LIB_VERSION} )
 install( TARGETS echonest DESTINATION lib )
 
 install( FILES ${LIBECHONEST_H} DESTINATION  include/echonest COMPONENT Devel )
