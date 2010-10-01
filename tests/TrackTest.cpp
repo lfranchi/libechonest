@@ -31,8 +31,6 @@ void TrackTest::initTestCase()
 
 void TrackTest::testUploadLocalFile()
 {
-    /**
-     * Disabled by default, as mp3 is not distributed in tarball but only resides in repo.
     QFile f( QString::fromLatin1( DATA_DIR "/01 - Cellule.mp3" ) );
     
     QVERIFY( f.exists() );
@@ -55,7 +53,6 @@ void TrackTest::testUploadLocalFile()
     Echonest::Track track = Echonest::Track::parseProfile( reply );
     
     verifyTrack1( track );
-   */
 }
 
 void TrackTest::testProfileFromMD5()
