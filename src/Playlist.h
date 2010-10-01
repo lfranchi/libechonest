@@ -44,7 +44,7 @@ namespace Echonest{
          *  ArtistRadio takes into account similar artists, adn ArtistDescription plays songs matching
          *  the given description.
          */
-        enum Type {
+        enum ArtistTypeEnum {
             ArtistType,
             ArtistRadioType,
             ArtistDescriptionType
@@ -63,7 +63,7 @@ namespace Echonest{
             SortArtistHotttnessAscending,
             SortArtistHotttnessDescending,
             SortSongHotttnesssAscending,
-            SortSongHotttnesssAsdc,
+            SortSongHotttnesssDescending,
             SortLatitudeAscending,
             SortLatitudeDescending,
             SortLongitudeAscending,
@@ -97,9 +97,9 @@ namespace Echonest{
          *  functions.
          */
         enum PlaylistParam {
-            Type, /// The type of playlist to generate. Value is the Playlist::Type enum
+            Type, /// The type of playlist to generate. Value is the DynamicPlaylist::ArtistTypeEnum enum
             Format, /// Either xml (default) or xspf. If the result is xspf, the raw xspf playlist is returned, else the xml is parsed and exposed programmatically.
-            ArtistPick,
+            Pick,   /// How the artists are picked for each artist in ArtistType playlists. Value is Playlist::ArtistPick enum value.
             Variety, /// 0 < variety < 1        The maximum variety of artists to be represented in the playlist. A higher number will allow for more variety in the artists.
             ArtistId, ///  ID(s) of seed artist(s) for the playlist
             Artist, /// Artist names of seeds for playlist
@@ -122,7 +122,7 @@ namespace Echonest{
             ArtistMaxLatitude, /// -90.0 < latitude < 90.0 the maximum latitude for the location of artists in the playlist
             Mode, /// (minor, major) 0, 1     the mode of songs in the playlist 
             Key, /// (c, c-sharp, d, e-flat, e, f, f-sharp, g, a-flat, a, b-flat, b) 0 - 11  the key of songs in the playlist
-            SongInformation,
+            SongInformation, /// what sort of song information should be returned. Should be an Echonest::Song::SongInformation object
             Sort, /// SortingType enum, the type of sorting to use, 
             Limit, /// true, false    if true songs will be limited to those that appear in the catalog specified by the id: bucket
             Audio, /// true, false,  if true songs will be limited to those that have associated audio
@@ -133,13 +133,23 @@ namespace Echonest{
         typedef QVector< PlaylistParamData > PlaylistParams;
         
         DynamicPlaylist();
-        explicit DynamicPlaylist( const QByteArray& xmlData );
         
         /**
-         * The session id of this dynamic playlist.
+         * Start a dynamic playlist with the given parameters.
+         *  Once the QNetworkReply has finished, pass it to parseStart() 
+         *  and the inital song will be populated and returned. The sessionId(), currentSong(), 
+         *  and fetchNextSong() methods will then be useful.
          */
-        QString sessionId() const;
-        void setSessionId( const QString& id );
+        QNetworkReply* start( const PlaylistParams& params );
+        Song parseStart( QNetworkReply* ) throw( ParseError );
+        
+        /**
+         * The session id of this dynamic playlist. If the playlist has ended, or has not been started,
+         *  the result is empty.
+         * 
+         */
+        QByteArray sessionId() const;
+        void setSessionId( const QByteArray& id );
         
         /**
          * The current song of this dynamic playlist. Once this song has been played,
@@ -166,9 +176,15 @@ namespace Echonest{
         /** 
          * Generate a static playlist, according to the desired criteria.
          */
-        static SongList staticPlaylist( const PlaylistParams& params );
+        static QNetworkReply* staticPlaylist( const PlaylistParams& params );
+        static SongList parseStaticPlaylist( QNetworkReply* reply ) throw( ParseError );
         
     private:
+        static QByteArray playlistParamToString( PlaylistParam param );
+        static QNetworkReply* generateInternal( const PlaylistParams& params, const QByteArray& type );
+        static QByteArray playlistSortToString(SortingType sorting);
+        static QByteArray playlistArtistPickToString(ArtistPick pick);
+        
         QSharedDataPointer<DynamicPlaylistData> d;
     };
     

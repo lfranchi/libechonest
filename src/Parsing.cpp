@@ -582,3 +582,13 @@ Echonest::License Echonest::Parser::parseLicense( QXmlStreamReader& xml ) throw(
     xml.readNextStartElement();
     return license;
 }
+
+QByteArray Echonest::Parser::parsePlaylistSessionId( QXmlStreamReader& xml ) throw( ParseError )
+{
+    if( xml.name() != "session_id" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw new Echonest::ParseError( Echonest::UnknownParseError );
+    
+    QByteArray sessionId = xml.readElementText().toLatin1();
+    xml.readNext(); //read to next start element
+    return sessionId;
+}

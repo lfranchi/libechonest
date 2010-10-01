@@ -79,6 +79,8 @@ namespace Parser
     TermList parseTermList( QXmlStreamReader& xml );
     
     License parseLicense( QXmlStreamReader& xml ) throw( ParseError );
+    
+    QByteArray parsePlaylistSessionId( QXmlStreamReader& xml ) throw( ParseError );
 }
 }
 

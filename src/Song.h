@@ -32,6 +32,7 @@ class QNetworkReply;
 class SongData;
 namespace Echonest{
 
+    class DynamicPlaylist; // forward declare for friend declaration
   
 /**
  * This encapsulates an Echo Nest song---use it if you wish to get information about a song,
@@ -192,6 +193,7 @@ public:
   
   QString toString() const;
   
+  friend class DynamicPlaylist;
 private:
     static QByteArray searchParamToString( SearchParam param );
     static void addQueryInformation( QUrl& url, SongInformation parts );
@@ -206,4 +208,7 @@ QDebug operator<<(QDebug d, const Song &song);
 Q_DECLARE_OPERATORS_FOR_FLAGS(Song::SongInformation)
 
 } // namespace
+
+Q_DECLARE_METATYPE( Echonest::Song::SongInformation )
+
 #endif

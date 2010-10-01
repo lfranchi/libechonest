@@ -14,21 +14,21 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
 
-#include "Song.h"
-#include <QSharedData>
-#include <QString>
+#ifndef ECHONEST_PLAYLIST_TEST_H
+#define ECHONEST_PLAYLIST_TEST_H
 
-class DynamicPlaylistData : public QSharedData
+#include <QtTest/QtTest>
+
+class PlaylistTest : public QObject
 {
-public:
-    DynamicPlaylistData() {}
-    DynamicPlaylistData(const DynamicPlaylistData& other)
-    {
-        sessionId = other.sessionId;
-        currentSong = other.currentSong;
-    }
+    Q_OBJECT
+private slots:
+    void initTestCase();
     
-    QByteArray sessionId;
-    Echonest::Song currentSong;
+    void testStatic1();
+    void testStatic2();
+    void testDynamic1();
+    void testDynamic2();
 };
 
+#endif
