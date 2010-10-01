@@ -60,7 +60,7 @@ void ArtistTest::testAudio()
     testArtist.setName( QLatin1String( "Goo Goo Dolls") );
     
     QNetworkReply* reply = testArtist.fetchAudio( 5, 5 );
-    
+    qDebug() << reply->url().toString();
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();

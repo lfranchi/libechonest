@@ -18,10 +18,12 @@
 #define ECHONEST_SONG_P_H
 
 #include "Track.h"
+#include "AudioSummary.h"
 
 #include <QSharedData>
 #include <QString>
 #include <QVector>
+
 
 class SongData : public QSharedData
 {
@@ -35,7 +37,7 @@ public:
         artistName = other.artistName;
         artistId = other.artistId;
         
-//         audioSummary = other.AudioSummary;
+        audioSummary = other.audioSummary;
         tracks = other.tracks;
         hotttnesss = other.hotttnesss;
         artistHotttnesss = other.artistHotttnesss;
@@ -51,7 +53,7 @@ public:
     QByteArray artistId;
     
     // The rest are optional that require manual fetching to populate
-    //     AudioSummary audioSummary;
+    Echonest::AudioSummary audioSummary;
     QVector<Echonest::Track> tracks;
     qreal hotttnesss;
     qreal artistHotttnesss;

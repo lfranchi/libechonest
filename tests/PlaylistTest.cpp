@@ -88,13 +88,13 @@ void PlaylistTest::testStatic2()
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::MaxTempo, 100 ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Mode, 0 ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistDescriptionType ) );
-    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Song::SongInformation( Song::AudioSummary | Song::Hotttnesss | Song::ArtistHotttnesss | Song::ArtistFamiliarity ) ) ) );
-    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 7 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Song::SongInformation( Song::AudioSummaryInformation | Song::Hotttnesss | Song::ArtistHotttnesss | Song::ArtistFamiliarity ) ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 1 ) );
     
     reply = DynamicPlaylist::staticPlaylist( p );
     
     qDebug() << reply->url().toString();
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&description=70s&description=folk^2&artist_min_familiarity=0.4&max_tempo=100&mode=0&type=artist-description&bucket=audio_summary&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&results=7" ) );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&description=70s&description=folk^2&artist_min_familiarity=0.4&max_tempo=100&mode=0&type=artist-description&bucket=audio_summary&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&results=1" ) );
     
     QEventLoop loop2;
     loop2.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -104,6 +104,8 @@ void PlaylistTest::testStatic2()
     QVERIFY( songs.size() == 7 );
     Q_FOREACH( const Song& song, songs ) {
         QVERIFY( !song.id().isEmpty() );
+        qDebug() << song << song.audioSummary();
+        QVERIFY( song.audioSummary().duration() > 0 );
     }
         
 }

@@ -33,7 +33,8 @@ class SongData;
 namespace Echonest{
 
     class DynamicPlaylist; // forward declare for friend declaration
-  
+    class AudioSummary;
+    
 /**
  * This encapsulates an Echo Nest song---use it if you wish to get information about a song,
  *   search for a song, etc.
@@ -45,7 +46,7 @@ class ECHONEST_EXPORT Song
   
 public:
   enum SongInformationFlag {
-      AudioSummary = 0x01,
+      AudioSummaryInformation = 0x01,
       Tracks = 0x02,
       Hotttnesss = 0x04,
       ArtistHotttnesss = 0x08,
@@ -118,7 +119,9 @@ public:
   /**
    * The full audio summary and analysis of this song.
    */
-  //   AudioSummary audioSummary() const;
+   AudioSummary audioSummary() const;
+   void setAudioSummary( const AudioSummary& summary );
+   
   /**
    * The associated Track objects with acoustic track information
    */

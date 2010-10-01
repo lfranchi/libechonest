@@ -89,30 +89,30 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
     
     Echonest::Song song;   
     while( !( xml.name() == "song" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
-        if( xml.name() == "id" && xml.tokenType() == QXmlStreamReader::StartElement )
+        if( xml.name() == "id" && xml.isStartElement() )
             song.setId( xml.readElementText().toLatin1() );
-        else if( xml.name() == "title" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "title" && xml.isStartElement() )
             song.setTitle( xml.readElementText() );
-        else if( xml.name() == "artist_id" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "artist_id" && xml.isStartElement() )
             song.setArtistId( xml.readElementText().toLatin1() );
-        else if( xml.name() == "artist_name" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "artist_name" && xml.isStartElement() )
             song.setArtistName( xml.readElementText() );
-        else if( xml.name() == "song_hotttnesss" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "song_hotttnesss" && xml.isStartElement() )
             song.setHotttnesss( xml.readElementText().toDouble() );
-        else if( xml.name() == "artist_hotttnesss" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "artist_hotttnesss" && xml.isStartElement() )
             song.setArtistHotttnesss( xml.readElementText().toDouble() );
-        else if( xml.name() == "artist_familiarity" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "artist_familiarity" && xml.isStartElement() )
             song.setArtistFamiliarity( xml.readElementText().toDouble() );
-        else if( xml.name() == "artist_location" && xml.tokenType() == QXmlStreamReader::StartElement ) {
+        else if( xml.name() == "artist_location" && xml.isStartElement() ) {
             while( !( xml.name() ==  "location" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
                 xml.readNextStartElement();
                 if( xml.name() == "location" )
                     song.setArtistLocation( xml.readElementText() );
             }
             xml.readNext();
+        } else if( xml.name() == "audio_summary" && xml.isStartElement() ) {
+            song.setAudioSummary( parseAudioSummary( xml ) );
         }
-        // TODO tracks
-        // TODO audio_summary
         xml.readNext();
     }
     xml.readNext(); // skip past the last </song>
@@ -128,27 +128,27 @@ Echonest::Track Echonest::Parser::parseTrack( QXmlStreamReader& xml ) throw( Ech
     
     Echonest::Track track;
     while( !( xml.name() == "track" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
-        if( xml.name() == "id" && xml.tokenType() == QXmlStreamReader::StartElement )
+        if( xml.name() == "id" && xml.isStartElement() )
             track.setId( xml.readElementText().toLatin1() );
-        else if( xml.name() == "title" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "title" && xml.isStartElement() )
             track.setTitle( xml.readElementText() );
-        else if( xml.name() == "artist" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "artist" && xml.isStartElement() )
             track.setArtist( xml.readElementText() );
-        else if( xml.name() == "status" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "status" && xml.isStartElement() )
             track.setStatus( Echonest::statusToEnum( xml.readElementText() ) );
-        else if( xml.name() == "analyzer_version" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "analyzer_version" && xml.isStartElement() )
             track.setAnalyzerVersion( xml.readElementText() );
-        else if( xml.name() == "release" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "release" && xml.isStartElement() )
             track.setRelease( xml.readElementText() );
-        else if( xml.name() == "audio_md5" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "audio_md5" && xml.isStartElement() )
             track.setAudioMD5( xml.readElementText().toLatin1() );
-        else if( xml.name() == "bitrate" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "bitrate" && xml.isStartElement() )
             track.setBitrate( xml.readElementText().toInt() );
-        else if( xml.name() == "samplerate" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "samplerate" && xml.isStartElement() )
             track.setSamplerate( xml.readElementText().toInt() );
-        else if( xml.name() == "md5" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "md5" && xml.isStartElement() )
             track.setMD5( xml.readElementText().toLatin1() );
-        else if( xml.name() == "audio_summary" && xml.tokenType() == QXmlStreamReader::StartElement ) {
+        else if( xml.name() == "audio_summary" && xml.isStartElement() ) {
             track.setAudioSummary( parseAudioSummary( xml ) );
             continue;
         }
@@ -168,24 +168,23 @@ Echonest::AudioSummary Echonest::Parser::parseAudioSummary( QXmlStreamReader& xm
     
     Echonest::AudioSummary summary;
     while( !( xml.name() == "audio_summary" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
-        if( xml.name() == "key" && xml.tokenType() == QXmlStreamReader::StartElement )
+        if( xml.name() == "key" && xml.isStartElement() )
             summary.setKey( xml.readElementText().toInt() );
-        else if( xml.name() == "analysis_url" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "analysis_url" && xml.isStartElement() )
             summary.setAnalysisUrl( xml.readElementText() );
-        else if( xml.name() == "tempo" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "tempo" && xml.isStartElement() )
             summary.setTempo( xml.readElementText().toDouble() );
-        else if( xml.name() == "mode" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "mode" && xml.isStartElement() )
             summary.setMode( xml.readElementText().toInt() );
-        else if( xml.name() == "time_signature" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "time_signature" && xml.isStartElement() )
             summary.setTimeSignature( xml.readElementText().toInt() );
-        else if( xml.name() == "duration" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "duration" && xml.isStartElement() )
             summary.setDuration( xml.readElementText().toDouble() );
-        else if( xml.name() == "loudness" && xml.tokenType() == QXmlStreamReader::StartElement )
+        else if( xml.name() == "loudness" && xml.isStartElement() )
             summary.setLoudness( xml.readElementText().toDouble() );
         
         xml.readNext();
     }
-    xml.readNext(); // skip past the lasts
     
     return summary;
 }
@@ -503,7 +502,7 @@ void Echonest::Parser::parseVideos( QXmlStreamReader& xml, Echonest::Artist& art
         throw new Echonest::ParseError( Echonest::UnknownParseError );
     
     Echonest::VideoList videos;
-    while( xml.name() == "video" && xml.tokenType() == QXmlStreamReader::StartElement ) {
+    while( xml.name() == "video" && xml.isStartElement() ) {
         
         Echonest::Video video;
         
@@ -536,7 +535,7 @@ Echonest::TermList Echonest::Parser::parseTermList( QXmlStreamReader& xml )
         throw new Echonest::ParseError( Echonest::UnknownParseError );
     
     Echonest::TermList terms;
-    while( xml.name() == "terms" && xml.tokenType() == QXmlStreamReader::StartElement ) {
+    while( xml.name() == "terms" && xml.isStartElement() ) {
         
         Echonest::Term term;
         

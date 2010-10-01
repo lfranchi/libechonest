@@ -18,6 +18,7 @@
 
 #include "Config.h"
 #include "Song_p.h"
+#include "AudioSummary.h"
 
 #include <QNetworkReply>
 #include <QDebug>
@@ -128,6 +129,16 @@ qreal Echonest::Song::artistHotttnesss() const
 void Echonest::Song::setArtistHotttnesss(qreal artistHotttnesss)
 {
     d->artistHotttnesss = artistHotttnesss;
+}
+
+Echonest::AudioSummary Echonest::Song::audioSummary() const
+{
+    return d->audioSummary;
+}
+
+void Echonest::Song::setAudioSummary(const Echonest::AudioSummary& summary)
+{
+    d->audioSummary = summary;
 }
 
 qreal Echonest::Song::artistFamiliarity() const
@@ -270,7 +281,7 @@ QByteArray Echonest::Song::searchParamToString( Echonest::Song::SearchParam para
 
 void Echonest::Song::addQueryInformation(QUrl& url, Echonest::Song::SongInformation parts)
 {
-    if( parts.testFlag( Echonest::Song::AudioSummary ) )
+    if( parts.testFlag( Echonest::Song::AudioSummaryInformation ) )
         url.addEncodedQueryItem( "bucket", "audio_summary" );
     if( parts.testFlag( Echonest::Song::Tracks ) )
         url.addEncodedQueryItem( "bucket", "tracks" );
