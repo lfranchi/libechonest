@@ -193,8 +193,9 @@ void Echonest::Song::parseInformation( QNetworkReply* reply ) throw( ParseError 
     Echonest::Parser::readStatus( xml );
     // we'll just take the new data. it is given as a list even though it can only have 1 song as we specify the song id
     QVector< Echonest::Song > songs = Echonest::Parser::parseSongList( xml );
-    if( !songs.size() == 1 )
-        throw new ParseError( Echonest::UnknownParseError );
+    if( !songs.size() == 1 ) { // no data for this song. returned empty.
+        return;
+    }
     // copy any non-default values
     Echonest::Song newSong = songs.at( 0 );
     if( newSong.hotttnesss() >= 0 )

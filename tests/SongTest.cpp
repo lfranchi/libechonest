@@ -33,6 +33,7 @@ void SongTest::testSearch1()
     Echonest::Song::SearchParams params;
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Artist, QLatin1String("Modest Mouse") ) );
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Title, QLatin1String("Float On") ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::Results, 2 ) );
     
     QNetworkReply* reply = Echonest::Song::search( params, Echonest::Song::ArtistHotttnesss  | Echonest::Song::ArtistLocation | Echonest::Song::ArtistFamiliarity );
     
