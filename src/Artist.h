@@ -265,7 +265,7 @@ namespace Echonest{
          * The idspace can be used to specify what idspace to return the results in, if none is specifed, The Echo Nest song identifiers
          *   are used. If limitToIdSpace is true, then only results in the requested idspace are returned.
          */
-        QNetworkReply* fetchSongs( ArtistInformation idspace = NoInformation, bool limitToIdSpace = false ) const;
+        QNetworkReply* fetchSongs( ArtistInformation idspace = NoInformation, bool limitToIdSpace = false, int numResults = 0, int offset = -1 ) const;
         
         /**
          * Fetch a list of the most descriptive terms for this artist.

@@ -472,6 +472,9 @@ void ArtistTest::testSongsUrl()
     
     QNetworkReply* reply = testArtist.fetchSongs();
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/songs?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID" ) );
+    
+    reply = testArtist.fetchSongs( Artist::NoInformation, false, 20, 5 );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/songs?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID&results=20&start=5" ) );
 }
 
 void ArtistTest::testSongs()
@@ -490,6 +493,19 @@ void ArtistTest::testSongs()
     QVERIFY( testArtist.songs().size() > 0 );
     
     qDebug() << testArtist.songs();
+    
+    reply = testArtist.fetchSongs( Artist::NoInformation, false, 10, 5 );  
+    qDebug() << reply->url().toString();
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+    
+    qDebug() << testArtist.songs().size();
+    QVERIFY( testArtist.songs().size() == 10 );
+    
+    qDebug() << testArtist.songs();
+    
+    // TODO support ID spaces
 }
 
 void ArtistTest::testTopHotttUrl()

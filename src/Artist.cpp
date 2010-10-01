@@ -331,9 +331,9 @@ QNetworkReply* Echonest::Artist::fetchSimilar(const Echonest::Artist::SearchPara
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
-QNetworkReply* Echonest::Artist::fetchSongs( Echonest::Artist::ArtistInformation idspace, bool limitToIdSpace ) const
+QNetworkReply* Echonest::Artist::fetchSongs( Echonest::Artist::ArtistInformation idspace, bool limitToIdSpace, int numResults, int offset  ) const
 {
-    QUrl url = setupQuery( "songs", 0, -1 );
+    QUrl url = setupQuery( "songs", numResults, offset );
     addQueryInformation( url, idspace );
     if( limitToIdSpace )
         url.addEncodedQueryItem( "limit", "true" );
