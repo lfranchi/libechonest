@@ -363,7 +363,7 @@ namespace Echonest{
         QSharedDataPointer<ArtistData> d;
     };
     
-    QDebug operator<<(QDebug d, const Echonest::Artist& artist);
+    ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::Artist& artist);
     
     Q_DECLARE_OPERATORS_FOR_FLAGS(Artist::ArtistInformation)
 } // namespace

@@ -38,6 +38,7 @@ Echonest::Artist::Artist(const Echonest::Artist& other)
 Echonest::Artist& Echonest::Artist::operator=(const Echonest::Artist& artist)
 {
     d = artist.d;
+    return *this;
 }
 
 Echonest::Artist::~Artist()

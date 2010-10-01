@@ -177,7 +177,7 @@ private:
     QSharedDataPointer<TrackData> d;
 };
 
-QDebug operator<<(QDebug d, const Echonest::Track& track);
+ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::Track& track);
 
 
 } // namespace

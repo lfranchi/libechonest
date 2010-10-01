@@ -206,7 +206,7 @@ private:
 
 typedef QVector< Song > SongList;
 
-QDebug operator<<(QDebug d, const Song &song);
+ECHONEST_EXPORT QDebug operator<<(QDebug d, const Song &song);
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Song::SongInformation)
 

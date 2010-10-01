@@ -193,7 +193,7 @@ namespace Echonest{
         QSharedDataPointer<DynamicPlaylistData> d;
     };
     
-    QDebug operator<<(QDebug d, const Echonest::DynamicPlaylist& playlist);
+    ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::DynamicPlaylist& playlist);
     
     
 } // namespace

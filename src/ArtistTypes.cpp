@@ -34,6 +34,7 @@ Echonest::ArtistImage::ArtistImage(const Echonest::ArtistImage& other)
 Echonest::ArtistImage& Echonest::ArtistImage::operator=(const Echonest::ArtistImage& img)
 {
     d = img.d;
+    return *this;
 }
 
 Echonest::ArtistImage::~ArtistImage()
@@ -75,6 +76,7 @@ Echonest::AudioFile::AudioFile(const Echonest::AudioFile& other)
 Echonest::AudioFile& Echonest::AudioFile::operator=(const Echonest::AudioFile& artist)
 {
     d = artist.d;
+    return *this;
 }
 
 Echonest::AudioFile::~AudioFile()
@@ -176,6 +178,7 @@ Echonest::Biography::Biography(const Echonest::Biography& other)
 Echonest::Biography& Echonest::Biography::operator=(const Echonest::Biography& biblio)
 {
     d = biblio.d;
+    return *this;
 }
 
 Echonest::Biography::~Biography()
@@ -236,6 +239,7 @@ Echonest::Blog::Blog(const Echonest::Blog& other) : d( other.d )
 Echonest::Blog& Echonest::Blog::operator=(const Echonest::Blog& other)
 {
     d = other.d;
+    return *this;
 }
 
 Echonest::Blog::~Blog()
@@ -317,6 +321,7 @@ Echonest::Review::Review(const Echonest::Review& other) : d( other.d )
 Echonest::Review& Echonest::Review::operator=(const Echonest::Review& other)
 {
     d = other.d;
+    return *this;
 }
 
 Echonest::Review::~Review()
@@ -418,6 +423,7 @@ Echonest::Term::Term(const Echonest::Term& other) : d( other.d )
 Echonest::Term& Echonest::Term::operator=(const Echonest::Term& other)
 {
     d = other.d;
+    return *this;
 }
 
 Echonest::Term::~Term()
@@ -468,6 +474,7 @@ Echonest::Video::Video(const Echonest::Video& other) : d( other.d )
 Echonest::Video& Echonest::Video::operator=(const Echonest::Video& other)
 {
     d = other.d;
+    return *this;
 }
 
 Echonest::Video::~Video()

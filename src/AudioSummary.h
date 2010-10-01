@@ -130,7 +130,7 @@ namespace Echonest{
         qreal timestamp() const;
         void setTimestamp( qreal timestamp );
         
-        /**
+        /** ECHONEST_EXPORT 
          * The sample rate of the track.
          */
         qreal sampleRate() const;
@@ -220,7 +220,7 @@ namespace Echonest{
         QSharedDataPointer<AudioSummaryData> d;
     };
     
-    QDebug operator<<(QDebug d, const Echonest::AudioSummary& summary);
+    ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::AudioSummary& summary);
     
     
 } // namespace

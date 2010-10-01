@@ -39,6 +39,7 @@ Echonest::DynamicPlaylist::~DynamicPlaylist()
 Echonest::DynamicPlaylist& Echonest::DynamicPlaylist::operator=(const Echonest::DynamicPlaylist& playlist)
 {
     d = playlist.d;
+    return *this;
 }
 
 QNetworkReply* Echonest::DynamicPlaylist::start(const Echonest::DynamicPlaylist::PlaylistParams& params)

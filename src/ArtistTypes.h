@@ -369,13 +369,13 @@ namespace Echonest{
         QSharedDataPointer<VideoData> d;
     };
     
-    QDebug operator<<(QDebug d, const Echonest::AudioFile& artist);
-    QDebug operator<<(QDebug d, const Echonest::Biography& biblio);
-    QDebug operator<<(QDebug d, const Echonest::Blog& blog);
-    QDebug operator<<(QDebug d, const Echonest::ArtistImage& img);
-    QDebug operator<<(QDebug d, const Echonest::Review& review);
-    QDebug operator<<(QDebug d, const Echonest::Term& term);
-    QDebug operator<<(QDebug d, const Echonest::Video& video);
+    ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::AudioFile& artist);
+    ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::Biography& biblio);
+    ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::Blog& blog);
+    ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::ArtistImage& img);
+    ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::Review& review);
+    ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::Term& term);
+    ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::Video& video);
     
     typedef QVector< AudioFile > AudioList;
     typedef QVector< Biography > BiographyList;

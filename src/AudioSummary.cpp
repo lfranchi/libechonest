@@ -280,7 +280,7 @@ void Echonest::AudioSummary::setTimeSignature(int timeSignature)
 
 qreal Echonest::AudioSummary::timeSignatureConfidence() const
 {
-    d->time_signature_confidence;
+    return d->time_signature_confidence;
 }
 
 void Echonest::AudioSummary::setTimeSignatureConfidence(qreal confidence)

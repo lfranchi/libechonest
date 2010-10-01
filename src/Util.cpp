@@ -29,6 +29,7 @@ Echonest::Analysis::AnalysisStatus Echonest::statusToEnum(const QString& status)
     } else if( status == QLatin1String("error" )) {
         return Echonest::Analysis::Error;
     }
+    return Echonest::Analysis::Unknown;
 }
 
 QString Echonest::statusToString(Echonest::Analysis::AnalysisStatus status)
@@ -44,4 +45,5 @@ QString Echonest::statusToString(Echonest::Analysis::AnalysisStatus status)
         case Echonest::Analysis::Error:
             return QLatin1String( "error" );
     }
+    return QString();
 }

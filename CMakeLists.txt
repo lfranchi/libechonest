@@ -17,6 +17,18 @@ set(ECHONEST_LIB_PATCH_VERSION "0")
 
 set( ECHONEST_LIB_VERSION_STRING "${ECHONEST_LIB_MAJOR_VERSION}.${ECHONEST_LIB_MINOR_VERSION}.${ECHONEST_LIB_PATCH_VERSION}")
 
+IF (CMAKE_COMPILER_IS_GNUCXX)
+    ADD_DEFINITIONS( -Wall -Wundef -Wcast-align -Wchar-subscripts -Wpointer-arith
+       -Wwrite-strings -Wpacked -Wformat-security -Wmissing-format-attribute
+       -Wold-style-cast -Woverloaded-virtual -Wnon-virtual-dtor -Werror )
+    ADD_DEFINITIONS( -fvisibility=hidden )
+# to be added:
+#       -Wshadow
+# FIXME we might want this one back in, but Qt 4.4.3 spits gazillions of warnings with it on Linux-64:
+#       -Wconversion
+ENDIF (CMAKE_COMPILER_IS_GNUCXX)
+
+
 option(ECHONEST_BUILD_TESTS "Build all unit tests" ON)
 
 if(ECHONEST_BUILD_TESTS)

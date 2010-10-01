@@ -52,6 +52,8 @@ void Echonest::Parser::readStatus( QXmlStreamReader& xml ) throw( Echonest::Pars
             // only check the error code for now
             xml.readNextStartElement();
             double version = xml.readElementText().toDouble();
+            // TODO use version for something?
+            Q_UNUSED(version);
             xml.readNextStartElement();
             Echonest::ErrorType code = static_cast< Echonest::ErrorType >( xml.readElementText().toInt() );
             xml.readNextStartElement();
