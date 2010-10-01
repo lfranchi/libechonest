@@ -59,7 +59,7 @@ void ArtistTest::testAudio()
     Artist testArtist;
     testArtist.setName( QLatin1String( "Goo Goo Dolls") );
     
-    QNetworkReply* reply = testArtist.fetchAudio( 5, 5 );
+    QNetworkReply* reply = testArtist.fetchAudio( 5, 2 );
     qDebug() << reply->url().toString();
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -67,7 +67,7 @@ void ArtistTest::testAudio()
     testArtist.parseProfile( reply );
     
     qDebug() << testArtist.audio().size();
-    QVERIFY( testArtist.audio().size() == 5 );
+    QVERIFY( testArtist.audio().size() == 3 );
     
     qDebug() << testArtist.audio().at(0).artist() << testArtist.audio().at(0).date() << testArtist.audio().at(0).id() << testArtist.audio().at(0).length() << testArtist.audio().at(0).release() << 
                 testArtist.audio().at(0).title() << testArtist.audio().at(0).url() << testArtist.audio().at(0).title() << testArtist.audio().at(0).link();

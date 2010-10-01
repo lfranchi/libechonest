@@ -3,3 +3,4 @@ TODO list
 
 * Add parsing and handling of id spaces
 * Add support for xspf playlists, especially chained xspfs
+* Add JSON parsing of full AudioSummary
