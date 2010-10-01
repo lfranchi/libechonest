@@ -64,21 +64,48 @@ void PlaylistTest::testStatic2()
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::ArtistMaxFamiliarity, 0.4 ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistType ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Song::SongInformation( Song::Hotttnesss | Song::ArtistHotttnesss | Song::ArtistFamiliarity ) ) ) );
-    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 10 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 4 ) );
     
     QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
     
     qDebug() << reply->url().toString();
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&artist=tallest+man+on+earth&artist=bon+iver&artist=mumford+and+sons&artist_max_familiarity=0.4&type=artist&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&results=10" ) );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&artist=tallest+man+on+earth&artist=bon+iver&artist=mumford+and+sons&artist_max_familiarity=0.4&type=artist&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&results=4" ) );
     
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     SongList songs = DynamicPlaylist::parseStaticPlaylist( reply );
     
-    QVERIFY( songs.size() == 10 );
-    Q_FOREACH( const Song& song, songs )
-    QVERIFY( !song.id().isEmpty() );
+    QVERIFY( songs.size() == 4 );
+    Q_FOREACH( const Song& song, songs ) {
+        QVERIFY( !song.id().isEmpty() );
+    }
+    
+    p.clear();
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Description, QLatin1String( "70s" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Description, QLatin1String( "folk^2" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::ArtistMinFamiliarity, 0.4 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::MaxTempo, 100 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Mode, 0 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistDescriptionType ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Song::SongInformation( Song::AudioSummary | Song::Hotttnesss | Song::ArtistHotttnesss | Song::ArtistFamiliarity ) ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 7 ) );
+    
+    reply = DynamicPlaylist::staticPlaylist( p );
+    
+    qDebug() << reply->url().toString();
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&description=70s&description=folk^2&artist_min_familiarity=0.4&max_tempo=100&mode=0&type=artist-description&bucket=audio_summary&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&results=7" ) );
+    
+    QEventLoop loop2;
+    loop2.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop2.exec();
+    songs = DynamicPlaylist::parseStaticPlaylist( reply );
+    
+    QVERIFY( songs.size() == 7 );
+    Q_FOREACH( const Song& song, songs ) {
+        QVERIFY( !song.id().isEmpty() );
+    }
+        
 }
 
 void PlaylistTest::testDynamic1()
