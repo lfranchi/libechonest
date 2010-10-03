@@ -31,7 +31,6 @@ void TrackTest::initTestCase()
 
 void TrackTest::testUploadLocalFile()
 {
-    /*
     QFile f( QString::fromLatin1( DATA_DIR "/01 - Cellule.mp3" ) );
     
     QVERIFY( f.exists() );
@@ -53,7 +52,7 @@ void TrackTest::testUploadLocalFile()
     QVERIFY( reply->error() == QNetworkReply::NoError );
     Echonest::Track track = Echonest::Track::parseProfile( reply );
     
-    verifyTrack1( track ); */
+    verifyTrack1( track );
 }
 
 void TrackTest::testProfileFromMD5()
