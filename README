@@ -7,7 +7,7 @@ the APIs can be found here:
 
 http://developer.echonest.com/docs/v4/
 
-liblastfm is developed by Leo Franchi (lfranchi@kde.org), and is available on gitorious 
+libechonest is developed by Leo Franchi (lfranchi@kde.org), and is available on gitorious 
  at http://gitorious.org/libechonest . Merge requests, API comments, and more are appreciated.
 
 Dependencies
