@@ -27,9 +27,10 @@ void Echonest::Parser::checkForErrors( QNetworkReply* reply ) throw( Echonest::P
     if( !reply )
         throw ParseError( Echonest::UnknownError );
     
-    if( !reply->isFinished() )
-        throw ParseError( Echonest::UnfinishedQuery );
-    
+    // TODO sometimes this returns false when it shouldn't be? what's going on..
+//     if( !reply->isFinished() )
+//         throw ParseError( Echonest::UnfinishedQuery );
+//     
     if( reply->error() != QNetworkReply::NoError ) {   
         ParseError* err = new ParseError( Echonest::NetworkError );
         err->setNetworkError( reply->error() );
