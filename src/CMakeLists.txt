@@ -14,6 +14,7 @@ set( LIBECHONEST_SRC
 )
 
 set( LIBECHONEST_H
+        echonest_export.h
         Track.h
         Song.h
         Artist.h
@@ -21,6 +22,7 @@ set( LIBECHONEST_H
         Config.h
         AudioSummary.h
         ArtistTypes.h
+        Util.h
 )
 
 QT4_WRAP_CPP( ${LIBECHONEST_H} )
