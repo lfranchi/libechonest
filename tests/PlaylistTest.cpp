@@ -229,3 +229,4 @@ void PlaylistTest::testDynamic2()
 QTEST_MAIN( PlaylistTest )
 
 #include "PlaylistTest.moc"
+
