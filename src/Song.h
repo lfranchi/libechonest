@@ -187,10 +187,7 @@ public:
   /**
    * Identify a song from a given Echo Nest fingerprint hash code
    * 
-   * NOTE this is currently not supported, as the Echo Nest hash code
-   *      generator is not currently open source, so I don't care much 
-   *      for it.
-   *
+   * TODO
    * static QNetworkReply* identify(  ) const;
    */
   
