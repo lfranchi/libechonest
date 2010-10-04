@@ -17,8 +17,8 @@
 #ifndef ECHONEST_EXPORT_H
 #define ECHONEST_EXPORT_H
 
-#ifdef Q_CC_MSVC
-  #define ECHONEST_EXPORT __declspec(dllimport)
+#ifdef _WIN32
+  #define ECHONEST_EXPORT __declspec(dllexport)
 #elif __GNUC__ >= 4
   #define ECHONEST_EXPORT __attribute__ ((visibility("default")))
 #else
