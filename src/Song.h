@@ -78,6 +78,8 @@ public:
       MinHotttnesss,
       MaxLongitude,
       MinLongitude,
+      MaxEnergy,
+      MinEnergy,
       Mode,
       Key,
       Sort
@@ -153,7 +155,7 @@ public:
   void setArtistLocation( const QString& artistLocation );
   
   /**
-   *  This fetch the data from The Echo Nest for the requested data, so it
+   *  This fetches the data from The Echo Nest for the requested data, so it
    *   returns a QNetworkReply*. When the finished() signal is emitted 
    *   from the QNetworkReply object call parseInformation() to save the
    *   data back to this Song object.

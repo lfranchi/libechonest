@@ -145,6 +145,8 @@ void TrackTest::verifyTrack1(const Echonest::Track& track)
     QVERIFY( track.audioSummary().timeSignature() == 4 );
     QVERIFY( track.audioSummary().duration() == 220.86485 );
     QVERIFY( track.audioSummary().loudness() == -11.839 );
+    QVERIFY( track.audioSummary().danceability() > 0 );
+    QVERIFY( track.audioSummary().energy() > 0 );
 }
 
 void TrackTest::verifyTrack2(const Echonest::Track& track)

@@ -112,6 +112,10 @@ namespace Echonest{
             MinDuration, /// 0.0 < duration < 3600.0 (seconds)       the minimum duration of any song on the playlist
             MaxLoudness, /// -100.0 < loudness < 100.0 (dB)  the maximum loudness of any song on the playlist
             MinLoudness, /// -100.0 < loudness < 100.0 (dB)  the minimum loudness of any song on the playlist
+            MinDanceability, /// 0 < danceability < 1  a measure of the minimum danceability of the song
+            MaxDanceability, /// 0 < danceability < 1  a measure of the maximum danceability of the song
+            MinEnergy, /// 0 < danceability < 1  a measure of the maximum energy of the song
+            MaxEnergy, /// 0 < danceability < 1  a measure of the maximum energy of the song
             ArtistMaxFamiliarity, ///  0.0 < familiarity < 1.0 the maximum artist familiarity for songs in the playlist
             ArtistMinFamiliarity, ///  0.0 < familiarity < 1.0 the minimum artist familiarity for songs in the playlist
             ArtistMaxHotttnesss, ///  0.0 < hotttnesss < 1.0  the maximum hotttnesss for artists in the playlist

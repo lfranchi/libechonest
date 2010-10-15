@@ -65,6 +65,24 @@ void SongTest::testSearch1()
         QVERIFY( song.hotttnesss() != -1 );
         
     }
+    
+    params.clear();
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::Artist, QLatin1String("The Tallest Man On Earth") ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::Title, QLatin1String("The King of Spain") ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::Results, 3 ) );
+    
+    reply = Echonest::Song::search( params, Echonest::Song::AudioSummaryInformation );
+
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    
+    songs = Echonest::Song::parseSearch( reply );
+    qDebug() << songs << songs.size();
+    QVERIFY( songs.size() == 3 );
+    QVERIFY( songs[ 0 ].audioSummary().danceability() > 0 );
+    QVERIFY( songs[ 0 ].audioSummary().energy() > 0 );
+    
+    
 }
 
 void SongTest::testProfile()

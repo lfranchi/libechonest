@@ -185,6 +185,10 @@ Echonest::AudioSummary Echonest::Parser::parseAudioSummary( QXmlStreamReader& xm
             summary.setDuration( xml.readElementText().toDouble() );
         else if( xml.name() == "loudness" && xml.isStartElement() )
             summary.setLoudness( xml.readElementText().toDouble() );
+        else if( xml.name() == "danceability" && xml.isStartElement() )
+            summary.setDanceability( xml.readElementText().toDouble() );
+        else if( xml.name() == "energy" && xml.isStartElement() )
+            summary.setEnergy( xml.readElementText().toDouble() );
         
         xml.readNext();
     }

@@ -197,6 +197,14 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "artist_max_familiarity";
         case Echonest::DynamicPlaylist::ArtistMinFamiliarity :
             return "artist_min_familiarity";
+        case Echonest::DynamicPlaylist::MinDanceability :
+            return "min_danceability";
+        case Echonest::DynamicPlaylist::MaxDanceability :
+            return "max_danceability";
+        case Echonest::DynamicPlaylist::MinEnergy :
+            return "min_energy";
+        case Echonest::DynamicPlaylist::MaxEnergy :
+            return "max_energy";
         case Echonest::DynamicPlaylist::ArtistMaxHotttnesss :
             return "artist_max_hotttnesss";
         case Echonest::DynamicPlaylist::ArtistMinHotttnesss :

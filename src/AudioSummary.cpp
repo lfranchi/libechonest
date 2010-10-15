@@ -312,3 +312,24 @@ void Echonest::AudioSummary::setMode(int mode)
 {
     d->mode = mode;
 }
+
+qreal Echonest::AudioSummary::danceability() const
+{
+    return d->danceability;
+}
+
+void Echonest::AudioSummary::setDanceability(qreal dance)
+{
+    d->danceability = dance;
+}
+
+qreal Echonest::AudioSummary::energy() const
+{
+    return d->energy;
+}
+
+void Echonest::AudioSummary::setEnergy(qreal energy)
+{
+    d->energy = energy;
+}
+

@@ -178,7 +178,7 @@ QNetworkReply* Echonest::Song::search( const Echonest::Song::SearchParams& param
     
     SearchParams::const_iterator iter = params.constBegin();
     for( ; iter < params.constEnd(); ++iter )
-        url.addQueryItem( QLatin1String( searchParamToString( iter->first ) ), iter->second.toString() );
+        url.addQueryItem( QLatin1String( searchParamToString( iter->first ) ), iter->second.toString().replace( QLatin1Char( ' ' ), QLatin1Char( '+' ) ) );
     
     qDebug() << "Creating search URL" << url;
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
@@ -270,6 +270,10 @@ QByteArray Echonest::Song::searchParamToString( Echonest::Song::SearchParam para
             return "max_longitude";
         case Echonest::Song::MinLongitude:
             return "min_longitude";
+        case Echonest::Song::MinEnergy:
+            return "min_energy";
+        case Echonest::Song::MaxEnergy:
+            return "max_energy";
         case Echonest::Song::Mode:
             return "mode";
         case Echonest::Song::Key:

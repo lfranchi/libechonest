@@ -85,6 +85,21 @@ namespace Echonest{
         void setLoudness( qreal loudness );
         
         /**
+         * The danceability of this track, from 0 to 1.
+         */
+        qreal danceability() const;
+        void setDanceability( qreal dance );
+        
+        /**
+         * The energy of this song, from 0 to 1.
+         */
+        qreal energy() const;
+        void setEnergy( qreal energy );
+        
+        /// The following require additional fetching to read ///
+                         /** TODO: implement **/
+        
+        /**
          * If you wish to use any of the more detailed track analysis data,
          *  use this method to begin the fetch. One the returned QNetworkReply*
          *  has emitted the finished() signal, call parseFullAnalysis.
