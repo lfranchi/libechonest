@@ -1,0 +1,12 @@
+To tag
+
+1) edit TrackTest.h so as to not do the track upload test.
+2) run tag command with given git hash
+3) Commit
+
+4) checkout, roll tarball
+5) Remove contents of test_data/ folder in tests
+6) Remove various unneeded files, TAGGING, tag_command.sh, etc
+7) create tarball, upload
+
+8) Re-enable track upload test
