@@ -21,7 +21,7 @@ Installing
 
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=/path/to/desired/install .
+cmake -DCMAKE_INSTALL_PREFIX=/path/to/desired/install ..
 make
 make install
 
