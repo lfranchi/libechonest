@@ -113,6 +113,8 @@ namespace Echonest{
         Artist( const Artist& other );
         Artist& operator=( const Artist& artist );
         ~Artist();
+
+        void init();
         
         QByteArray id() const;
         void setId( const QByteArray& id );
@@ -369,4 +371,7 @@ namespace Echonest{
     
     Q_DECLARE_OPERATORS_FOR_FLAGS(Artist::ArtistInformation)
 } // namespace
+
+Q_DECLARE_METATYPE(Echonest::Artist)
+
 #endif

@@ -22,11 +22,13 @@
 Echonest::Artist::Artist()
     : d( new ArtistData )
 {
+    init();
 }
 
 Echonest::Artist::Artist( const QByteArray& id, const QString& name )
     : d( new ArtistData )
 {
+    init();
     d->id = id;
     d->name = name;
 }
@@ -34,12 +36,15 @@ Echonest::Artist::Artist( const QByteArray& id, const QString& name )
 Echonest::Artist::Artist(const QString& name)
     : d( new ArtistData )
 {
+    init();
     setName( name );
 }
 
 Echonest::Artist::Artist(const Echonest::Artist& other)
     : d( other.d )
-{}
+{
+    init();
+}
 
 Echonest::Artist& Echonest::Artist::operator=(const Echonest::Artist& artist)
 {
@@ -52,6 +57,10 @@ Echonest::Artist::~Artist()
 
 }
 
+void Echonest::Artist::init()
+{
+    qRegisterMetaType<Echonest::Artist>("Echonest::Artist");
+}
 
 QByteArray Echonest::Artist::id() const
 {
