@@ -1,5 +1,5 @@
 
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/extra/qjson/src )
 
 set( LIBECHONEST_SRC
         Track.cpp
@@ -11,6 +11,9 @@ set( LIBECHONEST_SRC
         AudioSummary.cpp
         Util.cpp
         ArtistTypes.cpp
+        Generator.cpp
+        Catalog.cpp
+        CatalogEntry.cpp
 )
 
 set( LIBECHONEST_H
@@ -23,12 +26,16 @@ set( LIBECHONEST_H
         AudioSummary.h
         ArtistTypes.h
         Util.h
+        Catalog.h
+        CatalogEntry.h
 )
 
 QT4_WRAP_CPP( ${LIBECHONEST_H} )
 
+add_definitions( -Werror )
+
 add_library( echonest SHARED ${LIBECHONEST_SRC} )
-target_link_libraries( echonest ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}  )
+target_link_libraries( echonest qjson ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}  )
 set_target_properties( echonest PROPERTIES VERSION ${ECHONEST_LIB_VERSION} SOVERSION ${ECHONEST_LIB_VERSION} )
 install( TARGETS echonest DESTINATION lib )
 

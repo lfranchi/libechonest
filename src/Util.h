@@ -36,6 +36,21 @@ namespace Echonest
         };
     }
     
+    namespace CatalogTypes
+    {
+        enum Type {
+            Artist = 0,
+            Song = 1
+        };
+        
+        enum Action {
+            Delete,
+            Update,
+            Play,
+            Skip
+        };
+    }
+    
     typedef struct
     {
         qreal confidence;

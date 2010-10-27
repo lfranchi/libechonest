@@ -30,10 +30,11 @@
 
 class QNetworkReply;
 class SongData;
+
 namespace Echonest{
 
-    class DynamicPlaylist; // forward declare for friend declaration
-    class AudioSummary;
+class DynamicPlaylist; // forward declare for friend declaration
+class AudioSummary;
     
 /**
  * This encapsulates an Echo Nest song---use it if you wish to get information about a song,
