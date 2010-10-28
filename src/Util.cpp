@@ -60,3 +60,13 @@ QByteArray Echonest::catalogTypeToLiteral(Echonest::CatalogTypes::Type type)
             return "";
     }
 }
+
+Echonest::CatalogTypes::Type Echonest::literalToCatalogType( const QByteArray& type )
+{
+    if( type == "artist" )
+        return Echonest::CatalogTypes::Artist;
+    else if( type == "song" )
+        return Echonest::CatalogTypes::Song;
+    else
+        return Echonest::CatalogTypes::Artist;
+}

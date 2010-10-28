@@ -132,7 +132,7 @@ public:
     /**
      * Deletes this catalog from The Echo Nest. Only the API key used to create a catalog can delete it.
      */
-    QNetworkReply* deleteCatalog();
+    QNetworkReply* deleteCatalog() const;
         
     /**
      * Create a new catalog with the given name and type. 
@@ -191,7 +191,7 @@ public:
      * 
      * \return QPair of catalogName, catalogId that was just deleted.
      */
-    QPair< QString, QByteArray > parseDelete() throw( Echonest::ParseError );
+    QPair< QString, QByteArray > parseDelete( QNetworkReply* ) throw( Echonest::ParseError );
     
     /**
      * Parse the result of the list() API call. Will return a list of catalogs---each catalog only
@@ -206,6 +206,10 @@ public:
     static QByteArray parseTicket( QNetworkReply* ) throw( Echonest::ParseError );
     
 private:
+    static QNetworkReply* updatePrivate( QUrl&, const CatalogEntryList& entries );
+    QNetworkReply* readPrivate( QUrl& url, int results, int start ) const;
+    static void addLimits( QUrl&, int results, int start );
+    
     QSharedDataPointer< CatalogData > d;
 };
     

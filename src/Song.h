@@ -34,6 +34,7 @@ class SongData;
 namespace Echonest{
 
 class DynamicPlaylist; // forward declare for friend declaration
+class Catalog;
 class AudioSummary;
     
 /**
@@ -199,7 +200,7 @@ public:
   QString toString() const;
   
   friend class DynamicPlaylist;
-  
+  friend class Catalog; // for access to searchParamToString
 private:
     static QByteArray searchParamToString( SearchParam param );
     static void addQueryInformation( QUrl& url, SongInformation parts );

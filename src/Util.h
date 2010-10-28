@@ -57,9 +57,7 @@ namespace Echonest
             Error
         };
     }
-    
-    QByteArray catalogTypeToLiteral( CatalogTypes::Type );
-    
+        
     typedef struct
     {
         qreal confidence;
@@ -99,6 +97,9 @@ namespace Echonest
     
     Analysis::AnalysisStatus statusToEnum( const QString& status );
     QString statusToString( Analysis::AnalysisStatus status );
+    
+    QByteArray catalogTypeToLiteral( CatalogTypes::Type );
+    CatalogTypes::Type literalToCatalogType( const QByteArray& type );
 }
 
 #endif

@@ -22,6 +22,7 @@
 #include <QXmlStreamReader>
 #include "Song.h"
 #include "Artist.h"
+#include "Catalog.h"
 
 class QNetworkReply;
 
@@ -52,7 +53,7 @@ namespace Parser
     AudioSummary parseAudioSummary( QXmlStreamReader& xml ) throw( ParseError );
     
     // parses a list of artists in an <artists></artists> block
-    Echonest::Artists parseArtists( QXmlStreamReader& xml );
+    Echonest::Artists parseArtists( QXmlStreamReader& xml ) throw( ParseError );
     
     // parses the contents of an artist fetch result, expects to be positioned after the readStatus() call
     // it could be a profile query, in which case it has a bunch of different artist attributes
@@ -76,11 +77,15 @@ namespace Parser
     void parseForeignIds( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
     
     // parse a list of terms
-    TermList parseTermList( QXmlStreamReader& xml );
+    TermList parseTermList( QXmlStreamReader& xml ) throw( ParseError );
     
     License parseLicense( QXmlStreamReader& xml ) throw( ParseError );
     
     QByteArray parsePlaylistSessionId( QXmlStreamReader& xml ) throw( ParseError );
+    
+    // Catalog functions
+    Catalogs parseCatalogList( QXmlStreamReader& xml ) throw( ParseError );
+    Catalog parseCatalog( QXmlStreamReader& xml ) throw( ParseError );
 }
 }
 
