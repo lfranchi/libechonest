@@ -238,7 +238,7 @@ Echonest::Catalogs Echonest::Catalog::parseList(QNetworkReply* reply) throw( Ech
     QXmlStreamReader xml( reply->readAll() );
     Echonest::Parser::readStatus( xml );
     
-    Echonest::Catalogs catalogs = Echonest::Parser::parseCatalogList( xml );
+    Echonest::Catalogs catalogs = Echonest::Catalogs()/* Echonest::Parser::parseCatalogList( xml )*/;
     
     return catalogs;
 }

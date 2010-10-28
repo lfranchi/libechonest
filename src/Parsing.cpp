@@ -605,30 +605,31 @@ QByteArray Echonest::Parser::parsePlaylistSessionId( QXmlStreamReader& xml ) thr
     return sessionId;
 }
 
-Echonest::Catalogs parseCatalogList( QXmlStreamReader& xml ) throw( Echonest::ParseError )
-{
-    if( xml.atEnd() || xml.tokenType() != QXmlStreamReader::StartElement )
-        throw Echonest::ParseError( Echonest::UnknownParseError );
-    
-    int start = -1;
-    int total = -1;
-    while( xml.name() != QLatin1String( "catalogs" ) || !xml.isStartElement() ) {
-        if( xml.name() == "start" && xml.isStartElement() )
-            start = xml.readElementText().toInt();
-        else if( xml.name() == "total" && xml.isStartElement() )
-            total = xml.readElementText().toInt();
-        xml.readNextStartElement();
-    }
-    
-    Echonest::Catalogs catalogs;
-    catalogs.reserve( total );
-    // now we're pointing at the first catalog
-    while( xml.name() != "response" || !xml.isEndElement() )
-        catalogs.append( Echonest::Parser::parseCatalog( xml ) );
-    
-    return catalogs;
-}
-
+// Catalogs parseCatalogList( QXmlStreamReader& xml ) throw( ParseError );
+// Echonest::Catalogs parseCatalogList( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+// {
+//     if( xml.atEnd() || xml.tokenType() != QXmlStreamReader::StartElement )
+//         throw Echonest::ParseError( Echonest::UnknownParseError );
+//     
+//     int start = -1;
+//     int total = -1;
+//     while( xml.name() != QLatin1String( "catalogs" ) || !xml.isStartElement() ) {
+//         if( xml.name() == "start" && xml.isStartElement() )
+//             start = xml.readElementText().toInt();
+//         else if( xml.name() == "total" && xml.isStartElement() )
+//             total = xml.readElementText().toInt();
+//         xml.readNextStartElement();
+//     }
+//     
+//     Echonest::Catalogs catalogs;
+//     catalogs.reserve( total );
+//     // now we're pointing at the first catalog
+//     while( xml.name() != "response" || !xml.isEndElement() )
+//         catalogs.append( Echonest::Parser::parseCatalog( xml ) );
+//     
+//     return catalogs;
+// }
+/*
 Echonest::Catalog parseCatalog( QXmlStreamReader& xml ) throw( Echonest::ParseError )
 {
     if( xml.atEnd() || xml.name() != "catalogs" || xml.isStartElement() )
@@ -648,7 +649,7 @@ Echonest::Catalog parseCatalog( QXmlStreamReader& xml ) throw( Echonest::ParseEr
     }
     
     return catalog;
-}
+}*/
 
 
 
