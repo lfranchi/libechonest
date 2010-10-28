@@ -33,7 +33,7 @@ Echonest::Artist::Artist( const QByteArray& id, const QString& name )
     d->name = name;
 }
 
-Echonest::Artist::Artist(const QString& name)
+Echonest::Artist::Artist( const QString& name )
     : d( new ArtistData )
 {
     init();

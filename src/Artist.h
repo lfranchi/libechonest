@@ -112,7 +112,7 @@ namespace Echonest{
         
         Artist( const Artist& other );
         Artist& operator=( const Artist& artist );
-        ~Artist();
+        virtual ~Artist();
 
         void init();
         

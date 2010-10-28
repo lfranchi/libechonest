@@ -49,7 +49,16 @@ namespace Echonest
             Play,
             Skip
         };
+        
+        enum TicketStatus {
+            Unknown,
+            Pending,
+            Complete,
+            Error
+        };
     }
+    
+    QByteArray catalogTypeToLiteral( CatalogTypes::Type );
     
     typedef struct
     {

@@ -139,7 +139,7 @@ namespace Echonest{
         typedef QVector< PlaylistParamData > PlaylistParams;
         
         DynamicPlaylist();
-        ~DynamicPlaylist();
+        virtual ~DynamicPlaylist();
         DynamicPlaylist( const DynamicPlaylist& other );
         DynamicPlaylist& operator=( const DynamicPlaylist& playlist );
         

@@ -17,26 +17,38 @@
 #define ECHONEST_CATALOG_ENTRY_H
 
 #include "echonest_export.h"
+#include "Util.h"
 
 #include <QByteArray>
 #include <QSharedDataPointer>
 #include <QString>
 #include <QVector>
-#include "Util.h"
 
 class CatalogEntryData;
 
 namespace Echonest {
     
 /**
- * This class described a catalog entry for use in the Catalog API methods.
+ * This rather simple struct collects information about a status update
+ */
+typedef struct CatalogStatusStruct {
+    CatalogTypes::TicketStatus status;
+    
+    int items_updated;
+    QList< QPair< QByteArray, QString > > items; // List of [ item_id, info ]
+    
+    CatalogStatusStruct() : status( CatalogTypes::Unknown ), items_updated( -1 ) {}
+} CatalogStatus;
+
+/**
+ * This class described a catalog entry for use in the Catalog update() call.
  *  All data fields are optional except Action, and only the ones specified will be sent. 
  */
 class ECHONEST_EXPORT CatalogEntry
 {
 public:
     CatalogEntry( CatalogTypes::Action action );
-    ~CatalogEntry();
+    virtual ~CatalogEntry();
     CatalogEntry( const CatalogEntry& other );
     CatalogEntry& operator=( const CatalogEntry& );
     

@@ -52,7 +52,9 @@ public:
       Hotttnesss = 0x04,
       ArtistHotttnesss = 0x08,
       ArtistFamiliarity = 0x10,
-      ArtistLocation = 0x20
+      ArtistLocation = 0x20,
+      
+      NoInformation = 0x40
   };
   Q_DECLARE_FLAGS( SongInformation, SongInformationFlag )
 
@@ -92,7 +94,7 @@ public:
   Song( const QByteArray& id, const QString& title, const QByteArray& artistId, const QString& artistName );
   Song( const Song& other );
   Song& operator=(const Song& song);
-  ~Song();
+  virtual ~Song();
   
   /**
    * The following pieces of data are present in all Song objects, and do not require
@@ -197,6 +199,7 @@ public:
   QString toString() const;
   
   friend class DynamicPlaylist;
+  
 private:
     static QByteArray searchParamToString( SearchParam param );
     static void addQueryInformation( QUrl& url, SongInformation parts );

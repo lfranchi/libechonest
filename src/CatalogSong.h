@@ -13,45 +13,55 @@
  * You should have received a copy of the GNU General Public License along with         *
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
+#ifndef ECHONEST_CATALOG_SONG_H
+#define ECHONEST_CATALOG_SONG_H
 
-#ifndef ECHONEST_CATALOG_P_H
-#define ECHONEST_CATALOG_P_H
+#include "Song.h"
 
-#include "CatalogArtist.h"
-#include "CatalogSong.h"
-#include "Util.h"
-
-#include <QSharedData>
-
-class CatalogData : public QSharedData
+class CatalogSongData;
+namespace Echonest {
+/**
+* A song that includes some additional information returned when getting a song from a catalog listing.
+*/
+class CatalogSong : public Song
 {
 public:
-    CatalogData() : total( 0 ), resolved( 0 ) {}
-    CatalogData( const CatalogData& other ) {
-        name = other.name;
-        id = other.id;
-        type = other.type;
-        total = other.total;
-        
-        resolved = other.resolved;
-        songs = other.songs;
-        artists = other.artists;
-    }
-    ~CatalogData() {}
+    CatalogSong();
+    CatalogSong(const QByteArray& id, const QString& title, const QByteArray& artistId, const QString& artistName);
+    CatalogSong(const Echonest::CatalogSong& other);
+    virtual ~CatalogSong();
+    CatalogSong& operator=( const CatalogSong& other );
     
-    // Fields we always get in a catalog object
-    QString name;
-    QByteArray id;
-    Echonest::CatalogTypes::Type type;
-    int total;
+    /**
+    * The foreign id of this artist item in the catalog. e.g. CAOFUDS12BB066268E:artist:ARUI8651187B9ACF52
+    * 
+    * See The Echo Nest API docs for more information.
+    */
+    QByteArray foreignId() const;
+    void setForeignId( const QByteArray& id );
     
-    // Fields we sometimes get depending on the query
-    int resolved;
-    // pending_tickets
-    Echonest::CatalogSongs songs; // either has songs, or artists
-    Echonest::CatalogArtists artists;
+    /**
+    * The request name used when this artist item was requested.
+    */
+    QString requestName() const;
+    void setRequestName( const QString& name );
     
+    /**
+    * The request id used when this artist was requested.
+    */
+    QByteArray requestId() const;
+    void setRequestId( const QByteArray& id );
     
+    /**
+     * The date and time when this song was added to the catalog
+     */
+    QDateTime dateAdded() const;
+    void setDateAdded( const QDateTime& dt );
+    
+private:
+    QSharedDataPointer<CatalogSongData> d;
 };
 
+typedef QVector< CatalogSong > CatalogSongs;
+}
 #endif

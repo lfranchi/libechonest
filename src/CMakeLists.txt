@@ -14,6 +14,8 @@ set( LIBECHONEST_SRC
         Generator.cpp
         Catalog.cpp
         CatalogEntry.cpp
+        CatalogSong.cpp
+        CatalogArtist.cpp
 )
 
 set( LIBECHONEST_H
@@ -28,6 +30,8 @@ set( LIBECHONEST_H
         Util.h
         Catalog.h
         CatalogEntry.h
+        CatalogSong.h
+        CatalogArtist.h
 )
 
 QT4_WRAP_CPP( ${LIBECHONEST_H} )

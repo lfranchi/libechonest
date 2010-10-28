@@ -14,49 +14,36 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
 
-#include "Util.h"
+#ifndef ECHONEST_CATALOG_ARTIST_P_H
+#define ECHONEST_CATALOG_ARTIST_P_H
 
+#include "Artist_p.h"
+
+#include <QSharedData>
 #include <QString>
+#include <QVector>
+#include <QDateTime>
 
-Echonest::Analysis::AnalysisStatus Echonest::statusToEnum(const QString& status)
-{
-    if( status == QLatin1String("unknown") ) {
-        return Echonest::Analysis::Unknown;
-    } else if( status == QLatin1String("pending") ) {
-        return Echonest::Analysis::Pending;
-    } else if( status == QLatin1String("complete") ) {
-        return Echonest::Analysis::Complete;
-    } else if( status == QLatin1String("error" )) {
-        return Echonest::Analysis::Error;
-    }
-    return Echonest::Analysis::Unknown;
-}
 
-QString Echonest::statusToString(Echonest::Analysis::AnalysisStatus status)
+class CatalogArtistData : public QSharedData
 {
-    switch( status )
+public:
+    CatalogArtistData() {}
+   
+    CatalogArtistData(const CatalogArtistData& other)
     {
-        case Echonest::Analysis::Unknown:
-            return QLatin1String( "unknown" );
-        case Echonest::Analysis::Pending:
-            return QLatin1String( "pending" );
-        case Echonest::Analysis::Complete:
-            return QLatin1String( "complete" );
-        case Echonest::Analysis::Error:
-            return QLatin1String( "error" );
+        request_id = other.request_id;
+        request_name = other.request_name;
+        foreign_id = other.foreign_id;
+        date_added = other.date_added;
     }
-    return QString();
-}
+    
+    ~CatalogArtistData() {}
+    
+    QByteArray request_id;
+    QString request_name;
+    QByteArray foreign_id;
+    QDateTime date_added;
+};
 
-QByteArray Echonest::catalogTypeToLiteral(Echonest::CatalogTypes::Type type)
-{
-    switch( type )
-    {
-        case Echonest::CatalogTypes::Artist:
-            return "artist";
-        case Echonest::CatalogTypes::Song:
-            return "song";
-        default:
-            return "";
-    }
-}
+#endif

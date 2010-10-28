@@ -14,44 +14,76 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
 
-#ifndef ECHONEST_CATALOG_P_H
-#define ECHONEST_CATALOG_P_H
-
-#include "CatalogArtist.h"
 #include "CatalogSong.h"
-#include "Util.h"
+#include "CatalogSong_p.h"
 
-#include <QSharedData>
-
-class CatalogData : public QSharedData
+Echonest::CatalogSong::CatalogSong()
+    : d( new CatalogSongData )
 {
-public:
-    CatalogData() : total( 0 ), resolved( 0 ) {}
-    CatalogData( const CatalogData& other ) {
-        name = other.name;
-        id = other.id;
-        type = other.type;
-        total = other.total;
-        
-        resolved = other.resolved;
-        songs = other.songs;
-        artists = other.artists;
-    }
-    ~CatalogData() {}
-    
-    // Fields we always get in a catalog object
-    QString name;
-    QByteArray id;
-    Echonest::CatalogTypes::Type type;
-    int total;
-    
-    // Fields we sometimes get depending on the query
-    int resolved;
-    // pending_tickets
-    Echonest::CatalogSongs songs; // either has songs, or artists
-    Echonest::CatalogArtists artists;
-    
-    
-};
 
-#endif
+}
+
+Echonest::CatalogSong::CatalogSong(const QByteArray& id, const QString& title, const QByteArray& artistId, const QString& artistName)
+    : Song(id, title, artistId, artistName)
+    , d( new CatalogSongData )
+{
+
+}
+
+Echonest::CatalogSong::CatalogSong(const Echonest::CatalogSong& other)
+    : Song(other)
+    , d( other.d )
+{
+
+}
+
+Echonest::CatalogSong& Echonest::CatalogSong::operator=(const Echonest::CatalogSong& other)
+{
+    Song::operator=( other );
+    d = other.d;
+    return *this;
+}
+
+Echonest::CatalogSong::~CatalogSong()
+{
+}
+
+QDateTime Echonest::CatalogSong::dateAdded() const
+{
+    return d->date_added;
+}
+
+void Echonest::CatalogSong::setDateAdded(const QDateTime& dt)
+{
+    d->date_added = dt;
+}
+
+QByteArray Echonest::CatalogSong::foreignId() const
+{
+    return d->foreign_id;
+}
+
+void Echonest::CatalogSong::setForeignId(const QByteArray& id)
+{
+    d->foreign_id = id;
+}
+
+QByteArray Echonest::CatalogSong::requestId() const
+{
+    return d->request_id;
+}
+
+void Echonest::CatalogSong::setRequestId(const QByteArray& id)
+{
+    d->request_id = id;
+}
+
+QString Echonest::CatalogSong::requestName() const
+{
+    return d->request_name;
+}
+
+void Echonest::CatalogSong::setRequestName(const QString& name)
+{
+    d->request_name = name;
+}
