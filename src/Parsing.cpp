@@ -815,7 +815,7 @@ Echonest::CatalogStatus Echonest::Parser::parseCatalogStatus( QXmlStreamReader& 
         throw Echonest::ParseError( Echonest::UnknownParseError );
     Echonest::CatalogStatus status;
     
-    while( xml.name() != "response" || !xml.isStartElement() ) {
+    while( xml.name() != "response" || !xml.isEndElement() ) {
         if( xml.name() == "ticket_status" && xml.isStartElement() )
             status.status = Echonest::literalToCatalogStatus( xml.readElementText().toLatin1() );
         else if( xml.name() == "items_updated" && xml.isStartElement() )

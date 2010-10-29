@@ -95,9 +95,9 @@ QByteArray Echonest::catalogUpdateActionToLiteral(Echonest::CatalogTypes::Action
         case Echonest::CatalogTypes::Delete:
             return "delete";
         case Echonest::CatalogTypes::Play:
-            return "update";
-        case Echonest::CatalogTypes::Update:
             return "play";
+        case Echonest::CatalogTypes::Update:
+            return "update";
         case Echonest::CatalogTypes::Skip:
             return "skip";
         default:

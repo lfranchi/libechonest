@@ -134,8 +134,8 @@ QNetworkReply* Echonest::Catalog::create(const QString& name, Echonest::CatalogT
     QUrl url = Echonest::baseGetQuery( "catalog", "create" );
     url.addQueryItem( QLatin1String( "name" ), name );
     url.addEncodedQueryItem( "type", Echonest::catalogTypeToLiteral( type ) );
-    
-    QNetworkRequest request( url );
+
+    QNetworkRequest request = QNetworkRequest( url );
     request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "multipart/form-data" ) );
     return Echonest::Config::instance()->nam()->post( request, QByteArray() );
 }
@@ -146,10 +146,7 @@ QNetworkReply* Echonest::Catalog::deleteCatalog() const
     Q_ASSERT( !d->isEmpty() );
     url.addEncodedQueryItem( "id", d->id );
     
-    QNetworkRequest request( url );
-    request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "multipart/form-data" ) );
-    qDebug() << "Creating catalog::delete URL" << url;
-    return Echonest::Config::instance()->nam()->post( request, QByteArray() );
+    return doPost( url );
 }
 
 QNetworkReply* Echonest::Catalog::list(int results, int start)
@@ -267,10 +264,8 @@ Echonest::CatalogStatus Echonest::Catalog::parseStatus(QNetworkReply* reply) thr
 
 QByteArray Echonest::Catalog::parseTicket(QNetworkReply* reply) throw( Echonest::ParseError )
 {
-    QByteArray data = reply->readAll();
-    qDebug() << data;
     Echonest::Parser::checkForErrors( reply );
-    QXmlStreamReader xml( data );
+    QXmlStreamReader xml( reply->readAll() );
     Echonest::Parser::readStatus( xml );
     
     QByteArray ticket = Echonest::Parser::parseCatalogTicket( xml );
@@ -280,7 +275,7 @@ QByteArray Echonest::Catalog::parseTicket(QNetworkReply* reply) throw( Echonest:
 Echonest::Catalog Echonest::Catalog::parseCreate(QNetworkReply* reply) throw( Echonest::ParseError )
 {
     Echonest::Parser::checkForErrors( reply );
-    QXmlStreamReader xml( reply->readAll() );
+    QXmlStreamReader xml( reply->readAll()  );
     Echonest::Parser::readStatus( xml );
     
     Catalog c = Echonest::Parser::parseNewCatalog( xml );
@@ -293,10 +288,8 @@ QNetworkReply* Echonest::Catalog::updatePrivate( QUrl& url, const Echonest::Cata
     url.addEncodedQueryItem( "data_type", "json" );
     
     QByteArray payload = Generator::catalogEntriesToJson( entries );
-    QNetworkRequest request = QNetworkRequest( url );
-    request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "application/x-www-form-urlencoded" ) );
-    qDebug() << "Sending data:" << payload;
-    return Echonest::Config::instance()->nam()->post( request, payload );
+    url.addEncodedQueryItem( "data", payload );
+    return doPost( url );
 }
 
 void Echonest::Catalog::addLimits(QUrl& url, int results, int start)
@@ -314,6 +307,25 @@ QNetworkReply* Echonest::Catalog::readPrivate(QUrl& url, int results, int start)
     addLimits( url, results, start );
     
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) ); 
+}
+
+QNetworkReply* Echonest::Catalog::doPost(const QUrl& url)
+{
+    // UGLY :( Build url, then extract the encded query items, put them in the POST body, and send that to the url minus the encoded params.
+    // The final data
+    QByteArray data;
+    int size = url.encodedQueryItems().size();
+    for( int i = 0; i < size; i++ ) {
+        const QPair< QByteArray, QByteArray > item = url.encodedQueryItems().at( i );
+        data.append( item.first + "=" + item.second + "&" );
+    }
+    data.truncate( data.size() - 1 ); // remove extra &
+    qDebug() << "Sending data:" << data;
+    // strip the extras
+    QUrl url2( url.toString().mid( 0, url.toString().indexOf( QLatin1Char( '?' ) ) ) );
+    QNetworkRequest request = QNetworkRequest( url2 );
+//     request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "multipart/form-data" ) );
+    return Echonest::Config::instance()->nam()->post( request, data );
 }
 
 QDebug Echonest::operator<<(QDebug d, const Echonest::Catalog& catalog)

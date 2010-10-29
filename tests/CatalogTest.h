@@ -25,11 +25,11 @@ class CatalogTest : public QObject
 private slots:
     void initTestCase();
     
-    void testList();
-    void testProfile();
-    void testRead();
-    void testStatus();
-    void testUpdate();
+//     void testList();
+//     void testProfile();
+//     void testRead();
+//     void testStatus();
+    void testCreateUpdateDelete();
 };
 
 #endif

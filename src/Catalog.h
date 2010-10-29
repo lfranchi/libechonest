@@ -172,7 +172,7 @@ public:
      * Parses the result of a status call, returning the status information along with information on
      *  item resolution if available.
      */
-    CatalogStatus parseStatus( QNetworkReply* ) throw( Echonest::ParseError );
+    static CatalogStatus parseStatus( QNetworkReply* ) throw( Echonest::ParseError );
     
     /**
      * Parses the result of a profile() call. Saves the data to this catalog object.
@@ -212,7 +212,7 @@ private:
     static QNetworkReply* updatePrivate( QUrl&, const CatalogUpdateEntries& entries );
     QNetworkReply* readPrivate( QUrl& url, int results, int start ) const;
     static void addLimits( QUrl&, int results, int start );
-    
+    static QNetworkReply*  doPost( const QUrl& url );
     QSharedDataPointer< CatalogData > d;
 };
 

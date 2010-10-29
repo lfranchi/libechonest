@@ -24,10 +24,10 @@
 
 void CatalogTest::initTestCase()
 {
-    Echonest::Config::instance()->setAPIKey( "N6E4NIOVYMTHNDM8J" );
-//     Echonest::Config::instance()->setAPIKey( "JGJCRKWLXLBZIFAZB" );
+//     Echonest::Config::instance()->setAPIKey( "N6E4NIOVYMTHNDM8J" );
+    Echonest::Config::instance()->setAPIKey( "JGJCRKWLXLBZIFAZB" );
 }
-
+/*
 void CatalogTest::testList()
 {
     QNetworkReply* reply = Echonest::Catalog::list();
@@ -102,7 +102,7 @@ void CatalogTest::testRead()
     QVERIFY( c.songs().at( 0 ).artistFamiliarity() >= 0 );
     
     // test an artist catalog
-    Echonest::Catalog c2( "CABJYAU12BF92213D5" );
+    Echonest::Catalog c2( "CAWRKLJ12BF92BC7C3" );
     reply = c2.readArtistCatalog( Echonest::Artist::Audio | Echonest::Artist::Blogs | Echonest::Artist::Biographies | Echonest::Artist::Familiarity |
                                                 Echonest::Artist::Hotttnesss | Echonest::Artist::Images | Echonest::Artist::News | Echonest::Artist::Reviews | 
                                                 Echonest::Artist::Terms | Echonest::Artist::Urls | Echonest::Artist::Videos );
@@ -137,48 +137,65 @@ void CatalogTest::testStatus()
 {
 
 }
-
-void CatalogTest::testUpdate()
+*/
+void CatalogTest::testCreateUpdateDelete()
 {
-//     QNetworkReply* reply = Echonest::Catalog::create( QLatin1String( "unittest_catalog_999" ), Echonest::CatalogTypes::Artist );
+    QNetworkReply* reply = Echonest::Catalog::create( QLatin1String( "unittest_catalog_999" ), Echonest::CatalogTypes::Song );
     
-//     QEventLoop loop;
-//     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-//     loop.exec();
-//     
-//     Echonest::Catalog c = Echonest::Catalog::parseCreate( reply );
-//     qDebug() << c;
-    // delete it again
-//     reply = c.deleteCatalog();
-//     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-//     loop.exec();
-//     QPair< QString, QByteArray> res = c.parseDelete( reply );
-//     qDebug() << res;
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
     
-//     qDebug() << c;
-    Echonest::Catalog c( "CAWPOOZ12BF91EC57C" );
+    Echonest::Catalog c = Echonest::Catalog::parseCreate( reply );
+    qDebug() << "CREATED NEW CATALOG:" << c;
+    QVERIFY( !c.id().isEmpty() );
+    QVERIFY( !c.name().isEmpty() );
     
     Echonest::CatalogUpdateEntry entry;
-    entry.setArtistName( QLatin1String( "FOoARtist" ) );
-    entry.setArtistId( "fooid" );
-    entry.setFingerpring( "FINGERPRINT" );
-    entry.setRelease( QLatin1String( "FooAlbum:" ) );
-    entry.setGenre( QLatin1String( "Rock" ) );
-    entry.setRating( 5 );
-    entry.setTrackNumber( 5 );
-    entry.setDiscNumber( 1 );
-    entry.setUrl( QLatin1String( "myurl" ) );
+    entry.setSongName( QLatin1String( "Your Hand In Mine" ) );
+    entry.setArtistName( QLatin1String( "Explosions in the sky" ) );
+//     entry.S( "fooid" );
+//     entry.setFingerpring( "FINGERPRINT" );
+//     entry.setRelease( QLatin1String( "FooAlbum:" ) );
+//     entry.setGenre( QLatin1String( "Rock" ) );
+//     entry.setRating( 5 );
+//     entry.setTrackNumber( 5 );
+//     entry.setDiscNumber( 1 );
+//     entry.setUrl( QLatin1String( "myurl" ) );
+//     entry.setFavorite( true );
     entry.setAction( Echonest::CatalogTypes::Update );
     Echonest::CatalogUpdateEntries entries;
     entries << entry;
     
-    QNetworkReply* reply = c.update( entries );
-    QEventLoop loop;
+    reply = c.update( entries );
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     
     QByteArray ticket = Echonest::Catalog::parseTicket( reply );
     qDebug() << ticket;
+    
+    QVERIFY( !ticket.isEmpty() );
+    // now check the ticket status after 5s
+    sleep( 5 );
+    reply = Echonest::Catalog::status( ticket );
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    Echonest::CatalogStatus cs = Echonest::Catalog::parseStatus( reply );
+    qDebug() << "Catalog status:" << cs.status << cs.items_updated << cs.items;
+    
+    // now read the catalog
+    reply = c.readSongCatalog();
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    c.parseRead( reply );
+    qDebug() << c;
+    
+    reply = c.deleteCatalog();
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    QPair< QString, QByteArray> res = c.parseDelete( reply );
+    qDebug() << res;
+    
 }
 
 
