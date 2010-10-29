@@ -45,36 +45,42 @@ public:
     virtual Echonest::CatalogTypes::Type type() const = 0;    
     
     /**
-     * The foreign id of this artist item in the catalog. e.g. CAOFUDS12BB066268E:artist:ARUI8651187B9ACF52
+     * The foreign id of this item in the catalog. e.g. CAOFUDS12BB066268E:artist:ARUI8651187B9ACF52
      * 
      * See The Echo Nest API docs for more information.
      */
-    virtual QByteArray foreignId() const = 0;
+    QByteArray foreignId() const;
+    void setForeignId( const QByteArray& id );
     
     /**
      * The request name used when this item was requested.
      */
-    virtual QString requestName() const = 0;
+    QString requestName() const;
+    void setRequestName( const QString& name );
     
     /**
      * The request id used when this item was requested.
      */
-    virtual QByteArray requestId() const = 0;
+    QByteArray requestId() const;
+    void setRequestId( const QByteArray& id );
     
     /**
      * The date and time when this item was added to the catalog
      */
-    virtual QDateTime dateAdded() const = 0;
+    QDateTime dateAdded() const;
+    void setDateAdded( const QDateTime& dt );
     
     /**
      * The rating of this item.
      */
-    virtual int rating() const = 0;
+    int rating() const;
+    void setRating( int rating );
     
     /**
      * The play count of this item.
      */
-    virtual int playCount() const = 0;
+    int playCount() const;
+    void setPlayCount( int count );
     
 protected:
     QSharedPointer<CatalogItemData> dd;

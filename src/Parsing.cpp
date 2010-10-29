@@ -405,7 +405,6 @@ void Echonest::Parser::parseNewsOrBlogs( QXmlStreamReader& xml, Echonest::Artist
                 news.setId( xml.readElementText().toLatin1() );
             else if( xml.name() == "date_posted" )
                 news.setDatePosted( QDateTime::fromString( xml.readElementText(), Qt::ISODate ) );
-            
         } while( !( ( xml.name() == "news" || xml.name() == "blog" ) && xml.tokenType() == QXmlStreamReader::EndElement ) );
         newsList.append( news );
         xml.readNext();
@@ -479,7 +478,6 @@ void Echonest::Parser::parseTerms( QXmlStreamReader& xml, Echonest::Artist& arti
 {
     if( xml.atEnd() || xml.name() != "terms" || xml.tokenType() != QXmlStreamReader::StartElement )
         throw Echonest::ParseError( Echonest::UnknownParseError );
-    
     artist.setTerms( parseTermList( xml ) );
 }
 
@@ -487,9 +485,8 @@ void Echonest::Parser::parseUrls( QXmlStreamReader& xml, Echonest::Artist& artis
 {
     if( xml.atEnd() || xml.name() != "urls" || xml.tokenType() != QXmlStreamReader::StartElement )
         throw Echonest::ParseError( Echonest::UnknownParseError );
-    
     xml.readNextStartElement();
-    xml.readNextStartElement();
+//     xml.readNextStartElement();
     
     while( !xml.atEnd() && ( xml.name() != "urls" || !xml.isEndElement() ) ) {
         if( xml.name() == "lastfm_url" )
@@ -565,7 +562,7 @@ Echonest::TermList Echonest::Parser::parseTermList( QXmlStreamReader& xml ) thro
         }
         terms.append( term );
         
-        xml.readNextStartElement();
+        xml.readNext();
     }
     return terms;
 }
@@ -680,7 +677,6 @@ QList<Echonest::CatalogItem*> Echonest::Parser::parseCatalogItems( QXmlStreamRea
         Echonest::CatalogSong* song = new CatalogSong;
         while( xml.name() != "items" || !xml.isEndElement() ) {
             // OK, we have to check for all possible song+artist types :'(
-//             qDebug() << "checking item:" << xml.name();
             if( xml.name() == "rating" && xml.isStartElement() ) { /// mixed and artist items
                 artist->setRating( xml.readElementText().toInt() );
                 song->setRating( artist->rating() );
@@ -693,13 +689,14 @@ QList<Echonest::CatalogItem*> Echonest::Parser::parseCatalogItems( QXmlStreamRea
                 parseReviews( xml, *artist );
             } else if( xml.name() == "terms" && xml.isStartElement() ) {
                 parseTerms( xml, *artist );
+                continue;
             } else if( xml.name() == "biographies" && xml.isStartElement() ) {
                 parseBiographies( xml, *artist );
             } else if( xml.name() == "familiarity" && xml.isStartElement() ) {
                 artist->setFamiliarity( xml.readElementText().toDouble() );
                 song->setArtistFamiliarity( artist->familiarity() );
             } else if( xml.name() == "blogs" && xml.isStartElement() ) {
-                parseNewsOrBlogs( xml, *artist, true );
+                parseNewsOrBlogs( xml, *artist, false );
             } else if( xml.name() == "hotttnesss" && xml.isStartElement() ) {
                 artist->setHotttnesss( xml.readElementText().toDouble() );
                 song->setArtistHotttnesss( artist->hotttnesss() );
@@ -707,7 +704,7 @@ QList<Echonest::CatalogItem*> Echonest::Parser::parseCatalogItems( QXmlStreamRea
                 parseVideos( xml, *artist );
             } else if( xml.name() == "urls" && xml.isStartElement() ) {
                 parseUrls( xml, *artist );
-            } else if( xml.name() == "urls" && xml.isStartElement() ) {
+            } else if( xml.name() == "news" && xml.isStartElement() ) {
                 parseNewsOrBlogs( xml, *artist );
             } else if( xml.name() == "images" && xml.isStartElement() ) {
                 parseImages( xml, *artist );
@@ -781,10 +778,9 @@ void Echonest::Parser::parseCatalogRequestItem( QXmlStreamReader& xml, Echonest:
         // TODO finish
         xml.readNext();
     }
-    xml.readNext();
 }
 
-void Echonest::Parser::saveArtistList( Echonest::Catalog catalog, QList<Echonest::CatalogItem*> artists)
+void Echonest::Parser::saveArtistList( Echonest::Catalog& catalog, QList<Echonest::CatalogItem*>& artists)
 {
     // will copy artists into the catalog, and delete the origin
     Echonest::CatalogArtists ca;
@@ -795,7 +791,7 @@ void Echonest::Parser::saveArtistList( Echonest::Catalog catalog, QList<Echonest
     catalog.setArtists( ca );
 }
 
-void Echonest::Parser::saveSongList( Echonest::Catalog catalog, QList<Echonest::CatalogItem*> songs)
+void Echonest::Parser::saveSongList( Echonest::Catalog& catalog, QList<Echonest::CatalogItem*>& songs)
 {
     // will copy songs into the catalog, and delete the origin
     Echonest::CatalogSongs ca;

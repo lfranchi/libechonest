@@ -16,6 +16,7 @@
 #ifndef ECHONEST_CATALOG_SONG_H
 #define ECHONEST_CATALOG_SONG_H
 
+#include "echonest_export.h"
 #include "Song.h"
 #include "CatalogItem.h"
 
@@ -24,7 +25,7 @@ namespace Echonest {
 /**
 * A song that includes some additional information returned when getting a song from a catalog listing.
 */
-class CatalogSong : public Song, public CatalogItem
+class ECHONEST_EXPORT CatalogSong : public Song, public CatalogItem
 {
 public:
     CatalogSong();
@@ -37,44 +38,6 @@ public:
      * The type of this item: Song.
      */
     virtual CatalogTypes::Type type() const;
-    
-    /**
-    * The foreign id of this artist item in the catalog. e.g. CAOFUDS12BB066268E:artist:ARUI8651187B9ACF52
-    * 
-    * See The Echo Nest API docs for more information.
-    */
-    virtual QByteArray foreignId() const;
-    void setForeignId( const QByteArray& id );
-    
-    /**
-    * The request name used when this artist item was requested.
-    */
-    virtual QString requestName() const;
-    void setRequestName( const QString& name );
-    
-    /**
-    * The request id used when this artist was requested.
-    */
-    virtual QByteArray requestId() const;
-    void setRequestId( const QByteArray& id );
-    
-    /**
-     * The date and time when this song was added to the catalog
-     */
-    virtual QDateTime dateAdded() const;
-    void setDateAdded( const QDateTime& dt );
-    
-    /**
-     * The rating of this song.
-     */
-    virtual int rating() const;
-    void setRating( int rating );
-    
-    /**
-     * The play count of this song.
-     */
-    virtual int playCount() const;
-    void setPlayCount( int count );
     
 };
 

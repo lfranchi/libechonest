@@ -77,17 +77,59 @@ void CatalogTest::testProfile()
 void CatalogTest::testRead()
 {
     Echonest::Catalog c( "CAGPXKK12BB06F9DE9" );
-    QNetworkReply* reply = c.readSongCatalog( Echonest::Song::ArtistHotttnesss  | Echonest::Song::ArtistLocation | Echonest::Song::ArtistFamiliarity );
+    QNetworkReply* reply = c.readSongCatalog( Echonest::Song::AudioSummaryInformation | Echonest::Song::Tracks | Echonest::Song::Hotttnesss | Echonest::Song::ArtistHotttnesss | Echonest::Song::ArtistFamiliarity | Echonest::Song::ArtistLocation );
     
     qDebug() << reply->url().toString();
-    QCOMPARE( reply->url(), QUrl( QLatin1String( "http://developer.echonest.com/api/v4/catalog/read?api_key=N6E4NIOVYMTHNDM8J&format=xml&bucket=artist_hotttnesss&bucket=artist_familiarity&bucket=artist_location&id=CAGPXKK12BB06F9DE9" ) ) );
+    QCOMPARE( reply->url(), QUrl( QLatin1String( "http://developer.echonest.com/api/v4/catalog/read?api_key=N6E4NIOVYMTHNDM8J&format=xml&bucket=audio_summary&bucket=tracks&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&bucket=artist_location&id=CAGPXKK12BB06F9DE9" ) ) );
     
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     
     c.parseRead( reply );
-    qDebug() << c << c.songs().size() << c.songs();
+    qDebug() << c;
+    QVERIFY( !c.songs().isEmpty() );
+    QVERIFY( c.songs().at( 0 ).audioSummary().duration() > 0 );
+    QVERIFY( c.songs().at( 0 ).audioSummary().danceability() > 0 );
+    QVERIFY( c.songs().at( 0 ).audioSummary().energy() > 0 );
+//     QVERIFY( !c.songs().at( 0 ).tracks().isEmpty() );
+    QVERIFY( c.songs().at( 0 ).hotttnesss() > 0 );
+    QVERIFY( !c.songs().at( 0 ).dateAdded().isNull() );
+    QVERIFY( !c.songs().at( 0 ).artistId().isEmpty() );
+    QVERIFY( !c.songs().at( 0 ).foreignId().isEmpty() );
+    QVERIFY( c.songs().at( 0 ).artistHotttnesss() >= 0 );
+    QVERIFY( c.songs().at( 0 ).artistFamiliarity() >= 0 );
+    
+    // test an artist catalog
+    Echonest::Catalog c2( "CAOFUDS12BB066268E" );
+    reply = c2.readArtistCatalog( Echonest::Artist::Audio | Echonest::Artist::Blogs | Echonest::Artist::Biographies | Echonest::Artist::Familiarity |
+                                                Echonest::Artist::Hotttnesss | Echonest::Artist::Images | Echonest::Artist::News | Echonest::Artist::Reviews | 
+                                                Echonest::Artist::Terms | Echonest::Artist::Urls | Echonest::Artist::Videos );
+    
+    qDebug() << reply->url().toString();
+    QCOMPARE( reply->url(), QUrl( QLatin1String( "http://developer.echonest.com/api/v4/catalog/read?api_key=N6E4NIOVYMTHNDM8J&format=xml&bucket=audio&bucket=biographies&bucket=blogs&bucket=familiarity&bucket=hotttnesss&bucket=images&bucket=news&bucket=reviews&bucket=terms&bucket=urls&bucket=video&id=CAOFUDS12BB066268E" ) ) );
+    
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    
+    c2.parseRead( reply );
+    qDebug() << c2;
+    QVERIFY( !c2.artists().isEmpty() );
+    QVERIFY( c2.artists().at( 0 ).familiarity() > 0 );
+    QVERIFY( !c2.artists().at( 0 ).terms().isEmpty() );
+    QVERIFY( !c2.artists().at( 0 ).biographies().isEmpty() );
+    QVERIFY( !c2.artists().at( 0 ).blogs().isEmpty() );
+    QVERIFY( !c2.artists().at( 0 ).name().isEmpty() );
+    QVERIFY( c2.artists().at( 0 ).hotttnesss() > 0 );
+    QVERIFY( !c2.artists().at( 0 ).reviews().isEmpty() );
+    QVERIFY( !c2.artists().at( 0 ).videos().isEmpty() );
+    QVERIFY( c2.artists().at( 0 ).lastFmUrl().isValid() );
+    QVERIFY( !c2.artists().at( 0 ).news().isEmpty() );
+    QVERIFY( !c2.artists().at( 0 ).images().isEmpty() );
+    QVERIFY( !c2.artists().at( 0 ).audio().isEmpty() );
+    QVERIFY( !c2.artists().at( 0 ).dateAdded().isNull() );
+    QVERIFY( !c2.artists().at( 0 ).id().isEmpty() );
+    QVERIFY( !c2.artists().at( 0 ).foreignId().isEmpty() );
 }
 
 

@@ -40,3 +40,64 @@ Echonest::CatalogItem& Echonest::CatalogItem::operator=(const Echonest::CatalogI
     dd = other.dd;
     return *this;
 }
+
+
+QDateTime Echonest::CatalogItem::dateAdded() const
+{
+    return dd->date_added;
+}
+
+void Echonest::CatalogItem::setDateAdded(const QDateTime& dt)
+{
+    dd->date_added = dt;
+}
+
+QByteArray Echonest::CatalogItem::foreignId() const
+{
+    return dd->foreign_id;
+}
+
+void Echonest::CatalogItem::setForeignId(const QByteArray& id)
+{
+    dd->foreign_id = id;
+}
+
+QByteArray Echonest::CatalogItem::requestId() const
+{
+    return dd->request_id;
+}
+
+void Echonest::CatalogItem::setRequestId(const QByteArray& id)
+{
+    dd->request_id = id;
+}
+
+QString Echonest::CatalogItem::requestName() const
+{
+    return dd->request_name;
+}
+
+void Echonest::CatalogItem::setRequestName(const QString& name)
+{
+    dd->request_name = name;
+}
+
+int Echonest::CatalogItem::rating() const
+{
+    return dd->rating;
+}
+
+void Echonest::CatalogItem::setRating(int rating)
+{
+    dd->rating = rating;
+}
+
+int Echonest::CatalogItem::playCount() const
+{
+    return dd->play_count;
+}
+
+void Echonest::CatalogItem::setPlayCount(int count)
+{
+    dd->play_count = count;
+}

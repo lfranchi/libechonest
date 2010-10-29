@@ -35,7 +35,7 @@ typedef struct CatalogStatusStruct {
     CatalogTypes::TicketStatus status;
     
     int items_updated;
-    QList< QPair< QByteArray, QString > > items; // List of [ item_id, info ]
+    QVector< QPair< QByteArray, QString > > items; // List of [ item_id, info ]
     
     CatalogStatusStruct() : status( CatalogTypes::Unknown ), items_updated( -1 ) {}
 } CatalogStatus;
@@ -146,7 +146,7 @@ private:
     QSharedDataPointer<CatalogEntryData> d;
 };
 
-typedef QList<CatalogEntry> CatalogEntryList;
+typedef QVector<CatalogEntry> CatalogEntryList;
 
 }
 
