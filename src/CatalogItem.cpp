@@ -14,36 +14,29 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
 
-#ifndef ECHONEST_CATALOG_SONG_P_H
-#define ECHONEST_CATALOG_SONG_P_H
+#include "CatalogItem.h"
+#include "CatalogItem_p.h"
 
-#include "Song_p.h"
+// just an interface.
 
-#include <QSharedData>
-#include <QString>
-#include <QVector>
-#include <QDateTime>
-
-
-class CatalogSongData : public QSharedData
+Echonest::CatalogItem::CatalogItem()
+    : dd( new CatalogItemData )
 {
-public:
-    CatalogSongData() {}
-    
-    CatalogSongData(const CatalogSongData& other)
-    {
-        foreign_id = other.foreign_id;
-        request_id = other.request_id;
-        request_name = other.request_name;
-        date_added = other.date_added;
-    }
-    
-    ~CatalogSongData() {}
-    
-    QByteArray request_id;
-    QString request_name;
-    QByteArray foreign_id;
-    QDateTime date_added;
-};
 
-#endif
+}
+
+Echonest::CatalogItem::CatalogItem(const Echonest::CatalogItem& other)
+    : dd( other.dd )
+{
+}
+
+Echonest::CatalogItem::~CatalogItem()
+{
+
+}
+
+Echonest::CatalogItem& Echonest::CatalogItem::operator=(const Echonest::CatalogItem& other)
+{
+    dd = other.dd;
+    return *this;
+}

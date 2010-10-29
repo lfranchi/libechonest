@@ -17,13 +17,14 @@
 #define ECHONEST_CATALOG_SONG_H
 
 #include "Song.h"
+#include "CatalogItem.h"
 
 class CatalogSongData;
 namespace Echonest {
 /**
 * A song that includes some additional information returned when getting a song from a catalog listing.
 */
-class CatalogSong : public Song
+class CatalogSong : public Song, public CatalogItem
 {
 public:
     CatalogSong();
@@ -33,33 +34,48 @@ public:
     CatalogSong& operator=( const CatalogSong& other );
     
     /**
+     * The type of this item: Song.
+     */
+    virtual CatalogTypes::Type type() const;
+    
+    /**
     * The foreign id of this artist item in the catalog. e.g. CAOFUDS12BB066268E:artist:ARUI8651187B9ACF52
     * 
     * See The Echo Nest API docs for more information.
     */
-    QByteArray foreignId() const;
+    virtual QByteArray foreignId() const;
     void setForeignId( const QByteArray& id );
     
     /**
     * The request name used when this artist item was requested.
     */
-    QString requestName() const;
+    virtual QString requestName() const;
     void setRequestName( const QString& name );
     
     /**
     * The request id used when this artist was requested.
     */
-    QByteArray requestId() const;
+    virtual QByteArray requestId() const;
     void setRequestId( const QByteArray& id );
     
     /**
      * The date and time when this song was added to the catalog
      */
-    QDateTime dateAdded() const;
+    virtual QDateTime dateAdded() const;
     void setDateAdded( const QDateTime& dt );
     
-private:
-    QSharedDataPointer<CatalogSongData> d;
+    /**
+     * The rating of this song.
+     */
+    virtual int rating() const;
+    void setRating( int rating );
+    
+    /**
+     * The play count of this song.
+     */
+    virtual int playCount() const;
+    void setPlayCount( int count );
+    
 };
 
 typedef QVector< CatalogSong > CatalogSongs;

@@ -43,7 +43,6 @@ class ECHONEST_EXPORT Catalog
 public:    
     Catalog();
     explicit Catalog( const QByteArray& id );
-    explicit Catalog( const QString& name );
     Catalog( const Catalog& );
     virtual ~Catalog();
     Catalog& operator=( const Catalog& );
@@ -197,7 +196,7 @@ public:
      * Parse the result of the list() API call. Will return a list of catalogs---each catalog only
      *  has id, name, type, and total tracks information.
      */
-    Catalogs parseList( QNetworkReply* ) throw( Echonest::ParseError );
+    static Catalogs parseList( QNetworkReply* ) throw( Echonest::ParseError );
     
     /**
      * Parse the result of a catalog call. The calls return a ticket that can be used to check the status
@@ -212,7 +211,9 @@ private:
     
     QSharedDataPointer< CatalogData > d;
 };
-    
+
+ECHONEST_EXPORT QDebug operator<<(QDebug d, const Catalog &catalog);
+
 }
 
 #endif

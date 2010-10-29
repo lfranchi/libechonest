@@ -25,13 +25,6 @@ Echonest::Catalog::Catalog()
 
 }
 
-Echonest::Catalog::Catalog(const QString& name)
-    : d( new CatalogData )
-{
-    d->name = name;
-}
-
-
 Echonest::Catalog::Catalog( const QByteArray& id )
     : d( new CatalogData )
 {
@@ -238,19 +231,29 @@ Echonest::Catalogs Echonest::Catalog::parseList(QNetworkReply* reply) throw( Ech
     QXmlStreamReader xml( reply->readAll() );
     Echonest::Parser::readStatus( xml );
     
-    Echonest::Catalogs catalogs = Echonest::Catalogs()/* Echonest::Parser::parseCatalogList( xml )*/;
+    Echonest::Catalogs catalogs = Echonest::Parser::parseCatalogList( xml );
     
     return catalogs;
 }
 
-void Echonest::Catalog::parseProfile(QNetworkReply* ) throw( Echonest::ParseError )
+void Echonest::Catalog::parseProfile(QNetworkReply* reply) throw( Echonest::ParseError )
 {
-
+    Echonest::Parser::checkForErrors( reply );
+    QXmlStreamReader xml( reply->readAll() );
+    Echonest::Parser::readStatus( xml );
+    
+    Echonest::Catalog catalog = Echonest::Parser::parseCatalog( xml, true );
+    d = catalog.d;
 }
 
-void Echonest::Catalog::parseRead(QNetworkReply* ) throw( Echonest::ParseError )
+void Echonest::Catalog::parseRead(QNetworkReply* reply) throw( Echonest::ParseError )
 {
-
+    Echonest::Parser::checkForErrors( reply );
+    QXmlStreamReader xml( reply->readAll() );
+    Echonest::Parser::readStatus( xml );
+    
+    Echonest::Catalog catalog = Echonest::Parser::parseCatalog( xml, true );
+    d = catalog.d;
 }
 
 Echonest::CatalogStatus Echonest::Catalog::parseStatus(QNetworkReply* ) throw( Echonest::ParseError )
@@ -287,4 +290,10 @@ QNetworkReply* Echonest::Catalog::readPrivate(QUrl& url, int results, int start)
     addLimits( url, results, start );
     
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) ); 
+}
+
+QDebug Echonest::operator<<(QDebug d, const Echonest::Catalog& catalog)
+{
+    return d.maybeSpace() << QString::fromLatin1( "Catalog(%1, %2, %3, %4)" ).arg( catalog.name() ).arg( QLatin1String( catalog.id() ) )
+                                                                                     .arg( QString::fromLatin1( Echonest::catalogTypeToLiteral( catalog.type() ) ) ).arg( catalog.total() ) << catalog.artists() << catalog.songs();
 }

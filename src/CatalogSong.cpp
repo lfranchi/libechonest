@@ -15,24 +15,22 @@
  ****************************************************************************************/
 
 #include "CatalogSong.h"
-#include "CatalogSong_p.h"
+#include "CatalogItem_p.h"
 
 Echonest::CatalogSong::CatalogSong()
-    : d( new CatalogSongData )
 {
 
 }
 
 Echonest::CatalogSong::CatalogSong(const QByteArray& id, const QString& title, const QByteArray& artistId, const QString& artistName)
     : Song(id, title, artistId, artistName)
-    , d( new CatalogSongData )
 {
 
 }
 
 Echonest::CatalogSong::CatalogSong(const Echonest::CatalogSong& other)
     : Song(other)
-    , d( other.d )
+    , CatalogItem( other )
 {
 
 }
@@ -40,7 +38,7 @@ Echonest::CatalogSong::CatalogSong(const Echonest::CatalogSong& other)
 Echonest::CatalogSong& Echonest::CatalogSong::operator=(const Echonest::CatalogSong& other)
 {
     Song::operator=( other );
-    d = other.d;
+    CatalogItem::operator=( other );
     return *this;
 }
 
@@ -48,42 +46,70 @@ Echonest::CatalogSong::~CatalogSong()
 {
 }
 
+Echonest::CatalogTypes::Type Echonest::CatalogSong::type() const
+{
+    return Echonest::CatalogTypes::Song;
+}
+
+
 QDateTime Echonest::CatalogSong::dateAdded() const
 {
-    return d->date_added;
+    return dd->date_added;
 }
 
 void Echonest::CatalogSong::setDateAdded(const QDateTime& dt)
 {
-    d->date_added = dt;
+    dd->date_added = dt;
 }
 
 QByteArray Echonest::CatalogSong::foreignId() const
 {
-    return d->foreign_id;
+    return dd->foreign_id;
 }
 
 void Echonest::CatalogSong::setForeignId(const QByteArray& id)
 {
-    d->foreign_id = id;
+    dd->foreign_id = id;
 }
 
 QByteArray Echonest::CatalogSong::requestId() const
 {
-    return d->request_id;
+    return dd->request_id;
 }
 
 void Echonest::CatalogSong::setRequestId(const QByteArray& id)
 {
-    d->request_id = id;
+    dd->request_id = id;
 }
 
 QString Echonest::CatalogSong::requestName() const
 {
-    return d->request_name;
+    return dd->request_name;
 }
 
 void Echonest::CatalogSong::setRequestName(const QString& name)
 {
-    d->request_name = name;
+    dd->request_name = name;
 }
+
+int Echonest::CatalogSong::rating() const
+{
+    return dd->rating;
+}
+
+void Echonest::CatalogSong::setRating(int rating)
+{
+    dd->rating = rating;
+}
+
+int Echonest::CatalogSong::playCount() const
+{
+    return dd->play_count;
+}
+
+void Echonest::CatalogSong::setPlayCount(int count)
+{
+    dd->play_count = count;
+}
+
+

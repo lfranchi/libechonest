@@ -17,50 +17,66 @@
 #define ECHONEST_CATALOG_ARTIST_H
 
 #include "Artist.h"
+#include "CatalogItem.h"
 
 class CatalogArtistData;
 namespace Echonest {
+    
 /**
  * An artist that includes some additional information returned when getting an artist from a catalog listing.
  */
-class CatalogArtist : public Artist
+class CatalogArtist : public Artist, public CatalogItem
 {
 public:
     CatalogArtist();
     explicit CatalogArtist(const QString& name);
     CatalogArtist(const QByteArray& id, const QString& name);
     CatalogArtist(const Echonest::CatalogArtist& other);
-    ~CatalogArtist();
+    virtual ~CatalogArtist();
     CatalogArtist& operator=( const CatalogArtist& other );
+    
+    /**
+     * The type of this catalog item: Artist.
+     */
+    virtual CatalogTypes::Type type() const;
     
     /**
      * The foreign id of this artist item in the catalog. e.g. CAOFUDS12BB066268E:artist:ARUI8651187B9ACF52
      * 
      * See The Echo Nest API docs for more information.
      */
-    QByteArray foreignId() const;
+    virtual QByteArray foreignId() const;
     void setForeignId( const QByteArray& id );
     
     /**
      * The request name used when this artist item was requested.
      */
-    QString requestName() const;
+    virtual QString requestName() const;
     void setRequestName( const QString& name );
     
     /**
      * The request id used when this artist was requested.
      */
-    QByteArray requestId() const;
+    virtual QByteArray requestId() const;
     void setRequestId( const QByteArray& id );
     
     /**
      * The date and time when this artist was added to the catalog
      */
-    QDateTime dateAdded() const;
+    virtual QDateTime dateAdded() const;
     void setDateAdded( const QDateTime& dt );
     
-private:
-    QSharedDataPointer<CatalogArtistData> d;
+    /**
+     * The rating of this artist.
+     */
+    virtual int rating() const;
+    void setRating( int rating );
+    
+    /**
+     * The play count of this item.
+     */
+    virtual int playCount() const;
+    void setPlayCount( int count );
 };
 
 typedef QVector< CatalogArtist > CatalogArtists;

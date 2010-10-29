@@ -85,7 +85,11 @@ namespace Parser
     
     // Catalog functions
     Catalogs parseCatalogList( QXmlStreamReader& xml ) throw( ParseError );
-    Catalog parseCatalog( QXmlStreamReader& xml ) throw( ParseError );
+    Catalog parseCatalog( QXmlStreamReader& xml, bool justOne = false /* the catalog API is ugly :( */ ) throw( ParseError );
+    QList<CatalogItem*> parseCatalogItems( QXmlStreamReader& xml ) throw( ParseError );
+    void parseCatalogRequestItem( QXmlStreamReader& xml, Echonest::CatalogArtist&, Echonest::CatalogSong& ) throw( ParseError );
+    void saveArtistList( Catalog catalog, QList<CatalogItem*> );
+    void saveSongList( Catalog catalog, QList<CatalogItem*> );
 }
 }
 

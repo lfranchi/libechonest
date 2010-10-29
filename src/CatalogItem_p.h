@@ -14,10 +14,10 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
 
-#ifndef ECHONEST_CATALOG_ARTIST_P_H
-#define ECHONEST_CATALOG_ARTIST_P_H
+#ifndef ECHONEST_CATALOG_ITEM_P_H
+#define ECHONEST_CATALOG_ITEM_P_H
 
-#include "Artist_p.h"
+#include "Song_p.h"
 
 #include <QSharedData>
 #include <QString>
@@ -25,25 +25,28 @@
 #include <QDateTime>
 
 
-class CatalogArtistData : public QSharedData
+class CatalogItemData : public QSharedData
 {
 public:
-    CatalogArtistData() {}
-   
-    CatalogArtistData(const CatalogArtistData& other)
+    CatalogItemData() {}
+    
+    CatalogItemData(const CatalogItemData& other)
     {
+        foreign_id = other.foreign_id;
         request_id = other.request_id;
         request_name = other.request_name;
-        foreign_id = other.foreign_id;
         date_added = other.date_added;
+        rating = other.rating;
+        play_count = other.play_count;
     }
-    
-    ~CatalogArtistData() {}
+    ~CatalogItemData() {}
     
     QByteArray request_id;
     QString request_name;
     QByteArray foreign_id;
     QDateTime date_added;
+    int rating;
+    int play_count;
 };
 
 #endif
