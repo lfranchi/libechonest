@@ -70,3 +70,51 @@ Echonest::CatalogTypes::Type Echonest::literalToCatalogType( const QByteArray& t
     else
         return Echonest::CatalogTypes::Artist;
 }
+
+
+QByteArray Echonest::catalogStatusToLiteral(Echonest::CatalogTypes::TicketStatus status)
+{
+    return statusToString( static_cast<Echonest::Analysis::AnalysisStatus>( status ) ).toLatin1();
+}
+
+Echonest::CatalogTypes::TicketStatus Echonest::literalToCatalogStatus(const QByteArray& type)
+{
+    return static_cast<Echonest::CatalogTypes::TicketStatus>( statusToEnum( QLatin1String( type ) ) );
+}
+
+/**
+ *             Delete,
+ U pda*te,
+ Play,
+ Skip */
+
+QByteArray Echonest::catalogUpdateActionToLiteral(Echonest::CatalogTypes::Action action)
+{
+    switch( action )
+    {
+        case Echonest::CatalogTypes::Delete:
+            return "delete";
+        case Echonest::CatalogTypes::Play:
+            return "update";
+        case Echonest::CatalogTypes::Update:
+            return "play";
+        case Echonest::CatalogTypes::Skip:
+            return "skip";
+        default:
+            return "";
+    }
+}
+
+Echonest::CatalogTypes::Action Echonest::literalToCatalogUpdateAction(const QByteArray& type)
+{
+    if( type == "delete" )
+        return Echonest::CatalogTypes::Delete;
+    else if( type == "play" )
+        return Echonest::CatalogTypes::Play;
+    else if( type == "update" )
+        return Echonest::CatalogTypes::Update;
+    else if( type == "skip" )
+        return Echonest::CatalogTypes::Skip;
+    
+    return Echonest::CatalogTypes::Update;
+}

@@ -15,15 +15,25 @@
  ****************************************************************************************/
 #ifndef LIBECHONEST_GENERATOR_H
 #define LIBECHONEST_GENERATOR_H
+#include <QByteArray>
+#include "CatalogUpdateEntry.h"
+#include <QVariant>
 
 namespace Echonest {
     
 namespace Generator {
 
-    /**
-     * Miscellaneous functions for generating JSON to send to The Echo Nest
-     */
-    
+/**
+* Miscellaneous functions for generating JSON to send to The Echo Nest
+*/
+
+QByteArray catalogEntriesToJson( const CatalogUpdateEntries& items );
+QByteArray catalogEntryToJson( const CatalogUpdateEntry& item );
+
+
+QVariantList catalogEntriesToVariant( const CatalogUpdateEntries& items );
+QVariant catalogEntryToVariant( const CatalogUpdateEntry& item );
+
 };
 
 };

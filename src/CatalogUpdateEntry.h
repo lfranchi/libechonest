@@ -24,18 +24,19 @@
 #include <QString>
 #include <QVector>
 
-class CatalogEntryData;
+class CatalogUpdateEntryData;
 
 namespace Echonest {
     
 /**
  * This rather simple struct collects information about a status update
  */
+typedef QVector< QPair< QByteArray, QString > > CatalogStatusItem;
 typedef struct CatalogStatusStruct {
     CatalogTypes::TicketStatus status;
     
     int items_updated;
-    QVector< QPair< QByteArray, QString > > items; // List of [ item_id, info ]
+    CatalogStatusItem items; // List of [ item_id, info ]
     
     CatalogStatusStruct() : status( CatalogTypes::Unknown ), items_updated( -1 ) {}
 } CatalogStatus;
@@ -44,19 +45,26 @@ typedef struct CatalogStatusStruct {
  * This class described a catalog entry for use in the Catalog update() call.
  *  All data fields are optional except Action, and only the ones specified will be sent. 
  */
-class ECHONEST_EXPORT CatalogEntry
+class ECHONEST_EXPORT CatalogUpdateEntry
 {
 public:
-    CatalogEntry( CatalogTypes::Action action );
-    virtual ~CatalogEntry();
-    CatalogEntry( const CatalogEntry& other );
-    CatalogEntry& operator=( const CatalogEntry& );
+    CatalogUpdateEntry();
+    CatalogUpdateEntry( CatalogTypes::Action action );
+    virtual ~CatalogUpdateEntry();
+    CatalogUpdateEntry( const CatalogUpdateEntry& other );
+    CatalogUpdateEntry& operator=( const CatalogUpdateEntry& );
     
     /**
      * The type of action that this item represents, required.
      */
     CatalogTypes::Action action() const;
     void setAction( CatalogTypes::Action action );
+    
+    /**
+     * The Echo Nest fingerprint.
+     */
+    QByteArray fingerprint() const;
+    void setFingerpring( const QByteArray& id );
     
     /**
      * The song id. Rosetta id or Echo Nest ID.
@@ -142,11 +150,13 @@ public:
     int rating() const;
     void setRating( int rating );
         
+    bool favoriteSet() const;
+    bool bannedSet() const;
 private:
-    QSharedDataPointer<CatalogEntryData> d;
+    QSharedDataPointer<CatalogUpdateEntryData> d;
 };
 
-typedef QVector<CatalogEntry> CatalogEntryList;
+typedef QVector<CatalogUpdateEntry> CatalogUpdateEntries;
 
 }
 

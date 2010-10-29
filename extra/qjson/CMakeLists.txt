@@ -27,6 +27,8 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     REMOVE_DEFINITIONS( -Werror )
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
+
 # #add extra search paths for libraries and includes
 # SET (LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 # SET (LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" CACHE STRING "Directory where lib will install")

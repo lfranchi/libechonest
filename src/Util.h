@@ -51,10 +51,10 @@ namespace Echonest
         };
         
         enum TicketStatus {
-            Unknown,
-            Pending,
-            Complete,
-            Error
+            Unknown = 0,
+            Pending = 1,
+            Complete = 2,
+            Error = 4
         };
     }
         
@@ -100,6 +100,12 @@ namespace Echonest
     
     QByteArray catalogTypeToLiteral( CatalogTypes::Type );
     CatalogTypes::Type literalToCatalogType( const QByteArray& type );
+    
+    QByteArray catalogStatusToLiteral( CatalogTypes::TicketStatus );
+    CatalogTypes::TicketStatus literalToCatalogStatus( const QByteArray& type );
+    
+    QByteArray catalogUpdateActionToLiteral( CatalogTypes::Action );
+    CatalogTypes::Action literalToCatalogUpdateAction( const QByteArray& type );
 }
 
 #endif

@@ -28,6 +28,8 @@ private slots:
     void testList();
     void testProfile();
     void testRead();
+    void testStatus();
+    void testUpdate();
 };
 
 #endif

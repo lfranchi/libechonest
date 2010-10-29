@@ -611,7 +611,7 @@ Echonest::Catalogs Echonest::Parser::parseCatalogList( QXmlStreamReader& xml ) t
     
     int start = -1;
     int total = -1;
-    while( xml.name() != QLatin1String( "catalogs" ) || !xml.isStartElement() ) {
+    while( xml.name() != "response" && ( xml.name() != QLatin1String( "catalogs" ) || !xml.isStartElement() ) ) {
         if( xml.name() == "start" && xml.isStartElement() )
             start = xml.readElementText().toInt();
         else if( xml.name() == "total" && xml.isStartElement() )
@@ -619,7 +619,13 @@ Echonest::Catalogs Echonest::Parser::parseCatalogList( QXmlStreamReader& xml ) t
         xml.readNextStartElement();
     }
     
+        
     Echonest::Catalogs catalogs;
+    
+    if( xml.name() != "catalogs" ) { // none
+        return catalogs;
+    }
+
     catalogs.reserve( total );
     // now we're pointing at the first catalog
     while( xml.name() != "response" || !xml.isEndElement() )
@@ -759,7 +765,7 @@ QList<Echonest::CatalogItem*> Echonest::Parser::parseCatalogItems( QXmlStreamRea
     return items;
 }
 
-void Echonest::Parser::parseCatalogRequestItem( QXmlStreamReader& xml, Echonest::CatalogArtist& artist, Echonest::CatalogSong& song) throw( ParseError )
+void Echonest::Parser::parseCatalogRequestItem( QXmlStreamReader& xml, Echonest::CatalogArtist& artist, Echonest::CatalogSong& song) throw( Echonest::ParseError )
 {
     if( xml.atEnd() || xml.name() != "request" || xml.tokenType() != QXmlStreamReader::StartElement )
         throw Echonest::ParseError( Echonest::UnknownParseError );
@@ -803,8 +809,67 @@ void Echonest::Parser::saveSongList( Echonest::Catalog& catalog, QList<Echonest:
 }
 
 
+Echonest::CatalogStatus Echonest::Parser::parseCatalogStatus( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    if( xml.atEnd() || xml.name() != "ticket_status" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw Echonest::ParseError( Echonest::UnknownParseError );
+    Echonest::CatalogStatus status;
+    
+    while( xml.name() != "response" || !xml.isStartElement() ) {
+        if( xml.name() == "ticket_status" && xml.isStartElement() )
+            status.status = Echonest::literalToCatalogStatus( xml.readElementText().toLatin1() );
+        else if( xml.name() == "items_updated" && xml.isStartElement() )
+            status.items_updated = xml.readElementText().toInt();
+        else if( xml.name() == "update_info" && xml.isStartElement() )
+            status.items = parseTicketUpdateInfo( xml );
+        
+        xml.readNext();
+    }
+    
+    return status;
+}
 
+Echonest::CatalogStatusItem Echonest::Parser::parseTicketUpdateInfo( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+//     if( xml.atEnd() || xml.name() != "ticket_status" || xml.tokenType() != QXmlStreamReader::StartElement )
+//         throw Echonest::ParseError( Echonest::UnknownParseError );
+        // TODO
+        return Echonest::CatalogStatusItem();
+}
 
+QByteArray Echonest::Parser::parseCatalogTicket( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    if( xml.atEnd() || xml.name() != "ticket" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw Echonest::ParseError( Echonest::UnknownParseError );
+    
+    QByteArray ticket= xml.readElementText().toLatin1();
+    return ticket;
+}
 
+Echonest::Catalog Echonest::Parser::parseNewCatalog( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    if( xml.atEnd() || xml.name() != "name" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw Echonest::ParseError( Echonest::UnknownParseError );
+    
+    QString name;
+    QByteArray id;
+    Echonest::CatalogTypes::Type type = Echonest::CatalogTypes::Artist;
+    
+    while( xml.name() != "response" || !xml.isEndElement() ) {
+        if( xml.name() == "name" && xml.isStartElement() )
+            name = xml.readElementText();
+        else if( xml.name() == "id" && xml.isStartElement() )
+            id = xml.readElementText().toLatin1();
+        else if( xml.name() == "type" && xml.isStartElement() )
+            type = Echonest::literalToCatalogType( xml.readElementText().toLatin1() );
+        
+        xml.readNextStartElement();
+    }
+    Echonest::Catalog c = Echonest::Catalog( id );
+    c.setName( name );
+    c.setType( type );
+    
+    return c;
+}
 
 

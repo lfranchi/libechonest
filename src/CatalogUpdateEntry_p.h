@@ -22,15 +22,15 @@
 #include <QByteArray>
 #include <QString>
 
-class CatalogEntryData : public QSharedData {
+class CatalogUpdateEntryData : public QSharedData {
     
 public:
-    CatalogEntryData() :  action( Echonest::CatalogTypes::Update ), track_number( -1 ), disc_number( -1 ), favorite( false ), 
+    CatalogUpdateEntryData() :  action( Echonest::CatalogTypes::Update ), track_number( -1 ), disc_number( -1 ), favorite( false ), 
                           banned( false ), play_count( -1 ), skip_count( -1 ), rating( -1 ), 
                           favoriteSet( false ), bannedSet( false ) 
     {}
     
-    CatalogEntryData( const CatalogEntryData& other ) {
+    CatalogUpdateEntryData( const CatalogUpdateEntryData& other ) {
         action = other.action;
         fp_code = other.fp_code;
         

@@ -13,7 +13,7 @@ set( LIBECHONEST_SRC
         ArtistTypes.cpp
         Generator.cpp
         Catalog.cpp
-        CatalogEntry.cpp
+        CatalogUpdateEntry.cpp
         CatalogSong.cpp
         CatalogArtist.cpp
         CatalogItem.cpp
@@ -30,7 +30,7 @@ set( LIBECHONEST_H
         ArtistTypes.h
         Util.h
         Catalog.h
-        CatalogEntry.h
+        CatalogUpdateEntry.h
         CatalogSong.h
         CatalogArtist.h
         CatalogItem.h

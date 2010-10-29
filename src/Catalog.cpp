@@ -18,6 +18,7 @@
 
 #include "Catalog_p.h"
 #include "Parsing_p.h"
+#include "Generator_p.h"
 
 Echonest::Catalog::Catalog()
     : d( new CatalogData )
@@ -176,13 +177,12 @@ QNetworkReply* Echonest::Catalog::profile() const
 QNetworkReply* Echonest::Catalog::status(const QByteArray& ticket)
 {
     QUrl url = Echonest::baseGetQuery( "catalog", "status" );
-    Q_ASSERT( !d->isEmpty() );
-    url.addEncodedQueryItem( "id", d->id );
+    url.addEncodedQueryItem( "ticket", ticket );
     
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );    
 }
 
-QNetworkReply* Echonest::Catalog::update(const Echonest::CatalogEntryList& entries) const
+QNetworkReply* Echonest::Catalog::update(const Echonest::CatalogUpdateEntries& entries) const
 {
     QUrl url = Echonest::baseGetQuery( "catalog", "update" );
     Q_ASSERT( !d->isEmpty() );
@@ -190,7 +190,7 @@ QNetworkReply* Echonest::Catalog::update(const Echonest::CatalogEntryList& entri
     return Echonest::Catalog::updatePrivate( url, entries );
 }
 
-QNetworkReply* Echonest::Catalog::updateAndCreate(const Echonest::CatalogEntryList& entries)
+QNetworkReply* Echonest::Catalog::updateAndCreate(const Echonest::CatalogUpdateEntries& entries)
 {
     QUrl url = Echonest::baseGetQuery( "catalog", "update" );
     return Echonest::Catalog::updatePrivate( url, entries );
@@ -256,22 +256,42 @@ void Echonest::Catalog::parseRead(QNetworkReply* reply) throw( Echonest::ParseEr
     d = catalog.d;
 }
 
-Echonest::CatalogStatus Echonest::Catalog::parseStatus(QNetworkReply* ) throw( Echonest::ParseError )
+Echonest::CatalogStatus Echonest::Catalog::parseStatus(QNetworkReply* reply) throw( Echonest::ParseError )
 {
-    return Echonest::CatalogStatus();
+    Echonest::Parser::checkForErrors( reply );
+    QXmlStreamReader xml( reply->readAll() );
+    Echonest::Parser::readStatus( xml );
+    
+    Echonest::CatalogStatus status = Echonest::Parser::parseCatalogStatus( xml );
+    return status;
 }
 
-QByteArray Echonest::Catalog::parseTicket(QNetworkReply* ) throw( Echonest::ParseError )
+QByteArray Echonest::Catalog::parseTicket(QNetworkReply* reply) throw( Echonest::ParseError )
 {
-    return QByteArray();
+    Echonest::Parser::checkForErrors( reply );
+    QXmlStreamReader xml( reply->readAll() );
+    Echonest::Parser::readStatus( xml );
+    
+    QByteArray ticket = Echonest::Parser::parseCatalogTicket( xml );
+    return ticket;
 }
 
-QNetworkReply* Echonest::Catalog::updatePrivate( QUrl& url, const Echonest::CatalogEntryList& entries)
+Echonest::Catalog Echonest::Catalog::parseCreate(QNetworkReply* reply) throw( Echonest::ParseError )
+{
+    Echonest::Parser::checkForErrors( reply );
+    QXmlStreamReader xml( reply->readAll() );
+    Echonest::Parser::readStatus( xml );
+    
+    Catalog c = Echonest::Parser::parseNewCatalog( xml );
+    return c;
+}
+
+
+QNetworkReply* Echonest::Catalog::updatePrivate( QUrl& url, const Echonest::CatalogUpdateEntries& entries)
 {
     url.addEncodedQueryItem( "data_type", "json" );
     
-    //     QByteArray payload = Generator::catalogEntriesToJson( entries );
-    QByteArray payload;
+    QByteArray payload = Generator::catalogEntriesToJson( entries );
     return Echonest::Config::instance()->nam()->post( QNetworkRequest( url ), payload );
 }
 

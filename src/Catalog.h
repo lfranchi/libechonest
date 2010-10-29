@@ -18,7 +18,7 @@
 #define ECHONEST_CATALOG_H
 
 #include "Artist.h"
-#include "CatalogEntry.h"
+#include "CatalogUpdateEntry.h"
 #include "echonest_export.h"
 #include "Song.h"
 #include "Util.h"
@@ -109,7 +109,7 @@ public:
      * 
      * \param entries The list of entries to update the catalog with.
     */
-    QNetworkReply* update( const CatalogEntryList& entries ) const;
+    QNetworkReply* update( const CatalogUpdateEntries& entries ) const;
     
     /**
      * Get basic information on a catalog. Only requires one of catalog id or name.
@@ -157,7 +157,7 @@ public:
      * \param entries The list of entries to populate the catalog with.
      * 
      */
-    static QNetworkReply* updateAndCreate( const CatalogEntryList& entries );
+    static QNetworkReply* updateAndCreate( const CatalogUpdateEntries& entries );
     
     /**
      * Checks the status of a catalog operation given a catalog ticket.
@@ -166,7 +166,7 @@ public:
      * 
      * \param ticket The catalog ticket returned from an update() or updateAndCreate() call
      */
-    QNetworkReply* status( const QByteArray& ticket );
+    static QNetworkReply* status( const QByteArray& ticket );
     
     /**
      * Parses the result of a status call, returning the status information along with information on
@@ -200,12 +200,16 @@ public:
     
     /**
      * Parse the result of a catalog call. The calls return a ticket that can be used to check the status
-     *  of the call.
+     *  of the call with status()
      */
     static QByteArray parseTicket( QNetworkReply* ) throw( Echonest::ParseError );
     
+    /**
+     * Parse the result of a create() call.
+     */
+    static Catalog parseCreate( QNetworkReply* reply ) throw( Echonest::ParseError );
 private:
-    static QNetworkReply* updatePrivate( QUrl&, const CatalogEntryList& entries );
+    static QNetworkReply* updatePrivate( QUrl&, const CatalogUpdateEntries& entries );
     QNetworkReply* readPrivate( QUrl& url, int results, int start ) const;
     static void addLimits( QUrl&, int results, int start );
     

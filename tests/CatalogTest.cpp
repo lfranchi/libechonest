@@ -24,7 +24,8 @@
 
 void CatalogTest::initTestCase()
 {
-    Echonest::Config::instance()->setAPIKey( "N6E4NIOVYMTHNDM8J" );
+//     Echonest::Config::instance()->setAPIKey( "N6E4NIOVYMTHNDM8J" );
+    Echonest::Config::instance()->setAPIKey( "JGJCRKWLXLBZIFAZB" );
 }
 
 void CatalogTest::testList()
@@ -32,7 +33,7 @@ void CatalogTest::testList()
     QNetworkReply* reply = Echonest::Catalog::list();
     
     qDebug() << reply->url().toString();
-    QCOMPARE( reply->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/catalog/list?api_key=N6E4NIOVYMTHNDM8J&format=xml" ) );
+    QCOMPARE( reply->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/catalog/list?api_key=JGJCRKWLXLBZIFAZB&format=xml" ) );
     
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -48,7 +49,7 @@ void CatalogTest::testList()
     reply = Echonest::Catalog::list( 1, 1 );
     
     qDebug() << reply->url().toString();
-    QCOMPARE( reply->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/catalog/list?api_key=N6E4NIOVYMTHNDM8J&format=xml&results=1&start=1" ) );
+    QCOMPARE( reply->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/catalog/list?api_key=JGJCRKWLXLBZIFAZB&format=xml&results=1&start=1" ) );
     
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
@@ -60,11 +61,11 @@ void CatalogTest::testList()
 
 void CatalogTest::testProfile()
 {
-    Echonest::Catalog c( "CAOFUDS12BB066268E" );
+    Echonest::Catalog c( "CABJYAU12BF92213D5" );
     QNetworkReply* reply = c.profile();
     
     qDebug() << reply->url().toString();
-    QCOMPARE( reply->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/catalog/profile?api_key=N6E4NIOVYMTHNDM8J&format=xml&id=CAOFUDS12BB066268E" ) );
+    QCOMPARE( reply->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/catalog/profile?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=CAOFUDS12BB066268E" ) );
     
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -76,11 +77,11 @@ void CatalogTest::testProfile()
 
 void CatalogTest::testRead()
 {
-    Echonest::Catalog c( "CAGPXKK12BB06F9DE9" );
+    Echonest::Catalog c( "CABJYAU12BF92213D5" );
     QNetworkReply* reply = c.readSongCatalog( Echonest::Song::AudioSummaryInformation | Echonest::Song::Tracks | Echonest::Song::Hotttnesss | Echonest::Song::ArtistHotttnesss | Echonest::Song::ArtistFamiliarity | Echonest::Song::ArtistLocation );
     
     qDebug() << reply->url().toString();
-    QCOMPARE( reply->url(), QUrl( QLatin1String( "http://developer.echonest.com/api/v4/catalog/read?api_key=N6E4NIOVYMTHNDM8J&format=xml&bucket=audio_summary&bucket=tracks&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&bucket=artist_location&id=CAGPXKK12BB06F9DE9" ) ) );
+    QCOMPARE( reply->url(), QUrl( QLatin1String( "http://developer.echonest.com/api/v4/catalog/read?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=audio_summary&bucket=tracks&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&bucket=artist_location&id=CAGPXKK12BB06F9DE9" ) ) );
     
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -101,13 +102,13 @@ void CatalogTest::testRead()
     QVERIFY( c.songs().at( 0 ).artistFamiliarity() >= 0 );
     
     // test an artist catalog
-    Echonest::Catalog c2( "CAOFUDS12BB066268E" );
+    Echonest::Catalog c2( "CABJYAU12BF92213D5" );
     reply = c2.readArtistCatalog( Echonest::Artist::Audio | Echonest::Artist::Blogs | Echonest::Artist::Biographies | Echonest::Artist::Familiarity |
                                                 Echonest::Artist::Hotttnesss | Echonest::Artist::Images | Echonest::Artist::News | Echonest::Artist::Reviews | 
                                                 Echonest::Artist::Terms | Echonest::Artist::Urls | Echonest::Artist::Videos );
     
     qDebug() << reply->url().toString();
-    QCOMPARE( reply->url(), QUrl( QLatin1String( "http://developer.echonest.com/api/v4/catalog/read?api_key=N6E4NIOVYMTHNDM8J&format=xml&bucket=audio&bucket=biographies&bucket=blogs&bucket=familiarity&bucket=hotttnesss&bucket=images&bucket=news&bucket=reviews&bucket=terms&bucket=urls&bucket=video&id=CAOFUDS12BB066268E" ) ) );
+    QCOMPARE( reply->url(), QUrl( QLatin1String( "http://developer.echonest.com/api/v4/catalog/read?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=audio&bucket=biographies&bucket=blogs&bucket=familiarity&bucket=hotttnesss&bucket=images&bucket=news&bucket=reviews&bucket=terms&bucket=urls&bucket=video&id=CAOFUDS12BB066268E" ) ) );
     
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
@@ -130,6 +131,37 @@ void CatalogTest::testRead()
     QVERIFY( !c2.artists().at( 0 ).dateAdded().isNull() );
     QVERIFY( !c2.artists().at( 0 ).id().isEmpty() );
     QVERIFY( !c2.artists().at( 0 ).foreignId().isEmpty() );
+}
+
+void CatalogTest::testStatus()
+{
+
+}
+
+void CatalogTest::testUpdate()
+{
+    QNetworkReply* reply = Echonest::Catalog::create( QLatin1String( "unittest_catalog_999" ), Echonest::CatalogTypes::Artist );
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    
+    Echonest::Catalog c = Echonest::Catalog::parseCreate( reply );
+    qDebug() << c;
+    // delete it again
+    reply = c.deleteCatalog();
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+//     QPair< QString, QByteArray> res = c.parseDelete( reply );
+//     qDebug() << res;
+    
+    qDebug() << c;
+    
+    Echonest::CatalogUpdateEntry entry;
+    entry.setArtistName( QLatin1String( "FOoARtist" ) );
+    entry.setArtistId( "fooid" );
+    
+//     QNetworkReply* reply = 
 }
 
 

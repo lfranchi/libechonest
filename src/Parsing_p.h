@@ -90,6 +90,10 @@ namespace Parser
     void parseCatalogRequestItem( QXmlStreamReader& xml, Echonest::CatalogArtist&, Echonest::CatalogSong& ) throw( ParseError );
     void saveArtistList( Catalog& catalog, QList<CatalogItem*>& );
     void saveSongList( Catalog& catalog, QList<CatalogItem*>& );
+    Echonest::CatalogStatus parseCatalogStatus( QXmlStreamReader& xml ) throw( ParseError );
+    Echonest::CatalogStatusItem parseTicketUpdateInfo( QXmlStreamReader& xml ) throw( ParseError );
+    QByteArray parseCatalogTicket( QXmlStreamReader& xml ) throw( ParseError );
+    Catalog parseNewCatalog( QXmlStreamReader& xml ) throw( ParseError );
 }
 }
 

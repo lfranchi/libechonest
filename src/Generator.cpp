@@ -15,5 +15,98 @@
  ****************************************************************************************/
 
 #include "Generator_p.h"
+#include "CatalogUpdateEntry.h"
 
 #include "serializer.h"
+#include <QVariant>
+#include <quuid.h>
+#include <QDebug>
+
+QByteArray Echonest::Generator::catalogEntriesToJson( const Echonest::CatalogUpdateEntries& items )
+{
+    QJson::Serializer s;
+    
+    QVariant itms = catalogEntriesToJson( items );
+    QByteArray serialized = s.serialize( itms );
+    qDebug() << "Serialized:" << serialized;
+    return serialized;
+}
+
+QByteArray Echonest::Generator::catalogEntryToJson( const Echonest::CatalogUpdateEntry& item )
+{
+    QJson::Serializer s;
+    
+    QVariant itm = catalogEntryToVariant( item );
+    QByteArray serialized = s.serialize( itm );
+    qDebug() << "Serialized:" << serialized;
+    return serialized;
+}
+
+
+QVariantList Echonest::Generator::catalogEntriesToVariant( const Echonest::CatalogUpdateEntries& items )
+{
+    // copy the catalog item into a QVariant
+    QVariantList itemList;
+    foreach( const Echonest::CatalogUpdateEntry& item, items )
+        itemList << catalogEntryToVariant( item );
+    
+    return itemList;
+}
+
+QVariant Echonest::Generator::catalogEntryToVariant( const Echonest::CatalogUpdateEntry& item )
+{
+    QVariantMap itemMap;
+    QVariantMap itm;
+    
+    itemMap[ QLatin1String( "action" ) ] = Echonest::catalogUpdateActionToLiteral( item.action() );
+    
+    itm[ QLatin1String( "item_id" ) ] = QUuid::createUuid().toString();
+    if( !item.fingerprint().isEmpty() )
+        itm[ QLatin1String( "fp_code" ) ] = item.fingerprint();
+    
+    if( !item.songId().isEmpty() )
+        itm[ QLatin1String( "song_id" ) ] = item.songId();
+    
+    if( !item.songName().isEmpty() )
+        itm[ QLatin1String( "song_name" ) ] = item.songName();
+    
+    if( !item.artistId().isEmpty() )
+        itm[ QLatin1String( "artist_id" ) ] = item.artistId();
+    
+    if( !item.artistName().isEmpty() )
+        itm[ QLatin1String( "artist_name" ) ] = item.artistName();
+    
+    if( !item.release().isEmpty() )
+        itm[ QLatin1String( "release" ) ] = item.release();
+    
+    if( !item.genre().isEmpty() )
+        itm[ QLatin1String( "genre" ) ] = item.genre();
+    
+    if( item.trackNumber() > -1 )
+        itm[ QLatin1String( "track_number" ) ] = item.trackNumber();
+    
+    if( item.discNumber() > -1 )
+        itm[ QLatin1String( "disc_number" ) ] = item.discNumber();
+    
+    if( !item.url().isEmpty() )
+        itm[ QLatin1String( "url" ) ] = item.url();
+    
+    if( item.favoriteSet() )
+        itm[ QLatin1String( "favorite" ) ] = item.favorite() ? QLatin1String( "true" ) : QLatin1String( "false" );
+    
+    if( item.bannedSet() )
+        itm[ QLatin1String( "banned" ) ] = item.banned() ? QLatin1String( "true" ) : QLatin1String( "false" );
+    
+    if( item.playCount() > -1 )
+        itm[ QLatin1String( "play_count" ) ] = item.playCount();
+    
+    if( item.skipCount() > -1 )
+        itm[ QLatin1String( "skip_count" ) ] = item.skipCount();
+    
+    if( item.rating() > -1 )
+        itm[ QLatin1String( "rating" ) ] = item.rating();
+    
+    itemMap[ QLatin1String( "item" ) ] = itm;
+    
+    return itemMap;
+}
