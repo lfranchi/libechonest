@@ -137,6 +137,7 @@ QNetworkReply* Echonest::Catalog::create(const QString& name, Echonest::CatalogT
 
     QNetworkRequest request = QNetworkRequest( url );
     request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "multipart/form-data" ) );
+    qDebug() << "Sending create url:" << url.toString();
     return Echonest::Config::instance()->nam()->post( request, QByteArray() );
 }
 
@@ -210,10 +211,12 @@ QNetworkReply* Echonest::Catalog::readSongCatalog(Echonest::Song::SongInformatio
 
 QPair< QString, QByteArray > Echonest::Catalog::parseDelete( QNetworkReply* reply ) throw( Echonest::ParseError )
 {
+    QByteArray data = reply->readAll();
+//     qDebug() << "DATA:" << data;
     QPair< QString, QByteArray > asd;
     Echonest::Parser::checkForErrors( reply );
     
-    QXmlStreamReader xml( reply->readAll() );
+    QXmlStreamReader xml( data );
     
     Echonest::Parser::readStatus( xml );
     
@@ -274,8 +277,10 @@ QByteArray Echonest::Catalog::parseTicket(QNetworkReply* reply) throw( Echonest:
 
 Echonest::Catalog Echonest::Catalog::parseCreate(QNetworkReply* reply) throw( Echonest::ParseError )
 {
+    QByteArray data = reply->readAll();
+    qDebug() << data;
     Echonest::Parser::checkForErrors( reply );
-    QXmlStreamReader xml( reply->readAll()  );
+    QXmlStreamReader xml( data  );
     Echonest::Parser::readStatus( xml );
     
     Catalog c = Echonest::Parser::parseNewCatalog( xml );
@@ -320,7 +325,7 @@ QNetworkReply* Echonest::Catalog::doPost(const QUrl& url)
         data.append( item.first + "=" + item.second + "&" );
     }
     data.truncate( data.size() - 1 ); // remove extra &
-    qDebug() << "Sending data:" << data;
+    qDebug() << "Sending data:" << data << "for method:" << url.path();
     // strip the extras
     QUrl url2( url.toString().mid( 0, url.toString().indexOf( QLatin1Char( '?' ) ) ) );
     QNetworkRequest request = QNetworkRequest( url2 );
