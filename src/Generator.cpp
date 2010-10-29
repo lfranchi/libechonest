@@ -26,7 +26,7 @@ QByteArray Echonest::Generator::catalogEntriesToJson( const Echonest::CatalogUpd
 {
     QJson::Serializer s;
     
-    QVariant itms = catalogEntriesToJson( items );
+    QVariant itms = catalogEntriesToVariant( items );
     QByteArray serialized = s.serialize( itms );
     qDebug() << "Serialized:" << serialized;
     return serialized;
@@ -60,7 +60,7 @@ QVariant Echonest::Generator::catalogEntryToVariant( const Echonest::CatalogUpda
     
     itemMap[ QLatin1String( "action" ) ] = Echonest::catalogUpdateActionToLiteral( item.action() );
     
-    itm[ QLatin1String( "item_id" ) ] = QUuid::createUuid().toString();
+    itm[ QLatin1String( "item_id" ) ] = QUuid::createUuid().toString().replace( QLatin1Char( '{' ), QString() ).replace( QLatin1Char( '}' ), QString() );
     if( !item.fingerprint().isEmpty() )
         itm[ QLatin1String( "fp_code" ) ] = item.fingerprint();
     

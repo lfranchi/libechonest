@@ -24,8 +24,8 @@
 
 void CatalogTest::initTestCase()
 {
-//     Echonest::Config::instance()->setAPIKey( "N6E4NIOVYMTHNDM8J" );
-    Echonest::Config::instance()->setAPIKey( "JGJCRKWLXLBZIFAZB" );
+    Echonest::Config::instance()->setAPIKey( "N6E4NIOVYMTHNDM8J" );
+//     Echonest::Config::instance()->setAPIKey( "JGJCRKWLXLBZIFAZB" );
 }
 
 void CatalogTest::testList()
@@ -140,28 +140,45 @@ void CatalogTest::testStatus()
 
 void CatalogTest::testUpdate()
 {
-    QNetworkReply* reply = Echonest::Catalog::create( QLatin1String( "unittest_catalog_999" ), Echonest::CatalogTypes::Artist );
+//     QNetworkReply* reply = Echonest::Catalog::create( QLatin1String( "unittest_catalog_999" ), Echonest::CatalogTypes::Artist );
     
-    QEventLoop loop;
-    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-    loop.exec();
-    
-    Echonest::Catalog c = Echonest::Catalog::parseCreate( reply );
-    qDebug() << c;
+//     QEventLoop loop;
+//     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+//     loop.exec();
+//     
+//     Echonest::Catalog c = Echonest::Catalog::parseCreate( reply );
+//     qDebug() << c;
     // delete it again
-    reply = c.deleteCatalog();
-    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-    loop.exec();
+//     reply = c.deleteCatalog();
+//     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+//     loop.exec();
 //     QPair< QString, QByteArray> res = c.parseDelete( reply );
 //     qDebug() << res;
     
-    qDebug() << c;
+//     qDebug() << c;
+    Echonest::Catalog c( "CAWPOOZ12BF91EC57C" );
     
     Echonest::CatalogUpdateEntry entry;
     entry.setArtistName( QLatin1String( "FOoARtist" ) );
     entry.setArtistId( "fooid" );
+    entry.setFingerpring( "FINGERPRINT" );
+    entry.setRelease( QLatin1String( "FooAlbum:" ) );
+    entry.setGenre( QLatin1String( "Rock" ) );
+    entry.setRating( 5 );
+    entry.setTrackNumber( 5 );
+    entry.setDiscNumber( 1 );
+    entry.setUrl( QLatin1String( "myurl" ) );
+    entry.setAction( Echonest::CatalogTypes::Update );
+    Echonest::CatalogUpdateEntries entries;
+    entries << entry;
     
-//     QNetworkReply* reply = 
+    QNetworkReply* reply = c.update( entries );
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    
+    QByteArray ticket = Echonest::Catalog::parseTicket( reply );
+    qDebug() << ticket;
 }
 
 

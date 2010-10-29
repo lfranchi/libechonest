@@ -137,7 +137,6 @@ QNetworkReply* Echonest::Catalog::create(const QString& name, Echonest::CatalogT
     
     QNetworkRequest request( url );
     request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "multipart/form-data" ) );
-    qDebug() << "Creating catalog::create URL" << url;
     return Echonest::Config::instance()->nam()->post( request, QByteArray() );
 }
 
@@ -268,8 +267,10 @@ Echonest::CatalogStatus Echonest::Catalog::parseStatus(QNetworkReply* reply) thr
 
 QByteArray Echonest::Catalog::parseTicket(QNetworkReply* reply) throw( Echonest::ParseError )
 {
+    QByteArray data = reply->readAll();
+    qDebug() << data;
     Echonest::Parser::checkForErrors( reply );
-    QXmlStreamReader xml( reply->readAll() );
+    QXmlStreamReader xml( data );
     Echonest::Parser::readStatus( xml );
     
     QByteArray ticket = Echonest::Parser::parseCatalogTicket( xml );
@@ -292,7 +293,10 @@ QNetworkReply* Echonest::Catalog::updatePrivate( QUrl& url, const Echonest::Cata
     url.addEncodedQueryItem( "data_type", "json" );
     
     QByteArray payload = Generator::catalogEntriesToJson( entries );
-    return Echonest::Config::instance()->nam()->post( QNetworkRequest( url ), payload );
+    QNetworkRequest request = QNetworkRequest( url );
+    request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "application/x-www-form-urlencoded" ) );
+    qDebug() << "Sending data:" << payload;
+    return Echonest::Config::instance()->nam()->post( request, payload );
 }
 
 void Echonest::Catalog::addLimits(QUrl& url, int results, int start)
