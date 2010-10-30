@@ -139,142 +139,126 @@ void CatalogTest::testStatus()
 
 void CatalogTest::testCreateUpdateDeleteSong()
 {
-    Echonest::Catalog c;
-    try {
-        QNetworkReply* reply = Echonest::Catalog::create( QLatin1String( "unittest_catalog_song_X" ), Echonest::CatalogTypes::Song );
+
+    QNetworkReply* reply = Echonest::Catalog::create( QLatin1String( "unittest_catalog_song_X" ), Echonest::CatalogTypes::Song );
 //         
-        QEventLoop loop;
-        loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-        loop.exec();
-        
-        c = Echonest::Catalog::parseCreate( reply );
-        qDebug() << "CREATED NEW CATALOG:" << c;
-        QVERIFY( !c.id().isEmpty() );
-        QVERIFY( !c.name().isEmpty() );
-//         c = Echonest::Catalog( "CAQDANH12BFA210FC4" ); // for deleting manually a catalog
-        Echonest::CatalogUpdateEntry entry;
-        entry.setSongName( QLatin1String( "Your Hand In Mine" ) );
-        entry.setArtistName( QLatin1String( "Explosions in the sky" ) );
-    //     entry.S( "fooid" );
-    //     entry.setFingerpring( "FINGERPRINT" );
-    //     entry.setRelease( QLatin1String( "FooAlbum:" ) );
-    //     entry.setGenre( QLatin1String( "Rock" ) );
-    //     entry.setRating( 5 );
-    //     entry.setTrackNumber( 5 );
-    //     entry.setDiscNumber( 1 );
-    //     entry.setUrl( QLatin1String( "myurl" ) );
-    //     entry.setFavorite( true );
-        entry.setAction( Echonest::CatalogTypes::Update );
-        Echonest::CatalogUpdateEntries entries;
-        entries << entry;
-        
-        reply = c.update( entries );
-        loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-        loop.exec();
-        
-        QByteArray ticket = Echonest::Catalog::parseTicket( reply );
-        qDebug() << ticket;
-        
-        QVERIFY( !ticket.isEmpty() );
-        // now check the ticket status after 5s
-        sleep( 5 );
-        reply = Echonest::Catalog::status( ticket );
-        loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-        loop.exec();
-        Echonest::CatalogStatus cs = Echonest::Catalog::parseStatus( reply );
-        qDebug() << "Catalog status:" << cs.status << cs.items_updated << cs.items;
-        
-        // now read the catalog
-        reply = c.readSongCatalog();
-        loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-        loop.exec();
-        c.parseRead( reply );
-        qDebug() << c;
-        QCOMPARE( c.songs().size(), 1 );
-    } catch( const Echonest::ParseError& e ) { // delete no matter what
-        qDebug() << "Caught exception, deleting anyway!";
-        
-        QNetworkReply* reply = c.deleteCatalog();
-        QEventLoop loop;
-        loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-        loop.exec();
-        return;
-    }
-    QNetworkReply* reply = c.deleteCatalog();
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
-    QPair< QString, QByteArray> res = c.parseDelete( reply );
-    qDebug() << res;
+    
+    m_songC = Echonest::Catalog::parseCreate( reply );
+    qDebug() << "CREATED NEW CATALOG:" << m_songC;
+    QVERIFY( !m_songC.id().isEmpty() );
+    QVERIFY( !m_songC.name().isEmpty() );
+//     m_songC = Echonest::Catalog( "CAGFEYU12BFD4789A2" ); // for deleting manually a catalog
+    Echonest::CatalogUpdateEntry entry;
+    entry.setSongName( QLatin1String( "Your Hand In Mine" ) );
+    entry.setArtistName( QLatin1String( "Explosions in the sky" ) );
+//     entry.S( "fooid" );
+//     entry.setFingerpring( "FINGERPRINT" );
+//     entry.setRelease( QLatin1String( "FooAlbum:" ) );
+//     entry.setGenre( QLatin1String( "Rock" ) );
+//     entry.setRating( 5 );
+//     entry.setTrackNumber( 5 );
+//     entry.setDiscNumber( 1 );
+//     entry.setUrl( QLatin1String( "myurl" ) );
+//     entry.setFavorite( true );
+    entry.setAction( Echonest::CatalogTypes::Update );
+    Echonest::CatalogUpdateEntries entries;
+    entries << entry;
+    
+    reply = m_songC.update( entries );
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    
+    QByteArray ticket = Echonest::Catalog::parseTicket( reply );
+    qDebug() << ticket;
+    
+    QVERIFY( !ticket.isEmpty() );
+    // now check the ticket status after 5s
+    sleep( 5 );
+    reply = Echonest::Catalog::status( ticket );
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    Echonest::CatalogStatus cs = Echonest::Catalog::parseStatus( reply );
+    qDebug() << "Catalog status:" << cs.status << cs.items_updated << cs.items;
+    
+    // now read the catalog
+    reply = m_songC.readSongCatalog();
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    m_songC.parseRead( reply );
+    qDebug() << m_songC;
+    QCOMPARE( m_songC.songs().size(), 1 );
+    
     
 }
 
 void CatalogTest::testCreateUpdateDeleteArtist()
 {
-    Echonest::Catalog c;
-    try {
-        QNetworkReply* reply = Echonest::Catalog::create( QLatin1String( "unittest_catalog_artist_X" ), Echonest::CatalogTypes::Artist );
+    QNetworkReply* reply = Echonest::Catalog::create( QLatin1String( "unittest_catalog_artist_X" ), Echonest::CatalogTypes::Artist );
 //         
-        QEventLoop loop;
-        loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-        loop.exec();
-        
-        c = Echonest::Catalog::parseCreate( reply );
-        qDebug() << "CREATED NEW ARTIST CATALOG:" << c;
-        QVERIFY( !c.id().isEmpty() );
-        QVERIFY( !c.name().isEmpty() );
-
-//         c = Echonest::Catalog( "CAPRWVK12BFA1A6F17" );
-        
-        Echonest::CatalogUpdateEntry entry;
-        entry.setArtistName( QLatin1String( "Balmorhea" ) );
-        entry.setGenre( QLatin1String( "Post Rock" ) );
-        entry.setAction( Echonest::CatalogTypes::Update );
-        Echonest::CatalogUpdateEntry entry2;
-        entry2.setArtistName( QLatin1String( "Mono" ) );
-        entry2.setGenre( QLatin1String( "Post Rock" ) );
-        entry2.setAction( Echonest::CatalogTypes::Update );
-        Echonest::CatalogUpdateEntries entries;
-        entries << entry << entry2;
-        
-        reply = c.update( entries );
-        loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-        loop.exec();
-        
-        QByteArray ticket = Echonest::Catalog::parseTicket( reply );
-        qDebug() << ticket;
-        
-        QVERIFY( !ticket.isEmpty() );
-        // now check the ticket status after 5s
-        sleep( 5 );
-        reply = Echonest::Catalog::status( ticket );
-        loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-        loop.exec();
-        Echonest::CatalogStatus cs = Echonest::Catalog::parseStatus( reply );
-        qDebug() << "Catalog status:" << cs.status << cs.items_updated << cs.items;
-        
-        // now read the catalog
-        reply = c.readSongCatalog();
-        loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-        loop.exec();
-        c.parseRead( reply );
-        qDebug() << c;
-        QCOMPARE( c.artists().size(), 2 );
-    } catch( const Echonest::ParseError& e ) { // delete no matter what
-        qDebug() << "Caught exception, deleting anyway!";
-        
-        QNetworkReply* reply = c.deleteCatalog();
-        QEventLoop loop;
-        loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-        loop.exec();
-        return;
-    }
-    QNetworkReply* reply = c.deleteCatalog();
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
-    QPair< QString, QByteArray> res = c.parseDelete( reply );
-    qDebug() << res;
+    
+    m_artistC = Echonest::Catalog::parseCreate( reply );
+    qDebug() << "CREATED NEW ARTIST CATALOG:" << m_artistC;
+    QVERIFY( !m_artistC.id().isEmpty() );
+    QVERIFY( !m_artistC.name().isEmpty() );
+
+//         c = Echonest::Catalog( "CAPRWVK12BFA1A6F17" );
+    
+    Echonest::CatalogUpdateEntry entry;
+    entry.setArtistName( QLatin1String( "Balmorhea" ) );
+    entry.setGenre( QLatin1String( "Post Rock" ) );
+    entry.setAction( Echonest::CatalogTypes::Update );
+    Echonest::CatalogUpdateEntry entry2;
+    entry2.setArtistName( QLatin1String( "Mono" ) );
+    entry2.setGenre( QLatin1String( "Post Rock" ) );
+    entry2.setAction( Echonest::CatalogTypes::Update );
+    Echonest::CatalogUpdateEntries entries;
+    entries << entry << entry2;
+    
+    reply = m_artistC.update( entries );
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    
+    QByteArray ticket = Echonest::Catalog::parseTicket( reply );
+    qDebug() << ticket;
+    
+    QVERIFY( !ticket.isEmpty() );
+    // now check the ticket status after 5s
+    sleep( 5 );
+    reply = Echonest::Catalog::status( ticket );
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    Echonest::CatalogStatus cs = Echonest::Catalog::parseStatus( reply );
+    qDebug() << "Catalog status:" << cs.status << cs.items_updated << cs.items;
+    
+    // now read the catalog
+    reply = m_artistC.readSongCatalog();
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    m_artistC.parseRead( reply );
+    qDebug() << m_artistC;
+    QCOMPARE( m_artistC.artists().size(), 2 );
+    
+}
+
+void CatalogTest::cleanupTestCase()
+{
+    // delete the two test catalogs we created
+    qDebug() << "Deleting catalogs!";
+    QNetworkReply* reply = m_songC.deleteCatalog();
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    
+    reply = m_artistC.deleteCatalog();
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    return;
 }
 
 

@@ -18,12 +18,14 @@
 #define ECHONEST_CATALOG_TEST_H
 
 #include <QtTest/QtTest>
+#include <Catalog.h>
 
 class CatalogTest : public QObject
 {
     Q_OBJECT
 private slots:
     void initTestCase();
+    void cleanupTestCase();
     
     void testList();
     void testProfile();
@@ -31,6 +33,10 @@ private slots:
     void testStatus();
     void testCreateUpdateDeleteSong();
     void testCreateUpdateDeleteArtist();
+    
+private:
+    Echonest::Catalog m_songC;
+    Echonest::Catalog m_artistC;
 };
 
 #endif

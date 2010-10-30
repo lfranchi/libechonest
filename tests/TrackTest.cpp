@@ -98,6 +98,7 @@ void TrackTest::testAnalyzeFromMD5()
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     
+    QEXPECT_FAIL( "", "profileFromMD5 seems to be disabled for this key on the server :(", Abort );
     QVERIFY( reply->error() == QNetworkReply::NoError );
     Echonest::Track track = Echonest::Track::parseProfile( reply );
     

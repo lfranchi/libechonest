@@ -278,7 +278,7 @@ QByteArray Echonest::Catalog::parseTicket(QNetworkReply* reply) throw( Echonest:
 Echonest::Catalog Echonest::Catalog::parseCreate(QNetworkReply* reply) throw( Echonest::ParseError )
 {
     QByteArray data = reply->readAll();
-    qDebug() << data;
+//     qDebug() << data;
     Echonest::Parser::checkForErrors( reply );
     QXmlStreamReader xml( data  );
     Echonest::Parser::readStatus( xml );
@@ -325,7 +325,7 @@ QNetworkReply* Echonest::Catalog::doPost(const QUrl& url)
         data.append( item.first + "=" + item.second + "&" );
     }
     data.truncate( data.size() - 1 ); // remove extra &
-    qDebug() << "Sending data:" << data << "for method:" << url.path();
+//     qDebug() << "Sending data:" << data << "for method:" << url.path();
     // strip the extras
     QUrl url2( url.toString().mid( 0, url.toString().indexOf( QLatin1Char( '?' ) ) ) );
     QNetworkRequest request = QNetworkRequest( url2 );
