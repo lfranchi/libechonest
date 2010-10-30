@@ -14,7 +14,9 @@ install(FILES
         serializer.h
         serializerrunnable.h
         qjson_export.h
-        DESTINATION ${INCLUDE_INSTALL_DIR}/qjson COMPONENT Devel
+        DESTINATION ${INCLUDE_INSTALL_DIR}/qjson
+        CONFIGURATIONS Debug
+        COMPONENT Devel
 )
 
 set(qjson_MOC_HDRS
