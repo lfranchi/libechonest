@@ -144,7 +144,7 @@ QNetworkReply* Echonest::Catalog::create(const QString& name, Echonest::CatalogT
 QNetworkReply* Echonest::Catalog::deleteCatalog() const
 {
     QUrl url = Echonest::baseGetQuery( "catalog", "delete" );
-    Q_ASSERT( !d->isEmpty() );
+    Q_ASSERT( !d->id.isEmpty() );
     url.addEncodedQueryItem( "id", d->id );
     
     return doPost( url );
@@ -182,7 +182,7 @@ QNetworkReply* Echonest::Catalog::status(const QByteArray& ticket)
 QNetworkReply* Echonest::Catalog::update(const Echonest::CatalogUpdateEntries& entries) const
 {
     QUrl url = Echonest::baseGetQuery( "catalog", "update" );
-    Q_ASSERT( !d->isEmpty() );
+    Q_ASSERT( !d->id.isEmpty() );
     url.addEncodedQueryItem( "id", d->id );
     return Echonest::Catalog::updatePrivate( url, entries );
 }
@@ -307,7 +307,7 @@ void Echonest::Catalog::addLimits(QUrl& url, int results, int start)
 
 QNetworkReply* Echonest::Catalog::readPrivate(QUrl& url, int results, int start) const
 {
-    Q_ASSERT( !d->isEmpty() );
+    Q_ASSERT( !d->id.isEmpty() );
     url.addEncodedQueryItem( "id", d->id );
     addLimits( url, results, start );
     
