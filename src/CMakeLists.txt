@@ -42,7 +42,7 @@ add_definitions( -Werror )
 
 add_library( echonest SHARED ${LIBECHONEST_SRC} )
 target_link_libraries( echonest qjson ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}  )
-set_target_properties( echonest PROPERTIES VERSION ${ECHONEST_LIB_VERSION} SOVERSION ${ECHONEST_LIB_VERSION} )
+set_target_properties( echonest PROPERTIES VERSION ${ECHONEST_LIB_VERSION} SOVERSION ${ECHONEST_LIB_VERSION_SONAME} )
 install( TARGETS echonest DESTINATION lib${LIB_SUFFIX} )
 
 install( FILES ${LIBECHONEST_H} DESTINATION  include/echonest COMPONENT Devel )
