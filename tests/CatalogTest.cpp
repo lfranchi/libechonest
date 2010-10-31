@@ -162,7 +162,7 @@ void CatalogTest::testCreateUpdateDeleteSong()
 //     entry.setTrackNumber( 5 );
 //     entry.setDiscNumber( 1 );
 //     entry.setUrl( QLatin1String( "myurl" ) );
-//     entry.setFavorite( true );
+    entry.setFavorite( true );
     entry.setAction( Echonest::CatalogTypes::Update );
     Echonest::CatalogUpdateEntries entries;
     entries << entry;

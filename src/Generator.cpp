@@ -92,10 +92,10 @@ QVariant Echonest::Generator::catalogEntryToVariant( const Echonest::CatalogUpda
         itm[ QLatin1String( "url" ) ] = item.url();
     
     if( item.favoriteSet() )
-        itm[ QLatin1String( "favorite" ) ] = item.favorite() ? QLatin1String( "true" ) : QLatin1String( "false" );
+        itm[ QLatin1String( "favorite" ) ] = item.favorite();
     
     if( item.bannedSet() )
-        itm[ QLatin1String( "banned" ) ] = item.banned() ? QLatin1String( "true" ) : QLatin1String( "false" );
+        itm[ QLatin1String( "banned" ) ] = item.banned();
     
     if( item.playCount() > -1 )
         itm[ QLatin1String( "play_count" ) ] = item.playCount();
