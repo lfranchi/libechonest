@@ -36,8 +36,8 @@ private slots:
     void testAnalyzeFromMD5();
     void testAnalyzerFromId();
     
-private:
     void testUploadLocalFile(); // slow and uploads an mp3, only enable on demand
+private:
     void verifyTrack1( const Echonest::Track& track );
     void verifyTrack2( const Echonest::Track& track );
 };
