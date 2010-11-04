@@ -38,7 +38,9 @@ set( LIBECHONEST_H
 
 QT4_WRAP_CPP( ${LIBECHONEST_H} )
 
-add_definitions( -Werror )
+if (CMAKE_COMPILER_IS_GNUCXX)
+    add_definitions( -Werror )
+endif (CMAKE_COMPILER_IS_GNUCXX)
 
 add_library( echonest SHARED ${LIBECHONEST_SRC} )
 target_link_libraries( echonest ${QJSON_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}  )
