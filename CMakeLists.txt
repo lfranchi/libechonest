@@ -82,5 +82,8 @@ ADD_CUSTOM_TARGET(uninstall
   "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 
 add_subdirectory( src )
-add_subdirectory( tests )
+
+if( ECHONEST_BUILD_TESTS )
+    add_subdirectory( tests )
+endif( ECHONEST_BUILD_TESTS )
 
