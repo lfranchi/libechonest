@@ -25,9 +25,9 @@ endif(QJSON_VERBOSE_DEBUG_OUTPUT)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
     REMOVE_DEFINITIONS( -Werror )
-endif(CMAKE_COMPILER_IS_GNUCXX)
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
+endif(CMAKE_COMPILER_IS_GNUCXX)
 
 # #add extra search paths for libraries and includes
 # SET (LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
