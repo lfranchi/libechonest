@@ -2,10 +2,14 @@ project( libechonest )
 
 cmake_minimum_required( VERSION 2.6 )
 
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
 
 find_package( Qt4 COMPONENTS QtCore QtNetwork QtTest REQUIRED )
 set( QT_DONT_USE_QTGUI TRUE )
+
+
+find_package(QJSON REQUIRED)
 
 include( ${QT_USE_FILE} )
 
@@ -13,7 +17,6 @@ set( ECHONEST_LIB_MAJOR_VERSION "0" )
 set( ECHONEST_LIB_MINOR_VERSION "2" )
 set( ECHONEST_LIB_PATCH_VERSION "1" )
 set( ECHONEST_LIB_VERSION "${ECHONEST_LIB_MAJOR_VERSION}.${ECHONEST_LIB_MINOR_VERSION}.${ECHONEST_LIB_PATCH_VERSION}" )
-
 
 set( ECHONEST_LIB_VERSION_SONAME "${ECHONEST_LIB_MAJOR_VERSION}.${ECHONEST_LIB_MINOR_VERSION}")
 
@@ -73,7 +76,6 @@ CONFIGURE_FILE(
 ADD_CUSTOM_TARGET(uninstall
   "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 
-add_subdirectory( extra )
 add_subdirectory( src )
 add_subdirectory( tests )
 

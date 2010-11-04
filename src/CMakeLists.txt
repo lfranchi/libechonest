@@ -1,5 +1,5 @@
 
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/extra/qjson/src )
+include_directories( ${QJSON_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
 set( LIBECHONEST_SRC
         Track.cpp
@@ -41,7 +41,7 @@ QT4_WRAP_CPP( ${LIBECHONEST_H} )
 add_definitions( -Werror )
 
 add_library( echonest SHARED ${LIBECHONEST_SRC} )
-target_link_libraries( echonest qjson ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}  )
+target_link_libraries( echonest ${QJSON_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}  )
 set_target_properties( echonest PROPERTIES VERSION ${ECHONEST_LIB_VERSION} SOVERSION ${ECHONEST_LIB_VERSION_SONAME} )
 install( TARGETS echonest DESTINATION lib${LIB_SUFFIX} )
 
