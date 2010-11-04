@@ -176,7 +176,7 @@ void CatalogTest::testCreateUpdateDeleteSong()
     
     QVERIFY( !ticket.isEmpty() );
     // now check the ticket status after 5s
-    sleep( 5 );
+    QTest::qWait( 5000 );
     reply = Echonest::Catalog::status( ticket );
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
@@ -229,7 +229,7 @@ void CatalogTest::testCreateUpdateDeleteArtist()
     
     QVERIFY( !ticket.isEmpty() );
     // now check the ticket status after 5s
-    sleep( 5 );
+    QTest::qWait( 5000 );
     reply = Echonest::Catalog::status( ticket );
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
