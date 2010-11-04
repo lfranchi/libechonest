@@ -33,6 +33,11 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 # FIXME we might want this one back in, but Qt 4.4.3 spits gazillions of warnings with it on Linux-64:
 #       -Wconversion
 endif(CMAKE_COMPILER_IS_GNUCXX)
+if(MSVC)
+    # since msvc doesn't implement it, we can simply ignore the warning:
+    # cf. http://msdn.microsoft.com/en-us/library/sa28fef8.aspx
+    add_definitions(/wd4290)
+endif(MSVC)
 
 
 option(ECHONEST_BUILD_TESTS "Build all unit tests" ON)
