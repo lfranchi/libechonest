@@ -264,7 +264,7 @@ void Echonest::Parser::parseArtistInfo( QXmlStreamReader& xml, Echonest::Artist&
         artist.setHotttnesss( xml.readElementText().toDouble() );
     }  else if( xml.name() == "images" ) {
         parseImages( xml, artist );
-    }  else if( xml.name() == "news" ) {
+    }  else if( xml.name() == "news" && xml.isStartElement() ) {
         parseNewsOrBlogs( xml, artist, true );
     }  else if( xml.name() == "blogs" ) {
         parseNewsOrBlogs( xml, artist, false );

@@ -448,7 +448,7 @@ void ArtistTest::testSimilar()
     params.append( Artist::SearchParamEntry( Artist::MinFamiliarity, 0.5 ) );
     
     reply = Artist::fetchSimilar( params, Artist::Biographies | Artist::News | Artist::Videos, 10 );
-
+    qDebug() << reply->url().toString();
     QEventLoop loop2;
     loop2.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop2.exec();
