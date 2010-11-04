@@ -49,7 +49,7 @@ Echonest::CatalogArtist::~CatalogArtist()
 Echonest::CatalogArtist& Echonest::CatalogArtist::operator=(const Echonest::CatalogArtist& other)
 {
     Artist::operator=( other );
-    CatalogArtist::operator=( other );
+    CatalogItem::operator=( other );
     return *this;
 }
 
