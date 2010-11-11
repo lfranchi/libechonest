@@ -212,7 +212,6 @@ private:
     static QNetworkReply* updatePrivate( QUrl&, const CatalogUpdateEntries& entries );
     QNetworkReply* readPrivate( QUrl& url, int results, int start ) const;
     static void addLimits( QUrl&, int results, int start );
-    static QNetworkReply*  doPost( const QUrl& url );
     QSharedDataPointer< CatalogData > d;
 };
 

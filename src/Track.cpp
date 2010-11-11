@@ -209,7 +209,8 @@ QNetworkReply* Echonest::Track::analyzeTrackId( const QByteArray& id, bool wait 
     url.addEncodedQueryItem( "wait", ( wait ? "true" : "false" ) );
     
     qDebug() << "Creating analyzeTrackId URL" << url;
-    return Echonest::Config::instance()->nam()->post( QNetworkRequest( url ), QByteArray() );
+    return Echonest::doPost( url );
+//     return Echonest::Config::instance()->nam()->post( QNetworkRequest( url ), QByteArray() );
 }
 
 QNetworkReply* Echonest::Track::analyzeTrackMD5( const QByteArray& md5, bool wait )
@@ -220,15 +221,16 @@ QNetworkReply* Echonest::Track::analyzeTrackMD5( const QByteArray& md5, bool wai
     url.addEncodedQueryItem( "wait", ( wait ? "true" : "false" ) );
     
     qDebug() << "Creating analyzeTrackMD5 URL" << url;
-    return Echonest::Config::instance()->nam()->post( QNetworkRequest( url ), QByteArray() );
+    return Echonest::doPost( url );
+//     return Echonest::Config::instance()->nam()->post( QNetworkRequest( url ), QByteArray() );
 }
 
 Echonest::Track Echonest::Track::parseProfile( QNetworkReply* finishedReply ) throw( Echonest::ParseError )
 {
-    Echonest::Parser::checkForErrors( finishedReply );
-    
     QByteArray data = finishedReply->readAll();
     qDebug() << data;
+    Echonest::Parser::checkForErrors( finishedReply );
+    
     QXmlStreamReader xml( data );
     
     Echonest::Parser::readStatus( xml );

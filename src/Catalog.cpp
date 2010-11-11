@@ -19,6 +19,7 @@
 #include "Catalog_p.h"
 #include "Parsing_p.h"
 #include "Generator_p.h"
+#include "Track_p.h"
 
 Echonest::Catalog::Catalog()
     : d( new CatalogData )
@@ -147,7 +148,7 @@ QNetworkReply* Echonest::Catalog::deleteCatalog() const
     Q_ASSERT( !d->id.isEmpty() );
     url.addEncodedQueryItem( "id", d->id );
     
-    return doPost( url );
+    return Echonest::doPost( url );
 }
 
 QNetworkReply* Echonest::Catalog::list(int results, int start)
@@ -294,7 +295,7 @@ QNetworkReply* Echonest::Catalog::updatePrivate( QUrl& url, const Echonest::Cata
     
     QByteArray payload = Generator::catalogEntriesToJson( entries );
     url.addEncodedQueryItem( "data", payload );
-    return doPost( url );
+    return Echonest::doPost( url );
 }
 
 void Echonest::Catalog::addLimits(QUrl& url, int results, int start)
@@ -312,25 +313,6 @@ QNetworkReply* Echonest::Catalog::readPrivate(QUrl& url, int results, int start)
     addLimits( url, results, start );
     
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) ); 
-}
-
-QNetworkReply* Echonest::Catalog::doPost(const QUrl& url)
-{
-    // UGLY :( Build url, then extract the encded query items, put them in the POST body, and send that to the url minus the encoded params.
-    // The final data
-    QByteArray data;
-    int size = url.encodedQueryItems().size();
-    for( int i = 0; i < size; i++ ) {
-        const QPair< QByteArray, QByteArray > item = url.encodedQueryItems().at( i );
-        data.append( item.first + "=" + item.second + "&" );
-    }
-    data.truncate( data.size() - 1 ); // remove extra &
-//     qDebug() << "Sending data:" << data << "for method:" << url.path();
-    // strip the extras
-    QUrl url2( url.toString().mid( 0, url.toString().indexOf( QLatin1Char( '?' ) ) ) );
-    QNetworkRequest request = QNetworkRequest( url2 );
-//     request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "multipart/form-data" ) );
-    return Echonest::Config::instance()->nam()->post( request, data );
 }
 
 QDebug Echonest::operator<<(QDebug d, const Echonest::Catalog& catalog)

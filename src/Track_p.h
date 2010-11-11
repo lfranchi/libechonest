@@ -18,9 +18,33 @@
 #define ECHONEST_TRACK_P_H
 
 #include "AudioSummary.h"
+#include "Config.h"
+
 
 #include <QSharedData>
 #include <QString>
+#include <QNetworkReply>
+
+namespace  Echonest {
+    inline QNetworkReply* doPost(const QUrl& url)
+    {
+        // UGLY :( Build url, then extract the encded query items, put them in the POST body, and send that to the url minus the encoded params.
+        // The final data
+        QByteArray data;
+        int size = url.encodedQueryItems().size();
+        for( int i = 0; i < size; i++ ) {
+            const QPair< QByteArray, QByteArray > item = url.encodedQueryItems().at( i );
+            data.append( item.first + "=" + item.second + "&" );
+        }
+        data.truncate( data.size() - 1 ); // remove extra &
+            qDebug() << "Sending data:" << data << "for method:" << url.path();
+        // strip the extras
+        QUrl url2( url.toString().mid( 0, url.toString().indexOf( QLatin1Char( '?' ) ) ) );
+        QNetworkRequest request = QNetworkRequest( url2 );
+//             request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "multipart/form-data" ) );
+        return Echonest::Config::instance()->nam()->post( request, data );
+    }
+};
 
 class TrackData : public QSharedData
 {
