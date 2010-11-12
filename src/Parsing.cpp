@@ -179,7 +179,7 @@ Echonest::AudioSummary Echonest::Parser::parseAudioSummary( QXmlStreamReader& xm
         if( xml.name() == "key" && xml.isStartElement() )
             summary.setKey( xml.readElementText().toInt() );
         else if( xml.name() == "analysis_url" && xml.isStartElement() )
-            summary.setAnalysisUrl( QUrl::fromPercentEncoding( xml.readElementText().toLatin1() ) );
+            summary.setAnalysisUrl( QUrl::fromEncoded( xml.readElementText().toUtf8(), QUrl::TolerantMode ) );
         else if( xml.name() == "tempo" && xml.isStartElement() )
             summary.setTempo( xml.readElementText().toDouble() );
         else if( xml.name() == "mode" && xml.isStartElement() )
@@ -215,13 +215,12 @@ inline QVector< T > extractTripleTuple( const QVariantList& list ) {
         
         tList.append( t );
     }
-    qDebug() << "Parsed simple list:" << tList.size();
+//     qDebug() << "Parsed simple list:" << tList.size();
     return tList;
 }
 
 void Echonest::Parser::parseDetailedAudioSummary( QNetworkReply* reply, Echonest::AudioSummary& summary ) throw( ParseError )
 {
-   qDebug() << "parsing audiosummary:" << &summary;
    QJson::Parser parser;
    bool ok;
    QVariant data = parser.parse( reply, &ok );
@@ -234,8 +233,8 @@ void Echonest::Parser::parseDetailedAudioSummary( QNetworkReply* reply, Echonest
         QVariantMap metaMap = mainMap.value( QLatin1String( "meta" ) ).toMap();
         summary.setAnalysisTime( metaMap.value( QLatin1String( "analysis_time" ), -1 ).toReal() );
         summary.setAnalysisStatus( metaMap.value( QLatin1String( "status_code" ) ).toInt() );
-        summary.setDetailedStatus( Echonest::statusToEnum( metaMap.value( QLatin1String( "detailed_status" ) ).toString() ) );
-        summary.setAnalyzerVersion( metaMap.value( QLatin1String( "analysis_time" ) ).toString() );
+        summary.setDetailedStatus( metaMap.value( QLatin1String( "detailed_status" ) ).toString() );
+        summary.setAnalyzerVersion( metaMap.value( QLatin1String( "analyzer_version" ) ).toString() );
         summary.setTimestamp( metaMap.value( QLatin1String( "analysis_time" ), -1 ).toReal() );
     }
     if( mainMap.contains( QLatin1String( "bars" ) ) ) {
@@ -279,7 +278,6 @@ void Echonest::Parser::parseDetailedAudioSummary( QNetworkReply* reply, Echonest
             segment.timbre = timbres;
             segments.append( segment );
         }
-        qDebug() << "Saving segments:" << segments.size();
         summary.setSegments( segments );
     }
     if( mainMap.contains( QLatin1String( "tatums" ) ) ) {
@@ -298,7 +296,6 @@ void Echonest::Parser::parseDetailedAudioSummary( QNetworkReply* reply, Echonest
         summary.setTempoConfidence( trackMap.value( QLatin1String( "tempo_confidence" ), -1 ).toReal() );
         summary.setTimeSignatureConfidence( trackMap.value( QLatin1String( "time_signature_confidence" ), -1 ).toReal() );
     }
-    qDebug() << "done parsing audiosummary:" << &summary;
 }
 
 

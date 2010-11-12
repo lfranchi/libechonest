@@ -157,8 +157,44 @@ void TrackTest::verifyTrack1(const Echonest::Track& track)
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
-    track.audioSummary().parseFullAnalysis( reply );
-    qDebug() << "track detailed summary num segments:" << track.audioSummary().segments().size();
+    Echonest::AudioSummary summary = track.audioSummary();
+    summary.parseFullAnalysis( reply );
+    qDebug() << "track detailed summary num segments:" << summary.segments().size();
+    qDebug() << "track detailed summary num bars:" << summary.bars().size();
+    qDebug() << "track detailed summary num beats:" << summary.beats().size();
+    qDebug() << "track detailed summary num sections:" << summary.sections().size();
+    qDebug() << "track detailed summary num tatums:" << summary.tatums().size();
+//     qDebug() << "track detailed analysis_time:" << summary.analysisTime();
+//     qDebug() << "track detailed analyzer_version:" << summary.analyzerVersion();
+//     qDebug() << "track detailed detailed_status:" << summary.detailedStatus();
+//     qDebug() << "track detailed status:" << summary.analysisStatus();
+//     qDebug() << "track detailed timestamp:" << summary.timestamp();
+//     qDebug() << "track detailed end_of_fade_in:" << summary.endOfFadeIn();
+//     qDebug() << "track detailed key_confidence:" << summary.keyConfidence();
+//     qDebug() << "track detailed mode_confidence:" << summary.modeConfidence();
+//     qDebug() << "track detailed num_samples:" << summary.numSamples();
+//     qDebug() << "track detailed sample_md5:" << summary.sampleMD5();
+//     qDebug() << "track detailed start_of_fade_out:" << summary.startOfFadeOut();
+//     qDebug() << "track detailed tempo_confidence:" << summary.tempoConfidence();
+//     qDebug() << "track detailed time_signature_confidence:" << summary.timeSignatureConfidence();
+    QVERIFY( summary.analysisTime() );
+    QVERIFY( !summary.analyzerVersion().isEmpty() );
+    QVERIFY( !summary.detailedStatus().isEmpty() );
+    QCOMPARE( summary.analysisStatus(), 0 );
+    QVERIFY( summary.timestamp() );
+    QVERIFY( summary.endOfFadeIn() );
+    QVERIFY( summary.keyConfidence() > -1 );
+    QVERIFY( summary.modeConfidence() > -1 );
+    QVERIFY( summary.numSamples() );
+    QVERIFY( !summary.sampleMD5().isEmpty() );
+    QVERIFY( summary.startOfFadeOut() );
+    QVERIFY( summary.tempoConfidence() > -1 );
+    QVERIFY( summary.timeSignatureConfidence() > -1 );
+    QVERIFY( summary.segments().size() );
+    QVERIFY( summary.bars().size() );
+    QVERIFY( summary.beats().size() );
+    QVERIFY( summary.sections().size() );
+    QVERIFY( summary.tatums().size() );
 }
 
 void TrackTest::verifyTrack2(const Echonest::Track& track)

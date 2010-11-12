@@ -29,14 +29,13 @@ class TrackTest : public QObject
 private slots:
     void initTestCase();
     
-    
+    void testAnalyzeFromMD5();
+    void testAnalyzerFromId();
+    void testUploadLocalFile(); // slow and uploads an mp3, only enable on demand
     void testProfileFromMD5();
     void testProfileFromId();
     
 private:
-    void testAnalyzeFromMD5();
-    void testAnalyzerFromId();
-    void testUploadLocalFile(); // slow and uploads an mp3, only enable on demand
     void verifyTrack1( const Echonest::Track& track );
     void verifyTrack2( const Echonest::Track& track );
 };

@@ -121,6 +121,12 @@ public:
    * 
    *  Information about how to interpret the results of the audio summary can be found here:
    *    http://developer.echonest.com/docs/v4/_static/AnalyzeDocumentation_2.2.pdf
+   * 
+   * NOTE: This will return a copy of the AudioSummary object, which 
+   *       is implicitly shared. If you make modifications to the returned
+   *       summary, for example by calling parseFullAnalysis(), it will detach
+   *       and you will have to call setAudioSummary() to save the changes back
+   *       to this Song object.
    */
   AudioSummary audioSummary() const;
   void setAudioSummary( const AudioSummary& summary );

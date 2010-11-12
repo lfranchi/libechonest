@@ -131,8 +131,8 @@ namespace Echonest{
         /**
          * Detailed status information about the analysis
          */
-        Analysis::AnalysisStatus detailedStatus() const;
-        void setDetailedStatus( Analysis::AnalysisStatus status );
+        QString detailedStatus() const;
+        void setDetailedStatus( const QString& status );
         
         /**
          * The status code of the analysis
@@ -230,7 +230,7 @@ namespace Echonest{
         SegmentList segments() const;
         void setSegments( const SegmentList& segments );
         
-        void setAnalysisUrl( const QString& analysisUrl );
+        void setAnalysisUrl( const QUrl& analysisUrl );
         
     private:        
         QSharedDataPointer<AudioSummaryData> d;

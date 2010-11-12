@@ -99,14 +99,14 @@ void Echonest::AudioSummary::setBeats(const Echonest::BeatList& beats)
     d->beats = beats;
 }
 
-Echonest::Analysis::AnalysisStatus Echonest::AudioSummary::detailedStatus() const
+QString Echonest::AudioSummary::detailedStatus() const
 {
-    return Echonest::statusToEnum( d->detailed_status );
+    return d->detailed_status;
 }
 
-void Echonest::AudioSummary::setDetailedStatus(Echonest::Analysis::AnalysisStatus status)
+void Echonest::AudioSummary::setDetailedStatus( const QString& status )
 {
-    d->detailed_status = Echonest::statusToString( status );
+    d->detailed_status = status;
 }
 
 qreal Echonest::AudioSummary::duration() const
@@ -188,7 +188,6 @@ void Echonest::AudioSummary::setNumSamples(qint64 num)
 void Echonest::AudioSummary::parseFullAnalysis( QNetworkReply* reply ) throw( Echonest::ParseError )
 {
     Echonest::Parser::checkForErrors( reply );
-    qDebug() << "Parsing... audiosummary:" << this;
     Echonest::Parser::parseDetailedAudioSummary( reply, *this );
 }
 
@@ -224,13 +223,11 @@ void Echonest::AudioSummary::setSections(const Echonest::SectionList& sections)
 
 Echonest::SegmentList Echonest::AudioSummary::segments() const
 {
-    qDebug() << "getting segments:" << d->segments.size() << this;
     return d->segments;
 }
 
 void Echonest::AudioSummary::setSegments(const Echonest::SegmentList& segments)
 {
-    qDebug() << "Setting segments:" << segments.size() << this;
     d->segments = segments;
 }
 
@@ -309,7 +306,7 @@ int Echonest::AudioSummary::mode() const
     return d->mode;
 }
 
-void Echonest::AudioSummary::setAnalysisUrl(const QString& analysisUrl)
+void Echonest::AudioSummary::setAnalysisUrl(const QUrl& analysisUrl)
 {
     qDebug() << "Setting analysys URL to:" << analysisUrl;
     d->analysis_url = analysisUrl;
