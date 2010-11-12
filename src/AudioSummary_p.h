@@ -100,7 +100,6 @@ public:
     Echonest::BeatList beats;
     Echonest::SectionList sections;
     Echonest::TatumList tatums;
-    
     Echonest::SegmentList segments;
     
 };

@@ -150,6 +150,15 @@ void TrackTest::verifyTrack1(const Echonest::Track& track)
     QVERIFY( track.audioSummary().loudness() == -11.839 );
     QVERIFY( track.audioSummary().danceability() > 0 );
     QVERIFY( track.audioSummary().energy() > 0 );
+    
+    // Detailed audiosummary
+    QNetworkReply* reply =track.audioSummary().fetchFullAnalysis();
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    track.audioSummary().parseFullAnalysis( reply );
+    qDebug() << "track detailed summary num segments:" << track.audioSummary().segments().size();
 }
 
 void TrackTest::verifyTrack2(const Echonest::Track& track)

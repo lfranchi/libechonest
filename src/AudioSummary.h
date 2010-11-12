@@ -24,6 +24,7 @@
 #include <QDebug>
 #include "Util.h"
 #include "Util.h"
+#include "Config.h"
 
 class QNetworkReply;
 class QNetworkReply;
@@ -111,7 +112,7 @@ namespace Echonest{
          *  information such as mode, fadein/fadeout, confidence metrics, 
          *  and the division of the song into bars, beats, sections, and segments.
          */
-        void parseFullAnalysis( QNetworkReply* reply );
+        void parseFullAnalysis( QNetworkReply* reply ) throw( ParseError );
         
         /// The following methods *ALL REQUIRE THAT parseFullAnalysis be called first*
         

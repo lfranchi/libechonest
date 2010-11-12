@@ -16,12 +16,16 @@
 
 #include "Parsing_p.h"
 
+#include "Artist.h"
 #include "CatalogItem_p.h"
 #include "Util.h"
 
+// QJSon
+#include <qjson/parser.h>
+
 #include <QNetworkReply>
-#include "Artist.h"
 #include <QDateTime>
+#include <QStringBuilder>
 
 void Echonest::Parser::checkForErrors( QNetworkReply* reply ) throw( Echonest::ParseError )
 {   
@@ -175,7 +179,7 @@ Echonest::AudioSummary Echonest::Parser::parseAudioSummary( QXmlStreamReader& xm
         if( xml.name() == "key" && xml.isStartElement() )
             summary.setKey( xml.readElementText().toInt() );
         else if( xml.name() == "analysis_url" && xml.isStartElement() )
-            summary.setAnalysisUrl( xml.readElementText() );
+            summary.setAnalysisUrl( QUrl::fromPercentEncoding( xml.readElementText().toLatin1() ) );
         else if( xml.name() == "tempo" && xml.isStartElement() )
             summary.setTempo( xml.readElementText().toDouble() );
         else if( xml.name() == "mode" && xml.isStartElement() )
@@ -195,6 +199,106 @@ Echonest::AudioSummary Echonest::Parser::parseAudioSummary( QXmlStreamReader& xm
     }
     
     return summary;
+}
+
+// extract confidence, duration, start out of a list of them. same code for bars, beats, sections, tatums
+template< class T >
+inline QVector< T > extractTripleTuple( const QVariantList& list ) {
+    QVector< T > tList;
+    tList.reserve( list.size() );
+    for( QVariantList::const_iterator iter = list.constBegin(); iter != list.constEnd(); ++iter ) {
+        T t;
+        QVariantMap tMap = iter->toMap();
+        t.confidence = tMap.value( QLatin1String( "confidence" ), -1 ).toReal();
+        t.duration = tMap.value( QLatin1String( "duration" ), -1 ).toReal();
+        t.start = tMap.value( QLatin1String( "start" ), -1 ).toReal();
+        
+        tList.append( t );
+    }
+    qDebug() << "Parsed simple list:" << tList.size();
+    return tList;
+}
+
+void Echonest::Parser::parseDetailedAudioSummary( QNetworkReply* reply, Echonest::AudioSummary& summary ) throw( ParseError )
+{
+   qDebug() << "parsing audiosummary:" << &summary;
+   QJson::Parser parser;
+   bool ok;
+   QVariant data = parser.parse( reply, &ok );
+   if( !ok ) {
+       qWarning() << "Failed to parse JSON data!" << parser.errorString();
+       throw ParseError( Echonest::UnknownParseError );
+    }
+    QVariantMap mainMap = data.toMap();
+    if( mainMap.contains( QLatin1String( "meta" ) ) ) {
+        QVariantMap metaMap = mainMap.value( QLatin1String( "meta" ) ).toMap();
+        summary.setAnalysisTime( metaMap.value( QLatin1String( "analysis_time" ), -1 ).toReal() );
+        summary.setAnalysisStatus( metaMap.value( QLatin1String( "status_code" ) ).toInt() );
+        summary.setDetailedStatus( Echonest::statusToEnum( metaMap.value( QLatin1String( "detailed_status" ) ).toString() ) );
+        summary.setAnalyzerVersion( metaMap.value( QLatin1String( "analysis_time" ) ).toString() );
+        summary.setTimestamp( metaMap.value( QLatin1String( "analysis_time" ), -1 ).toReal() );
+    }
+    if( mainMap.contains( QLatin1String( "bars" ) ) ) {
+        QVariantList barList = mainMap.value( QLatin1String( "bars" ) ).toList();
+        summary.setBars( extractTripleTuple<Echonest::Bar>( barList ) );
+    }
+    if( mainMap.contains( QLatin1String( "beats" ) ) ) {
+        QVariantList beatList = mainMap.value( QLatin1String( "beats" ) ).toList();
+        summary.setBeats( extractTripleTuple<Echonest::Beat>( beatList ) );
+    }
+    if( mainMap.contains( QLatin1String( "sections" ) ) ) {
+        QVariantList sectionList = mainMap.value( QLatin1String( "sections" ) ).toList();
+        summary.setSections( extractTripleTuple<Echonest::Section>( sectionList ) );
+    }
+    if( mainMap.contains( QLatin1String( "segments" ) ) ) {
+        QVariantList segmentList = mainMap.value( QLatin1String( "segments" ) ).toList();
+        Echonest::SegmentList segments;
+        segments.reserve( segmentList.size() );
+        for( QVariantList::const_iterator iter = segmentList.constBegin(); iter != segmentList.constEnd(); ++iter ) {
+            Echonest::Segment segment;
+            QVariantMap segmentMap = iter->toMap();
+            segment.confidence = segmentMap.value( QLatin1String( "confidence" ), -1 ).toReal();
+            segment.duration = segmentMap.value( QLatin1String( "duration" ), -1 ).toReal();
+            segment.loudness_max = segmentMap.value( QLatin1String( "loudness_max" ), -1 ).toReal();
+            segment.loudness_max_time = segmentMap.value( QLatin1String( "loudness_max_time" ), -1 ).toReal();
+            segment.loudness_start = segmentMap.value( QLatin1String( "loudness_start" ), -1 ).toReal();
+            // pitches
+            QVariantList pitchesList = segmentMap.value( QLatin1String( "pitches" ) ).toList();
+            QVector< qreal > pitches;
+            pitches.reserve( pitchesList.size() );
+            for( QVariantList::const_iterator piter = pitchesList.constBegin(); piter != pitchesList.constEnd(); ++piter )
+                pitches.append( piter->toReal() );
+            segment.pitches = pitches;
+            segment.start = segmentMap.value( QLatin1String( "start" ), -1 ).toReal();
+            // timbre
+            QVariantList timbreList = segmentMap.value( QLatin1String( "timbre" ) ).toList();
+            QVector< qreal > timbres;
+            timbres.reserve( timbreList.size() );
+            for( QVariantList::const_iterator titer = timbreList.constBegin(); titer != timbreList.constEnd(); ++titer )
+                timbres.append( titer->toReal() );
+            segment.timbre = timbres;
+            segments.append( segment );
+        }
+        qDebug() << "Saving segments:" << segments.size();
+        summary.setSegments( segments );
+    }
+    if( mainMap.contains( QLatin1String( "tatums" ) ) ) {
+        QVariantList tatumList = mainMap.value( QLatin1String( "tatums" ) ).toList();
+        summary.setTatums( extractTripleTuple<Echonest::Tatum>( tatumList ) );
+    }
+    if( mainMap.contains( QLatin1String( "track" ) ) ) {
+        QVariantMap trackMap = mainMap.value( QLatin1String( "track" ) ).toMap();
+        summary.setSampleRate( trackMap.value( QLatin1String( "analysis_sample_rate" ), -1 ).toReal() );
+        summary.setEndOfFadeIn( trackMap.value( QLatin1String( "end_of_fade_in" ), -1 ).toReal() );
+        summary.setKeyConfidence( trackMap.value( QLatin1String( "key_confidence" ), -1 ).toReal() );
+        summary.setModeConfidence( trackMap.value( QLatin1String( "mode_confidence" ), -1 ).toReal() );
+        summary.setNumSamples( trackMap.value( QLatin1String( "num_samples" ), -1 ).toLongLong() );
+        summary.setSampleMD5( trackMap.value( QLatin1String( "sample_md5" ) ).toString() );
+        summary.setStartOfFadeOut( trackMap.value( QLatin1String( "start_of_fade_out" ), -1 ).toReal() );
+        summary.setTempoConfidence( trackMap.value( QLatin1String( "tempo_confidence" ), -1 ).toReal() );
+        summary.setTimeSignatureConfidence( trackMap.value( QLatin1String( "time_signature_confidence" ), -1 ).toReal() );
+    }
+    qDebug() << "done parsing audiosummary:" << &summary;
 }
 
 

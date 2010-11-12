@@ -17,8 +17,10 @@
 #include "AudioSummary.h"
 
 #include "AudioSummary_p.h"
-#include <QNetworkReply>
 #include "Config.h"
+#include "Parsing_p.h"
+
+#include <QNetworkReply>
 
 Echonest::AudioSummary::AudioSummary()
     : d( new AudioSummaryData )
@@ -183,9 +185,11 @@ void Echonest::AudioSummary::setNumSamples(qint64 num)
     d->num_samples = num;
 }
 
-void Echonest::AudioSummary::parseFullAnalysis(QNetworkReply* reply)
+void Echonest::AudioSummary::parseFullAnalysis( QNetworkReply* reply ) throw( Echonest::ParseError )
 {
-    
+    Echonest::Parser::checkForErrors( reply );
+    qDebug() << "Parsing... audiosummary:" << this;
+    Echonest::Parser::parseDetailedAudioSummary( reply, *this );
 }
 
 QString Echonest::AudioSummary::sampleMD5() const
@@ -220,11 +224,13 @@ void Echonest::AudioSummary::setSections(const Echonest::SectionList& sections)
 
 Echonest::SegmentList Echonest::AudioSummary::segments() const
 {
+    qDebug() << "getting segments:" << d->segments.size() << this;
     return d->segments;
 }
 
 void Echonest::AudioSummary::setSegments(const Echonest::SegmentList& segments)
 {
+    qDebug() << "Setting segments:" << segments.size() << this;
     d->segments = segments;
 }
 
@@ -305,6 +311,7 @@ int Echonest::AudioSummary::mode() const
 
 void Echonest::AudioSummary::setAnalysisUrl(const QString& analysisUrl)
 {
+    qDebug() << "Setting analysys URL to:" << analysisUrl;
     d->analysis_url = analysisUrl;
 }
 

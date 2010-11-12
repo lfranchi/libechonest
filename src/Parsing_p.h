@@ -51,6 +51,8 @@ namespace Parser
     
     // parses an <audio_summary> chunk
     AudioSummary parseAudioSummary( QXmlStreamReader& xml ) throw( ParseError );
+    // parses the json of the detailed audio summary
+    void parseDetailedAudioSummary( QNetworkReply* reply, AudioSummary& summary ) throw( ParseError );
     
     // parses a list of artists in an <artists></artists> block
     Echonest::Artists parseArtists( QXmlStreamReader& xml ) throw( ParseError );
@@ -94,6 +96,7 @@ namespace Parser
     Echonest::CatalogStatusItem parseTicketUpdateInfo( QXmlStreamReader& xml ) throw( ParseError );
     QByteArray parseCatalogTicket( QXmlStreamReader& xml ) throw( ParseError );
     Catalog parseNewCatalog( QXmlStreamReader& xml ) throw( ParseError );
+    
 }
 }
 
