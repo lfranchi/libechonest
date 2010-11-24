@@ -161,20 +161,20 @@ void Echonest::Song::setArtistLocation(const QString& artistLocation)
     d->artistLocation = artistLocation;
 }
 
-QNetworkReply* Echonest::Song::fetchInformation( Echonest::Song::SongInformation parts ) const
+QNetworkReply* Echonest::Song::fetchInformation( Echonest::SongInformation information ) const
 {
     QUrl url = Echonest::baseGetQuery( "song", "profile" );
     url.addEncodedQueryItem( "id", d->id );
-    addQueryInformation( url, parts );
+    addQueryInformation( url, information );
     
     qDebug() << "Creating fetchInformation URL" << url;
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
-QNetworkReply* Echonest::Song::search( const Echonest::Song::SearchParams& params, Echonest::Song::SongInformation parts )
+QNetworkReply* Echonest::Song::search( const Echonest::Song::SearchParams& params, Echonest::SongInformation information )
 {
     QUrl url = Echonest::baseGetQuery( "song", "search" );
-    addQueryInformation( url, parts );
+    addQueryInformation( url, information );
     
     SearchParams::const_iterator iter = params.constBegin();
     for( ; iter < params.constEnd(); ++iter )
@@ -284,20 +284,25 @@ QByteArray Echonest::Song::searchParamToString( Echonest::Song::SearchParam para
     return QByteArray();
 }
 
-void Echonest::Song::addQueryInformation(QUrl& url, Echonest::Song::SongInformation parts)
+void Echonest::Song::addQueryInformation(QUrl& url, Echonest::SongInformation information)
 {
-    if( parts.testFlag( Echonest::Song::AudioSummaryInformation ) )
+    if( information.flags().testFlag( Echonest::SongInformation::AudioSummaryInformation ) )
         url.addEncodedQueryItem( "bucket", "audio_summary" );
-    if( parts.testFlag( Echonest::Song::Tracks ) )
+    if( information.flags().testFlag( Echonest::SongInformation::Tracks ) )
         url.addEncodedQueryItem( "bucket", "tracks" );
-    if( parts.testFlag( Echonest::Song::Hotttnesss ) )
+    if( information.flags().testFlag( Echonest::SongInformation::Hotttnesss ) )
         url.addEncodedQueryItem( "bucket", "song_hotttnesss" );
-    if( parts.testFlag( Echonest::Song::ArtistHotttnesss ) )
+    if( information.flags().testFlag( Echonest::SongInformation::ArtistHotttnesss ) )
         url.addEncodedQueryItem( "bucket", "artist_hotttnesss" );
-    if( parts.testFlag( Echonest::Song::ArtistFamiliarity ) )
+    if( information.flags().testFlag( Echonest::SongInformation::ArtistFamiliarity ) )
         url.addEncodedQueryItem( "bucket", "artist_familiarity" );
-    if( parts.testFlag( Echonest::Song::ArtistLocation ) )
+    if( information.flags().testFlag( Echonest::SongInformation::ArtistLocation ) )
         url.addEncodedQueryItem( "bucket", "artist_location" );
+    
+    if( !information.idSpaces().isEmpty() ) {
+        foreach( const QString& idSpace, information.idSpaces() )
+            url.addEncodedQueryItem( "bucket", idSpace.toUtf8() );
+    }
 }
 
 

@@ -64,7 +64,7 @@ void PlaylistTest::testStatic2()
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::ArtistMaxFamiliarity, 0.4 ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::MinDanceability, 0.7 ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistType ) );
-    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Song::SongInformation( Song::Hotttnesss | Song::ArtistHotttnesss | Song::ArtistFamiliarity ) ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Echonest::SongInformation( Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity ) ) ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 4 ) );
     
     QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
@@ -89,7 +89,7 @@ void PlaylistTest::testStatic2()
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::MaxTempo, 100 ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Mode, 0 ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistDescriptionType ) );
-    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Song::SongInformation( Song::AudioSummaryInformation | Song::Hotttnesss | Song::ArtistHotttnesss | Song::ArtistFamiliarity ) ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity ) ) ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 7 ) );
     
     reply = DynamicPlaylist::staticPlaylist( p );
@@ -171,7 +171,7 @@ void PlaylistTest::testDynamic2()
     p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::ArtistMaxFamiliarity, .3 ) );
     p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::MinLoudness, -10 ) );
     p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Mode, 1 ) );
-    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Song::SongInformation( Song::AudioSummaryInformation | Song::Hotttnesss | Song::ArtistHotttnesss | Song::ArtistFamiliarity ) ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity ) ) ) );
     
     DynamicPlaylist playlist;
     QNetworkReply* reply = playlist.start( p );

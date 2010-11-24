@@ -95,6 +95,13 @@ namespace Echonest
         QString type;
     } License;
     
+    typedef struct {
+        QString catalog;
+        QString foreign_id;
+    } ForeignId;
+    
+    typedef QVector< ForeignId > ForeignIds;
+    
     Analysis::AnalysisStatus statusToEnum( const QString& status );
     QString statusToString( Analysis::AnalysisStatus status );
     

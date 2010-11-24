@@ -103,6 +103,7 @@ namespace Echonest{
             Variety, /// 0 < variety < 1        The maximum variety of artists to be represented in the playlist. A higher number will allow for more variety in the artists.
             ArtistId, ///  ID(s) of seed artist(s) for the playlist
             Artist, /// Artist names of seeds for playlist
+            ArtistSeedCatalog, /// ID of seed artist catalog for the playlist
             SongId, /// IDs of seed songs for the playlist
             Description, /// Textual description for sort of songs that can be included in the playlist
             Results, /// 0-100, how many sonsg to include in the playlist, default 15
@@ -128,7 +129,7 @@ namespace Echonest{
             ArtistMaxLatitude, /// -90.0 < latitude < 90.0 the maximum latitude for the location of artists in the playlist
             Mode, /// (minor, major) 0, 1     the mode of songs in the playlist 
             Key, /// (c, c-sharp, d, e-flat, e, f, f-sharp, g, a-flat, a, b-flat, b) 0 - 11  the key of songs in the playlist
-            SongInformation, /// what sort of song information should be returned. Should be an Echonest::Song::SongInformation object
+            SongInformation, /// what sort of song information should be returned. Should be an Echonest::SongInformation object
             Sort, /// SortingType enum, the type of sorting to use, 
             Limit, /// true, false    if true songs will be limited to those that appear in the catalog specified by the id: bucket
             Audio, /// true, false,  if true songs will be limited to those that have associated audio

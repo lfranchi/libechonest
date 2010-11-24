@@ -194,7 +194,7 @@ QNetworkReply* Echonest::Catalog::updateAndCreate(const Echonest::CatalogUpdateE
     return Echonest::Catalog::updatePrivate( url, entries );
 }
 
-QNetworkReply* Echonest::Catalog::readArtistCatalog(Echonest::Artist::ArtistInformation info, int results, int start) const
+QNetworkReply* Echonest::Catalog::readArtistCatalog(Echonest::ArtistInformation info, int results, int start) const
 {
     QUrl url = Echonest::baseGetQuery( "catalog", "read" );
     Artist::addQueryInformation( url, info );
@@ -202,7 +202,7 @@ QNetworkReply* Echonest::Catalog::readArtistCatalog(Echonest::Artist::ArtistInfo
     return readPrivate( url, results, start ); 
 }
 
-QNetworkReply* Echonest::Catalog::readSongCatalog(Echonest::Song::SongInformation info, int results, int start) const
+QNetworkReply* Echonest::Catalog::readSongCatalog(Echonest::SongInformation info, int results, int start) const
 {
     QUrl url = Echonest::baseGetQuery( "catalog", "read" );
     Song::addQueryInformation( url, info );

@@ -21,6 +21,7 @@
 #include "CatalogUpdateEntry.h"
 #include "echonest_export.h"
 #include "Song.h"
+#include "TypeInformation.h"
 #include "Util.h"
 
 #include <QSharedDataPointer>
@@ -125,8 +126,8 @@ public:
      * \param results How many results to return in total
      * \param start The index of the first result
      */
-    QNetworkReply* readArtistCatalog( Artist::ArtistInformation info = Artist::NoInformation, int results = 30, int start = -1 ) const;
-    QNetworkReply* readSongCatalog( Song::SongInformation info = Song::NoInformation, int results = 30, int start = -1 ) const;
+    QNetworkReply* readArtistCatalog( ArtistInformation info = ArtistInformation(), int results = 30, int start = -1 ) const;
+    QNetworkReply* readSongCatalog( SongInformation info = SongInformation(), int results = 30, int start = -1 ) const;
     
     /**
      * Deletes this catalog from The Echo Nest. Only the API key used to create a catalog can delete it.

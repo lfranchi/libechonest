@@ -76,7 +76,7 @@ namespace Parser
     void parseUrls( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
     void parseArtistSong( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
     void parseVideos( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
-    void parseForeignIds( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
+    void parseForeignArtistIds( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
     
     // parse a list of terms
     TermList parseTermList( QXmlStreamReader& xml ) throw( ParseError );

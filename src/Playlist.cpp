@@ -148,7 +148,7 @@ QNetworkReply* Echonest::DynamicPlaylist::generateInternal(const Echonest::Dynam
         } else if( iter->first == Pick ) {
             url.addEncodedQueryItem( playlistParamToString( iter->first ), playlistArtistPickToString( static_cast<Echonest::DynamicPlaylist::ArtistPick>( iter->second.toInt() ) ) );
         } else if( iter->first == SongInformation ){
-            Echonest::Song::addQueryInformation( url, Echonest::Song::SongInformation( iter->second.value< Echonest::Song::SongInformation >() ) );
+            Echonest::Song::addQueryInformation( url, Echonest::SongInformation( iter->second.value< Echonest::SongInformation >() ) );
         } else {
             url.addQueryItem( QLatin1String( playlistParamToString( iter->first ) ), iter->second.toString().replace( QLatin1Char( ' ' ), QLatin1Char( '+' ) ) );
         }
@@ -175,6 +175,8 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "artist_id";
         case Echonest::DynamicPlaylist::Artist :
             return "artist";
+        case Echonest::DynamicPlaylist::ArtistSeedCatalog :
+            return "artist_seed_catalog";
         case Echonest::DynamicPlaylist::SongId :
             return "song_id";
         case Echonest::DynamicPlaylist::Description :

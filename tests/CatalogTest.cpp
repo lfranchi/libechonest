@@ -18,6 +18,7 @@
 
 #include "Config.h"
 #include "Catalog.h"
+#include "TypeInformation.h"
 
 #include <QDebug>
 #include <QNetworkReply>
@@ -77,7 +78,7 @@ void CatalogTest::testProfile()
 void CatalogTest::testRead()
 {
     Echonest::Catalog c( "CAWRKLJ12BF92BC7C3" );
-    QNetworkReply* reply = c.readSongCatalog( Echonest::Song::AudioSummaryInformation | Echonest::Song::Tracks | Echonest::Song::Hotttnesss | Echonest::Song::ArtistHotttnesss | Echonest::Song::ArtistFamiliarity | Echonest::Song::ArtistLocation );
+    QNetworkReply* reply = c.readSongCatalog( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Tracks | Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity | Echonest::SongInformation::ArtistLocation ) );
     
     qDebug() << reply->url().toString();
     QCOMPARE( reply->url(), QUrl( QLatin1String( "http://developer.echonest.com/api/v4/catalog/read?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=audio_summary&bucket=tracks&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&bucket=artist_location&id=CAWRKLJ12BF92BC7C3" ) ) );
@@ -102,9 +103,9 @@ void CatalogTest::testRead()
     
     // test an artist catalog
     Echonest::Catalog c2( "CAXBXBZ12BF92A9AC2" );
-    reply = c2.readArtistCatalog( Echonest::Artist::Audio | Echonest::Artist::Blogs | Echonest::Artist::Biographies | Echonest::Artist::Familiarity |
-                                                Echonest::Artist::Hotttnesss | Echonest::Artist::Images | Echonest::Artist::News | Echonest::Artist::Reviews | 
-                                                Echonest::Artist::Terms | Echonest::Artist::Urls | Echonest::Artist::Videos );
+    reply = c2.readArtistCatalog( Echonest::ArtistInformation( Echonest::ArtistInformation::Audio | Echonest::ArtistInformation::Blogs | Echonest::ArtistInformation::Biographies | Echonest::ArtistInformation::Familiarity |
+                                                Echonest::ArtistInformation::Hotttnesss | Echonest::ArtistInformation::Images | Echonest::ArtistInformation::News | Echonest::ArtistInformation::Reviews | 
+                                                Echonest::ArtistInformation::Terms | Echonest::ArtistInformation::Urls | Echonest::ArtistInformation::Videos ) );
     
     qDebug() << reply->url().toString();
     QCOMPARE( reply->url(), QUrl( QLatin1String( "http://developer.echonest.com/api/v4/catalog/read?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=audio&bucket=biographies&bucket=blogs&bucket=familiarity&bucket=hotttnesss&bucket=images&bucket=news&bucket=reviews&bucket=terms&bucket=urls&bucket=video&id=CAXBXBZ12BF92A9AC2" ) ) );

@@ -20,6 +20,7 @@
 
 #include "echonest_export.h"
 #include "Track.h"
+#include "TypeInformation.h"
 
 #include <QSharedData>
 #include <QHash>
@@ -47,18 +48,7 @@ class ECHONEST_EXPORT Song
 {
   
 public:
-  enum SongInformationFlag {
-      AudioSummaryInformation = 0x01,
-      Tracks = 0x02,
-      Hotttnesss = 0x04,
-      ArtistHotttnesss = 0x08,
-      ArtistFamiliarity = 0x10,
-      ArtistLocation = 0x20,
-      
-      NoInformation = 0x40
-  };
-  Q_DECLARE_FLAGS( SongInformation, SongInformationFlag )
-
+  
   enum SearchParam {
       Title,
       Artist,
@@ -86,7 +76,7 @@ public:
       MinEnergy,
       Mode,
       Key,
-      Sort
+      Sort,
   };
   typedef QPair< Echonest::Song::SearchParam, QVariant > SearchParamData;
   typedef QVector< SearchParamData > SearchParams;
@@ -171,7 +161,7 @@ public:
    *   data back to this Song object.
    * 
    */
-  QNetworkReply* fetchInformation( SongInformation parts ) const;
+  QNetworkReply* fetchInformation( SongInformation information = SongInformation() ) const;
   
   /**
    * Search for a song from The Echo Nest with the given search parameters. See 
@@ -182,7 +172,7 @@ public:
    *  can be extracted in the parseSearch() function.
    * 
    */
-  static QNetworkReply* search( const SearchParams& params, SongInformation parts );
+  static QNetworkReply* search( const SearchParams& params, SongInformation information = SongInformation()  );
   
   /**
    * Parse the result of the fetchInformation() call.
@@ -209,7 +199,7 @@ public:
   friend class Catalog; // for access to searchParamToString
 private:
     static QByteArray searchParamToString( SearchParam param );
-    static void addQueryInformation( QUrl& url, SongInformation parts );
+    static void addQueryInformation( QUrl& url, SongInformation information );
     
   QSharedDataPointer<SongData> d;
 };
@@ -218,10 +208,6 @@ typedef QVector< Song > SongList;
 
 ECHONEST_EXPORT QDebug operator<<(QDebug d, const Song &song);
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(Song::SongInformation)
-
 } // namespace
-
-Q_DECLARE_METATYPE( Echonest::Song::SongInformation )
 
 #endif

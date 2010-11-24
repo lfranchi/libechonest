@@ -18,14 +18,16 @@
 #ifndef ECHONEST_ARTIST_H
 #define ECHONEST_ARTIST_H
 
+
+#include "ArtistTypes.h"
+#include "Config.h"
 #include "echonest_export.h"
+#include "TypeInformation.h"
+#include "Song.h"
 
 #include <QDebug>
 #include <QSharedData>
 #include <QUrl>
-#include "Config.h"
-#include "ArtistTypes.h"
-#include "Song.h"
 
 class QNetworkReply;
 class ArtistData;
@@ -49,25 +51,6 @@ namespace Echonest{
     {
         
     public:
-        enum ArtistInformationFlag {
-            NoInformation = 0x0000,
-            Audio = 0x0001,
-            Biographies = 0x0002,
-            Blogs = 0x0004,
-            Familiarity = 0x0008,
-            Hotttnesss = 0x0010,
-            Images = 0x0020,
-            News = 0x0040,
-            Reviews = 0x0080,
-            Terms = 0x0100,
-            Urls = 0x200,
-            Videos = 0x0400,
-            MusicBrainzEntries = 0x0800,
-            SevenDigitalEntries = 0x1000,
-            PlaymeEntries = 0x2000
-        };
-        Q_DECLARE_FLAGS( ArtistInformation, ArtistInformationFlag )
-        
         enum TermSorting {
             Weight,
             Frequency
@@ -90,6 +73,7 @@ namespace Echonest{
          *  - min_hotttness          0.0 < hotttnesss < 1.0            The minimum hotttnesss for returned artists
          *  - reverse                [true, false]                     If true, return artists that are disimilar to the seeds
          *   -sort                   QString                           How to sort the results. Options: familiarity-asc, hotttnesss-asc, familiarity-desc, hotttnesss-desc.
+         * 
          */
         enum SearchParam {
             Id,
@@ -102,7 +86,8 @@ namespace Echonest{
             MaxHotttnesss,
             MinHotttnesss,
             Reverse,
-            Sort
+            Sort,
+            IdSpace
         };
         typedef QPair< Echonest::Artist::SearchParam, QVariant > SearchParamEntry;
         typedef QVector< SearchParamEntry > SearchParams;
@@ -215,6 +200,12 @@ namespace Echonest{
         void setVideos( const VideoList& );
         
         /**
+         * The list of foreign ids for this artist, if fetched.
+         */
+        ForeignIds foreignIds() const;
+        void setForeignIds( const ForeignIds& ids );
+        
+        /**
          * Fetch a list of audio documents found on the web that are related to this artist.
          * 
          * @param numResults Limit how many results are returned
@@ -257,7 +248,7 @@ namespace Echonest{
         /**
          * Fetch any number of pieces of artist information all at once.
          */
-        QNetworkReply* fetchProfile( ArtistInformation information ) const;
+        QNetworkReply* fetchProfile( ArtistInformation information = ArtistInformation() ) const;
         
         /**
          * Fetch reviews related to the artist.
@@ -266,11 +257,8 @@ namespace Echonest{
         
         /**
          * Fetch a list of songs created by this artist.
-         * 
-         * The idspace can be used to specify what idspace to return the results in, if none is specifed, The Echo Nest song identifiers
-         *   are used. If limitToIdSpace is true, then only results in the requested idspace are returned.
          */
-        QNetworkReply* fetchSongs( ArtistInformation idspace = NoInformation, bool limitToIdSpace = false, int numResults = 0, int offset = -1 ) const;
+        QNetworkReply* fetchSongs( int numResults = 0, int offset = -1 ) const;
         
         /**
          * Fetch a list of the most descriptive terms for this artist.
@@ -313,7 +301,7 @@ namespace Echonest{
          * 
          * Call parseSimilar() once the returned QNetworkReply* has emitted its finished() signal
          */        
-        static QNetworkReply* fetchSimilar( const SearchParams& params, ArtistInformation information = NoInformation,  int numResults = 0, int offset = -1 );
+        static QNetworkReply* fetchSimilar( const SearchParams& params, ArtistInformation information = ArtistInformation(),  int numResults = 0, int offset = -1 );
         
         /**
          * Search for artists.
@@ -323,7 +311,7 @@ namespace Echonest{
          * One of name or description is required, but only one can be used in a query at one time
          * 
          */
-        static QNetworkReply* search( const SearchParams& params, ArtistInformation information = NoInformation, bool limit = false );
+        static QNetworkReply* search( const SearchParams& params, ArtistInformation information = ArtistInformation(), bool limit = false );
         
         /**
          * Fetch a list of the current top artists in terms of hotttnesss.
@@ -331,7 +319,7 @@ namespace Echonest{
          * Warning If limit is set to true, at least one idspace must also be provided in the bucket parameter.
          * 
          */
-        static QNetworkReply* topHottt( ArtistInformation information = NoInformation, int numResults = 0, int offset = -1, bool limit = false );
+        static QNetworkReply* topHottt( ArtistInformation information = ArtistInformation(), int numResults = 0, int offset = -1, bool limit = false );
         
         /**
          * Fetch a list of the top overall terms.
@@ -363,7 +351,7 @@ namespace Echonest{
         QUrl setupQuery( const QByteArray& methodName, int numResults = 0, int start = -1 ) const;
         
         static QByteArray searchParamToString( SearchParam param );
-        static void addQueryInformation( QUrl& url, ArtistInformation parts );
+        static void addQueryInformation( QUrl& url, ArtistInformation information );
         
         QSharedDataPointer<ArtistData> d;
         
@@ -372,9 +360,6 @@ namespace Echonest{
     
     ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::Artist& artist);
     
-    Q_DECLARE_OPERATORS_FOR_FLAGS(Artist::ArtistInformation)
 } // namespace
-
-Q_DECLARE_METATYPE(Echonest::Artist)
 
 #endif

@@ -35,7 +35,7 @@ void SongTest::testSearch1()
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Title, QLatin1String("Float On") ) );
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Results, 2 ) );
     
-    QNetworkReply* reply = Echonest::Song::search( params, Echonest::Song::ArtistHotttnesss  | Echonest::Song::ArtistLocation | Echonest::Song::ArtistFamiliarity );
+    QNetworkReply* reply = Echonest::Song::search( params, Echonest::SongInformation( Echonest::SongInformation::ArtistHotttnesss  | Echonest::SongInformation::ArtistLocation | Echonest::SongInformation::ArtistFamiliarity ) );
     
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -52,7 +52,7 @@ void SongTest::testSearch1()
 //         qDebug() << song.hotttnesss() << song.artistHotttnesss() << song.artistFamiliarity() << song.artistLocation();
         
         // now fetch some more info and make sure everything is still sane
-        QNetworkReply* moreInfo = song.fetchInformation( Echonest::Song::Hotttnesss );
+        QNetworkReply* moreInfo = song.fetchInformation( Echonest::SongInformation( Echonest::SongInformation::Hotttnesss ) );
         QEventLoop loop;
         loop.connect( moreInfo, SIGNAL(finished()), SLOT(quit()) );
         loop.exec();
@@ -71,7 +71,7 @@ void SongTest::testSearch1()
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Title, QLatin1String("The King of Spain") ) );
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Results, 3 ) );
     
-    reply = Echonest::Song::search( params, Echonest::Song::AudioSummaryInformation );
+    reply = Echonest::Song::search( params, Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation ) );
 
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
@@ -90,7 +90,7 @@ void SongTest::testProfile()
     Echonest::Song song;
     song.setId( "SOYMZLR127CF8DD122" );
     
-    QNetworkReply* reply = song.fetchInformation( Echonest::Song::ArtistHotttnesss | Echonest::Song::ArtistLocation );
+    QNetworkReply* reply = song.fetchInformation( Echonest::SongInformation( Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistLocation ) );
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
