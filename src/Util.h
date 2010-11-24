@@ -17,6 +17,9 @@
 #ifndef ECHONEST_UTIL_H
 #define ECHONEST_UTIL_H
 
+#include "echonest_export.h"
+
+#include <QDebug>
 #include <QVector>
 #include <QUrl>
 
@@ -113,6 +116,8 @@ namespace Echonest
     
     QByteArray catalogUpdateActionToLiteral( CatalogTypes::Action );
     CatalogTypes::Action literalToCatalogUpdateAction( const QByteArray& type );
+    
+    ECHONEST_EXPORT QDebug operator<<(QDebug d, const ForeignId& id);
 }
 
 #endif

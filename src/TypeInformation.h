@@ -49,8 +49,6 @@ namespace Echonest {
             Terms = 0x0100,
             Urls = 0x200,
             Videos = 0x0400,
-            /// The following is for limiting the artists returned. It describe collections of artists
-            IdSpace = 0x0800,
         };
         Q_DECLARE_FLAGS( ArtistInformationFlags, ArtistInformationFlag )
         
@@ -63,8 +61,8 @@ namespace Echonest {
         
         /**
          * The individual pieces of information to fetch for this artist.
-         *  If IdSpace is included, then the idspaces to return must be set.
-         *  See \c setIdSpaces for more information
+         * 
+         * Use \c setIdSpaces to set an id space for this query.
          */
         ArtistInformationFlags flags() const;
         void setArtistInformationFlags( ArtistInformationFlags flags );
@@ -98,9 +96,6 @@ namespace Echonest {
             ArtistFamiliarity = 0x010,
             ArtistLocation = 0x020,
             
-            /// The following is for limiting the songs returned. It describe collections of songs, by named id space or catalog, for example.
-            IdSpace = 0x040,
-            
             NoInformation = 0x800
         };
         Q_DECLARE_FLAGS( SongInformationFlags, SongInformationFlag )
@@ -114,8 +109,7 @@ namespace Echonest {
         
         /**
          * The individual pieces of information to fetch for this song.
-         *  If IdSpace is included, then the idspaces to return must be set.
-         *  See \c setIdSpaces for more information
+         *  If id spaces are desired,see \c setIdSpaces for more information.
          */
         SongInformationFlags flags() const;
         void setSongInformationFlags( SongInformationFlags flags );

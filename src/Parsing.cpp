@@ -674,12 +674,15 @@ void Echonest::Parser::parseForeignArtistIds( QXmlStreamReader& xml, Echonest::A
     
     Echonest::ForeignIds ids;
     while( xml.name() != "foreign_ids" || !xml.isEndElement() ) {
+        xml.readNext();
+        xml.readNext(); // get past the enclosing <foreign_id>, or else we'll think it's the internal one.
         Echonest::ForeignId id;
         while( xml.name() != "foreign_id" || !xml.isEndElement() ) {
-            if( xml.name() == "catalog" )
+            if( xml.name() == "catalog" && xml.isStartElement() )
                 id.catalog = xml.readElementText();
-            else if( xml.name() == "foreign_id" )
+            else if( xml.name() == "foreign_id" && xml.isStartElement() )
                 id.foreign_id = xml.readElementText();
+            
             xml.readNext();
         }
         ids.append( id );

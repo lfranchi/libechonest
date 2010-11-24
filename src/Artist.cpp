@@ -441,7 +441,8 @@ Echonest::Artists Echonest::Artist::parseSearch( QNetworkReply* reply ) throw( E
 {
     Echonest::Parser::checkForErrors( reply );
     
-    QXmlStreamReader xml( reply->readAll() );
+    QByteArray data = reply->readAll();
+    QXmlStreamReader xml( data );
     
     Echonest::Parser::readStatus( xml );
     
@@ -521,8 +522,6 @@ QByteArray Echonest::Artist::searchParamToString(Echonest::Artist::SearchParam p
             return "reverse";
         case Sort:
             return "sort";
-        case IdSpace:
-            return "bucket"; // HACK :(
         default:
             return "";
     }

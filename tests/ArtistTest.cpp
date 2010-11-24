@@ -31,7 +31,7 @@ void ArtistTest::initTestCase()
 }
 
 void ArtistTest::testAudioUrl()
-{ /*
+{ 
     Artist testArtist;
     testArtist.setName( QLatin1String( "FooArtist" ) );
     
@@ -46,13 +46,13 @@ void ArtistTest::testAudioUrl()
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/audio?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=FooArtist&results=15&start=5" ) );
     
     testArtist.setName( QString() );
-    testArtist.setId( "ARTIST_ID" );
+    testArtist.setId( "ARH6W4X1187B99274F" );
     reply = testArtist.fetchAudio( 15, -1 );    
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/audio?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=ARTIST_ID&results=15" ) );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/audio?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=ARH6W4X1187B99274F&results=15" ) );
     
     testArtist.setName( QLatin1String( "FooArtist" ) );
     reply = testArtist.fetchAudio( 100 );    
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/audio?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=ARTIST_ID&results=100" ) ); */
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/audio?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=ARH6W4X1187B99274F&results=100" ) ); 
 }
 
 void ArtistTest::testAudio()
@@ -269,13 +269,13 @@ void ArtistTest::testProfileUrl()
     QNetworkReply* reply = testArtist.fetchProfile( ArtistInformation( ArtistInformation::Familiarity | ArtistInformation::Videos | ArtistInformation::Audio ) );
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/profile?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=ReallyGoodArtist&bucket=audio&bucket=familiarity&bucket=video" ) );
     
-    ArtistInformation info( ArtistInformation::Biographies | ArtistInformation::News | ArtistInformation::Reviews | ArtistInformation::Terms | ArtistInformation::Urls | ArtistInformation::IdSpace );
+    ArtistInformation info( ArtistInformation::Biographies | ArtistInformation::News | ArtistInformation::Reviews | ArtistInformation::Terms | ArtistInformation::Urls );
     info.setIdSpaces( QStringList() << QLatin1String( "musicbrainz" ) );
     reply = testArtist.fetchProfile( info );
     
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/profile?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=ReallyGoodArtist&bucket=biographies&bucket=news&bucket=reviews&bucket=terms&bucket=urls&bucket=id:musicbrainz" ) );
     
-    info.setArtistInformationFlags( ArtistInformation::Blogs | ArtistInformation::Hotttnesss | ArtistInformation::Images  | ArtistInformation::IdSpace );
+    info.setArtistInformationFlags( ArtistInformation::Blogs | ArtistInformation::Hotttnesss | ArtistInformation::Images );
     info.setIdSpaces( QStringList() << QLatin1String( "7digital" )  << QLatin1String( "playme" ) );
     reply = testArtist.fetchProfile( info );
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/profile?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=ReallyGoodArtist&bucket=blogs&bucket=hotttnesss&bucket=images&bucket=id:7digital&bucket=id:playme" ) );
@@ -379,7 +379,7 @@ void ArtistTest::testSearch()
     params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "stadium rock" ) ) );
     params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
     searchResult = Artist::search( params, ArtistInformation( ArtistInformation::Familiarity | ArtistInformation::Hotttnesss | ArtistInformation::News | ArtistInformation::Blogs | ArtistInformation::Audio ) );
-    qDebug() << "Querying:" << searchResult->url().toString();
+//     qDebug() << "Querying:" << searchResult->url().toString();
     QEventLoop loop2;
     loop2.connect( searchResult, SIGNAL(finished()), SLOT(quit()) );
     loop2.exec();
@@ -397,6 +397,28 @@ void ArtistTest::testSearch()
         if( count != artists.size() - 1 ) // last artist returned has no audio
             QVERIFY( artist.audio().size() > 0 );
         count++;
+    }
+    
+    ArtistInformation info( ArtistInformation::Familiarity | ArtistInformation::Hotttnesss );
+    info.setIdSpaces( QStringList() << QLatin1String( "musicbrainz" ) );
+    params.clear();
+    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "alternative rock" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "stadium rock" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "melodic^2" ) ) );
+    searchResult = Artist::search( params, info, true );
+    qDebug() << "reply:" << searchResult->url().toString();
+    QEventLoop loop3;
+    loop3.connect( searchResult, SIGNAL(finished()), SLOT(quit()) );
+    loop3.exec();
+    
+    artists = Echonest::Artist::parseSearch( searchResult );
+    foreach( const Echonest::Artist& artist, artists ) {
+        QVERIFY( !artist.foreignIds().isEmpty() );
+        foreach( const Echonest::ForeignId& id, artist.foreignIds() ) {
+            QVERIFY( !id.catalog.isEmpty() );
+            QVERIFY( !id.foreign_id.isEmpty() );
+        }
+//         qDebug() << "foreign ids:" << artist.foreignIds();
     }
 }
 

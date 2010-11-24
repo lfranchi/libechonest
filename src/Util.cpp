@@ -118,3 +118,9 @@ Echonest::CatalogTypes::Action Echonest::literalToCatalogUpdateAction(const QByt
     
     return Echonest::CatalogTypes::Update;
 }
+
+QDebug Echonest::operator<<(QDebug d, const Echonest::ForeignId& id)
+{
+    return d.maybeSpace() << QString::fromLatin1( "Foreign Id(%1, %2)" ).arg( id.catalog ).arg( id.foreign_id );
+}
+
