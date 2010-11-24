@@ -4,5 +4,4 @@ TODO list
 * Add parsing of Song::artistLocation()
 * Add parsing of Song::track info item, also when parsing a CatalogSong
 * Add parsing of request block in Catalog::read
-* Add parsing and handling of id spaces
 * Add support for xspf playlists, especially chained xspfs
