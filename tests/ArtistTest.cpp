@@ -357,6 +357,7 @@ void ArtistTest::testSearch()
     params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
     QNetworkReply* searchResult = Artist::search( params, ArtistInformation( ArtistInformation::Familiarity | ArtistInformation::Hotttnesss ) );
     
+    qDebug() << "searchResult:" << searchResult->url().toString();
     QEventLoop loop;
     loop.connect( searchResult, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
@@ -379,7 +380,7 @@ void ArtistTest::testSearch()
     params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "stadium rock" ) ) );
     params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
     searchResult = Artist::search( params, ArtistInformation( ArtistInformation::Familiarity | ArtistInformation::Hotttnesss | ArtistInformation::News | ArtistInformation::Blogs | ArtistInformation::Audio ) );
-//     qDebug() << "Querying:" << searchResult->url().toString();
+    qDebug() << "Querying:" << searchResult->url().toString();
     QEventLoop loop2;
     loop2.connect( searchResult, SIGNAL(finished()), SLOT(quit()) );
     loop2.exec();
@@ -420,6 +421,25 @@ void ArtistTest::testSearch()
         }
 //         qDebug() << "foreign ids:" << artist.foreignIds();
     }
+    
+    // try limiting it to a catalog
+    info.setIdSpaces( QStringList() << QLatin1String( "CAXBXBZ12BF92A9AC2" ) ); // artist catalog with 2 artists
+    searchResult = Artist::search( params, info, true );
+    qDebug() << "reply:" << searchResult->url().toString();
+    loop3.connect( searchResult, SIGNAL(finished()), SLOT(quit()) );
+    loop3.exec();
+    
+    artists = Echonest::Artist::parseSearch( searchResult );
+    foreach( const Echonest::Artist& artist, artists ) {
+        QVERIFY( !artist.foreignIds().isEmpty() );
+        foreach( const Echonest::ForeignId& id, artist.foreignIds() ) {
+            QVERIFY( !id.catalog.isEmpty() );
+            QVERIFY( id.foreign_id.contains( QLatin1String( "CAXBXBZ12BF92A9AC2:artist:" ) ) );
+        }
+                qDebug() << "foreign ids:" << artist.foreignIds();
+    }
+    
+    
 }
 
 void ArtistTest::testSimilarUrl()
