@@ -141,6 +141,11 @@ void CatalogTest::testRead()
     QVERIFY( !c2.artists().at( 0 ).dateAdded().isNull() );
     QVERIFY( !c2.artists().at( 0 ).id().isEmpty() );
     QVERIFY( !c2.artists().at( 0 ).foreignId().isEmpty() );
+    QCOMPARE( c2.artists().at( 0 ).request().itemId(), QByteArray( "f1bc85de-de19-4cc2-a77b-475a5b4afb7b" ) );
+    QCOMPARE( c2.artists().at( 0 ).request().artistName(), QLatin1String( "Balmorhea" ) );
+    QCOMPARE( c2.artists().at( 1 ).request().itemId(), QByteArray( "473cb167-6459-429a-b4a2-561702753d8b" ) );
+    QCOMPARE( c2.artists().at( 1 ).request().artistName(), QLatin1String( "Mono" ) );
+    QCOMPARE( c2.artists().size(), 2 );
 }
 
 void CatalogTest::testStatus()
