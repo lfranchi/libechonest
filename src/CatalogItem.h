@@ -19,6 +19,8 @@
 
 #include "echonest_export.h"
 #include "Util.h"
+
+#include <QMetaType>
 #include <QSharedPointer>
 #include <QDateTime>
 
@@ -87,6 +89,7 @@ protected:
 };
 
 typedef QVector< CatalogItem > CatalogItems;
-}
+};
+
 
 #endif

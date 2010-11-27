@@ -208,6 +208,8 @@ typedef QVector< Song > SongList;
 
 ECHONEST_EXPORT QDebug operator<<(QDebug d, const Song &song);
 
-} // namespace
+}; // namespace
+
+Q_DECLARE_METATYPE( Echonest::Song )
 
 #endif

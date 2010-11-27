@@ -201,5 +201,9 @@ namespace Echonest{
     ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::DynamicPlaylist& playlist);
     
     
-} // namespace
+}; // namespace
+
+
+Q_DECLARE_METATYPE( Echonest::DynamicPlaylist )
+
 #endif

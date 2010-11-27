@@ -362,4 +362,6 @@ namespace Echonest{
     
 } // namespace
 
+Q_DECLARE_METATYPE( Echonest::Artist )
+
 #endif

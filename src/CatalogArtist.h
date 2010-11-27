@@ -44,5 +44,7 @@ public:
 
 typedef QVector< CatalogArtist > CatalogArtists;
 
-}
+};
+
+Q_DECLARE_METATYPE( Echonest::CatalogArtist )
 #endif

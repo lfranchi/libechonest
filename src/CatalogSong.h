@@ -42,5 +42,8 @@ public:
 };
 
 typedef QVector< CatalogSong > CatalogSongs;
-}
+};
+
+
+Q_DECLARE_METATYPE( Echonest::CatalogSong )
 #endif
