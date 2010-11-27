@@ -60,7 +60,11 @@ QVariant Echonest::Generator::catalogEntryToVariant( const Echonest::CatalogUpda
     
     itemMap[ QLatin1String( "action" ) ] = Echonest::catalogUpdateActionToLiteral( item.action() );
     
-    itm[ QLatin1String( "item_id" ) ] = QUuid::createUuid().toString().replace( QLatin1Char( '{' ), QString() ).replace( QLatin1Char( '}' ), QString() );
+    if( item.itemId().isEmpty() )
+        itm[ QLatin1String( "item_id" ) ] = QUuid::createUuid().toString().replace( QLatin1Char( '{' ), QString() ).replace( QLatin1Char( '}' ), QString() );
+    else
+        itm[ QLatin1String( "item_id" ) ] = item.itemId();
+    
     if( !item.fingerprint().isEmpty() )
         itm[ QLatin1String( "fp_code" ) ] = item.fingerprint();
     

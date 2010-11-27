@@ -31,6 +31,7 @@ public:
     {}
     
     CatalogUpdateEntryData( const CatalogUpdateEntryData& other ) {
+        item_id = other.item_id;
         action = other.action;
         fp_code = other.fp_code;
         
@@ -57,6 +58,7 @@ public:
     }
     Echonest::CatalogTypes::Action action;
     
+    QByteArray item_id;
     QByteArray fp_code;
     
     QByteArray song_id;

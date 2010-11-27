@@ -889,20 +889,29 @@ void Echonest::Parser::parseCatalogRequestItem( QXmlStreamReader& xml, Echonest:
     if( xml.atEnd() || xml.name() != "request" || xml.tokenType() != QXmlStreamReader::StartElement )
         throw Echonest::ParseError( Echonest::UnknownParseError );
     
+    Echonest::CatalogUpdateEntry request;
     while( xml.name() != "request" || !xml.isEndElement() ) {
         if( xml.name() == "item_id" ) {
-            artist.setRequestId( xml.readElementText().toLatin1() );
-            song.setRequestId( artist.requestId() );
+            request.setItemId( xml.readElementText().toLatin1() );
         } else if( xml.name() == "artist_name" ) {
-            artist.setRequestName( xml.readElementText() );
-            song.setRequestName( artist.requestName() );
+            request.setArtistName( xml.readElementText() );
         } else if( xml.name() == "song_name" ) {
-            artist.setRequestName( xml.readElementText() );
-            song.setRequestName( artist.requestName() );
+            request.setSongName( xml.readElementText() );
+        } else if( xml.name() == "fp_code" ) {
+            request.setFingerpring( xml.readElementText().toLatin1() );
+        } else if( xml.name() == "song_id" ) {
+            request.setSongId( xml.readElementText().toLatin1() );
+        } else if( xml.name() == "artist_id" ) {
+            request.setArtistId( xml.readElementText().toLatin1() );
+        } else if( xml.name() == "release" ) {
+            request.setRelease( xml.readElementText() );
+        } else if( xml.name() == "genre" ) {
+            request.setGenre( xml.readElementText() );
         }
-        // TODO finish
         xml.readNext();
     }
+    artist.setRequest( request );
+    song.setRequest( request );
 }
 
 void Echonest::Parser::saveArtistList( Echonest::Catalog& catalog, QList<Echonest::CatalogItem*>& artists)

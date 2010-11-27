@@ -62,24 +62,14 @@ void Echonest::CatalogItem::setForeignId(const QByteArray& id)
     dd->foreign_id = id;
 }
 
-QByteArray Echonest::CatalogItem::requestId() const
+Echonest::CatalogUpdateEntry Echonest::CatalogItem::request() const
 {
-    return dd->request_id;
+    return dd->request;
 }
 
-void Echonest::CatalogItem::setRequestId(const QByteArray& id)
+void Echonest::CatalogItem::setRequest(const Echonest::CatalogUpdateEntry& request)
 {
-    dd->request_id = id;
-}
-
-QString Echonest::CatalogItem::requestName() const
-{
-    return dd->request_name;
-}
-
-void Echonest::CatalogItem::setRequestName(const QString& name)
-{
-    dd->request_name = name;
+    dd->request = request;
 }
 
 int Echonest::CatalogItem::rating() const

@@ -100,6 +100,16 @@ void CatalogTest::testRead()
     QVERIFY( !c.songs().at( 0 ).foreignId().isEmpty() );
     QVERIFY( c.songs().at( 0 ).artistHotttnesss() >= 0 );
     QVERIFY( c.songs().at( 0 ).artistFamiliarity() >= 0 );
+    QCOMPARE( c.songs().at( 0 ).request().itemId(), QByteArray( "d951f4d6-b678-4264-8193-cd90c6b3ee4d" ) );
+    QCOMPARE( c.songs().at( 0 ).request().songName(), QLatin1String( "Your Hand In Mine" ) );
+    QCOMPARE( c.songs().at( 0 ).request().artistName(), QLatin1String( "Explosions in the sky" ) );
+    QCOMPARE( c.songs().at( 1 ).request().itemId(), QByteArray( "1f2cc282-068b-4d0c-aa41-d0d3b1638986" ) );
+    QCOMPARE( c.songs().at( 1 ).request().songName(), QLatin1String( "Your Hand In Mine" ) );
+    QCOMPARE( c.songs().at( 1 ).request().artistName(), QLatin1String( "Explosions in the sky" ) );
+    QCOMPARE( c.songs().at( 2 ).request().itemId(), QByteArray( "a61a4ac1-55a8-4c04-8789-5693d5d285d6" ) );
+    QCOMPARE( c.songs().at( 2 ).request().songName(), QLatin1String( "Your Hand In Mine" ) );
+    QCOMPARE( c.songs().at( 2 ).request().artistName(), QLatin1String( "Explosions in the sky" ) );
+    QCOMPARE( c.songs().size(), 3 );
     
     // test an artist catalog
     Echonest::Catalog c2( "CAXBXBZ12BF92A9AC2" );

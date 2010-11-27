@@ -55,6 +55,13 @@ public:
     CatalogUpdateEntry& operator=( const CatalogUpdateEntry& );
     
     /**
+     * Optional, the item id for the catalog entry. hash( catalog_id + item_id )
+     *  MUST be unique. If this is not set, a unique id will be generated internally.
+     */
+    QByteArray itemId() const;
+    void setItemId( const QByteArray& id );
+    
+    /**
      * The type of action that this item represents, required.
      */
     CatalogTypes::Action action() const;

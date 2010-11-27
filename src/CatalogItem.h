@@ -17,6 +17,7 @@
 #ifndef ECHONEST_CATALOG_ITEM_H
 #define ECHONEST_CATALOG_ITEM_H
 
+#include "CatalogUpdateEntry.h"
 #include "echonest_export.h"
 #include "Util.h"
 
@@ -55,17 +56,11 @@ public:
     void setForeignId( const QByteArray& id );
     
     /**
-     * The request name used when this item was requested.
+     * The request that generated this catalog item
      */
-    QString requestName() const;
-    void setRequestName( const QString& name );
-    
-    /**
-     * The request id used when this item was requested.
-     */
-    QByteArray requestId() const;
-    void setRequestId( const QByteArray& id );
-    
+    CatalogUpdateEntry request() const;
+    void setRequest( const CatalogUpdateEntry& request );
+        
     /**
      * The date and time when this item was added to the catalog
      */

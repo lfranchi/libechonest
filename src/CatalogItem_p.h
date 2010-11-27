@@ -23,6 +23,7 @@
 #include <QString>
 #include <QVector>
 #include <QDateTime>
+#include "CatalogUpdateEntry.h"
 
 
 class CatalogItemData : public QSharedData
@@ -33,16 +34,14 @@ public:
     CatalogItemData(const CatalogItemData& other)
     {
         foreign_id = other.foreign_id;
-        request_id = other.request_id;
-        request_name = other.request_name;
+        request = other.request;
         date_added = other.date_added;
         rating = other.rating;
         play_count = other.play_count;
     }
     ~CatalogItemData() {}
     
-    QByteArray request_id;
-    QString request_name;
+    Echonest::CatalogUpdateEntry request;
     QByteArray foreign_id;
     QDateTime date_added;
     int rating;

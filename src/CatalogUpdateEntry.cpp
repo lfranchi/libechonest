@@ -44,6 +44,16 @@ Echonest::CatalogUpdateEntry& Echonest::CatalogUpdateEntry::operator=(const Echo
     return *this;
 }
 
+QByteArray Echonest::CatalogUpdateEntry::itemId() const
+{
+    return d->item_id;
+}
+
+void Echonest::CatalogUpdateEntry::setItemId(const QByteArray& id)
+{
+    d->item_id = id;
+}
+
 Echonest::CatalogTypes::Action Echonest::CatalogUpdateEntry::action() const
 {
     return d->action;

@@ -308,7 +308,6 @@ int Echonest::AudioSummary::mode() const
 
 void Echonest::AudioSummary::setAnalysisUrl(const QUrl& analysisUrl)
 {
-    qDebug() << "Setting analysys URL to:" << analysisUrl;
     d->analysis_url = analysisUrl;
 }
 
