@@ -71,13 +71,23 @@ void SongTest::testSearch1()
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Title, QLatin1String("The King of Spain") ) );
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Results, 3 ) );
     
-    reply = Echonest::Song::search( params, Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation ) );
-
+    Echonest::SongInformation info( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Tracks ) );
+    info.setIdSpaces( QStringList() << QLatin1String( "musicbrainz" ) << QLatin1String( "7digital" ) << QLatin1String( "playme" ) );
+    reply = Echonest::Song::search( params, info);
+    qDebug() << "QUERY:" << reply->url().toString();
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     
     songs = Echonest::Song::parseSearch( reply );
     qDebug() << songs << songs.size();
+    foreach( const Echonest::Song& song, songs ) {
+//         qDebug() << "SONG  TRACKS:" << song.tracks();
+        foreach( const Echonest::Track& track, song.tracks() ) {
+//             qDebug() << track.catalog() << track.foreignId();
+            QVERIFY( !track.catalog().isEmpty() );
+            QVERIFY( !track.foreignId().isEmpty() );
+        }
+    }
     QVERIFY( songs.size() == 3 );
     QVERIFY( songs[ 0 ].audioSummary().danceability() > 0 );
     QVERIFY( songs[ 0 ].audioSummary().energy() > 0 );

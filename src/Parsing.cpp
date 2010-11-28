@@ -111,7 +111,9 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
             song.setArtistHotttnesss( xml.readElementText().toDouble() );
         else if( xml.name() == "artist_familiarity" && xml.isStartElement() )
             song.setArtistFamiliarity( xml.readElementText().toDouble() );
-        else if( xml.name() == "artist_location" && xml.isStartElement() ) {
+        else if( xml.name() == "tracks" && xml.isStartElement() ) {
+            song.setTracks( parseSongTrackBucket( xml ) );
+        } else if( xml.name() == "artist_location" && xml.isStartElement() ) {
             while( !( xml.name() ==  "location" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
                 xml.readNextStartElement();
                 if( xml.name() == "location" )
@@ -128,12 +130,48 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
     return song;
 }
 
+
+Echonest::Tracks Echonest::Parser::parseSongTrackBucket( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    if( xml.atEnd() || xml.name() != "tracks" ) {
+        throw ParseError( Echonest::UnknownParseError );
+    }
+    
+    Echonest::Tracks tracks;
+    while( !( xml.name() == "tracks" && xml.tokenType() == QXmlStreamReader::EndElement ) && ( xml.name() != "track" || !xml.isEndElement() ) ) {
+        if( xml.name() == "track" && xml.isStartElement() ) {
+            Echonest::Track track = parseTrack( xml );
+            tracks.append( track );
+        } else
+            xml.readNext();
+    }
+    
+    return tracks;
+}
+
+
+Echonest::Tracks Echonest::Parser::parseCatalogSongTracks( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    if( xml.atEnd() || xml.name() != "tracks" ) {
+        throw ParseError( Echonest::UnknownParseError );
+    }
+    
+    Echonest::Tracks tracks;
+    while( !( xml.name() == "tracks" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
+        if( xml.name() == "track" && xml.isStartElement() ) {
+            tracks.append( Echonest::Track( xml.readElementText().toLatin1() ) );
+        }
+        xml.readNext();
+    }
+    
+    return tracks;
+}
+
 Echonest::Track Echonest::Parser::parseTrack( QXmlStreamReader& xml ) throw( Echonest::ParseError )
 {
     if( xml.atEnd() || xml.name() != "track" ) {
         throw ParseError( Echonest::UnknownParseError );
     }
-    
     Echonest::Track track;
     while( !( xml.name() == "track" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
         if( xml.name() == "id" && xml.isStartElement() )
@@ -156,14 +194,21 @@ Echonest::Track Echonest::Parser::parseTrack( QXmlStreamReader& xml ) throw( Ech
             track.setSamplerate( xml.readElementText().toInt() );
         else if( xml.name() == "md5" && xml.isStartElement() )
             track.setMD5( xml.readElementText().toLatin1() );
+        else if( xml.name() == "catalog" && xml.isStartElement() )
+            track.setCatalog( xml.readElementText() );
+        else if( xml.name() == "foreign_id" && xml.isStartElement() )
+            track.setForeignId( xml.readElementText().toLatin1() );
+        else if( xml.name() == "release_image" && xml.isStartElement() )
+            track.setReleaseImage( QUrl( xml.readElementText(), QUrl::TolerantMode ) );
+        else if( xml.name() == "preview_url" && xml.isStartElement() )
+            track.setPreviewUrl( QUrl( xml.readElementText(), QUrl::TolerantMode ) );
         else if( xml.name() == "audio_summary" && xml.isStartElement() ) {
             track.setAudioSummary( parseAudioSummary( xml ) );
             continue;
         }
         xml.readNext();
     }
-    xml.readNext(); // skip past the last
-    
+    xml.readNext(); // skip past the last    
     return track;
 }
 
@@ -849,7 +894,7 @@ QList<Echonest::CatalogItem*> Echonest::Parser::parseCatalogItems( QXmlStreamRea
             } else if( xml.name() == "song_name" && xml.isStartElement() ) {
                 song->setTitle( xml.readElementText() );
             } else if( xml.name() == "tracks" && xml.isStartElement() ) {
-//                 parseS( xml, *artist ); TODO
+                song->setTracks( parseCatalogSongTracks( xml ) );
             } else if( xml.name() == "play_count" && xml.isStartElement() ) {
                static_cast<Echonest::CatalogSong*>(song)->setPlayCount( xml.readElementText().toInt() );
             } else if( xml.name() == "artist_hotttnesss" && xml.isStartElement() ) {

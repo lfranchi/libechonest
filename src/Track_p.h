@@ -62,6 +62,10 @@ public:
         samplerate = other.samplerate;
         status = other.status;
         title = other.title;
+        catalog = other.catalog;
+        foreign_id = other.foreign_id;
+        release_image = other.release_image;
+        preview_url = other.preview_url;
         
     }
     
@@ -75,6 +79,11 @@ public:
     int samplerate;
     QString status;
     QString title;
+    // used when fetched as a foreign id in a tracks bucket
+    QString catalog;
+    QByteArray foreign_id;
+    QUrl release_image;
+    QUrl preview_url;
     
     Echonest::AudioSummary audio_summary;
     

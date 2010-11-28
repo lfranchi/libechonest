@@ -111,6 +111,14 @@ void CatalogTest::testRead()
     QCOMPARE( c.songs().at( 2 ).request().artistName(), QLatin1String( "Explosions in the sky" ) );
     QCOMPARE( c.songs().size(), 3 );
     
+    foreach( const Echonest::Song& song, c.songs() ) {
+        QCOMPARE( song.tracks().size(), 4 );
+        QCOMPARE( song.tracks().at( 0 ).id().constData(), "TRXIFWD123E8589514" );
+        QCOMPARE( song.tracks().at( 1 ).id().constData(), "TRZMJVA128F42636CE" );
+        QCOMPARE( song.tracks().at( 2 ).id().constData(), "TRXKSJB128F92E8307" );
+        QCOMPARE( song.tracks().at( 3 ).id().constData(), "TRWYCBR128F9325C60" );
+    }
+    
     // test an artist catalog
     Echonest::Catalog c2( "CAXBXBZ12BF92A9AC2" );
     reply = c2.readArtistCatalog( Echonest::ArtistInformation( Echonest::ArtistInformation::Audio | Echonest::ArtistInformation::Blogs | Echonest::ArtistInformation::Biographies | Echonest::ArtistInformation::Familiarity |

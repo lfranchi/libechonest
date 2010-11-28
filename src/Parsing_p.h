@@ -49,6 +49,9 @@ namespace Parser
     // parses a <track></track> block
     Track parseTrack( QXmlStreamReader& xml ) throw( ParseError );
     
+    // parses a <tracks> chunk when asking for a song with tracks bucket
+    Tracks parseSongTrackBucket( QXmlStreamReader& xml ) throw( ParseError );
+    
     // parses an <audio_summary> chunk
     AudioSummary parseAudioSummary( QXmlStreamReader& xml ) throw( ParseError );
     // parses the json of the detailed audio summary
@@ -96,6 +99,9 @@ namespace Parser
     Echonest::CatalogStatusItem parseTicketUpdateInfo( QXmlStreamReader& xml ) throw( ParseError );
     QByteArray parseCatalogTicket( QXmlStreamReader& xml ) throw( ParseError );
     Catalog parseNewCatalog( QXmlStreamReader& xml ) throw( ParseError );
+    
+    // parses a <tracks> chunk when asking for a song with tracks bucket in a catalog.read call
+    Tracks parseCatalogSongTracks( QXmlStreamReader& xml ) throw( ParseError );
     
 }
 }

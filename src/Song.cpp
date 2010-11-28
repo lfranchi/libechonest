@@ -301,7 +301,7 @@ void Echonest::Song::addQueryInformation(QUrl& url, Echonest::SongInformation in
     
     if( !information.idSpaces().isEmpty() ) {
         foreach( const QString& idSpace, information.idSpaces() )
-            url.addEncodedQueryItem( "bucket", idSpace.toUtf8() );
+            url.addEncodedQueryItem( "bucket", "id:" + idSpace.toUtf8() );
     }
 }
 

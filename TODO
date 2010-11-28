@@ -2,5 +2,4 @@ TODO list
 ========
 * Add parsing of catalog ticket items
 * Add parsing of Song::artistLocation()
-* Add parsing of Song::track info item, also when parsing a CatalogSong
 * Add support for xspf playlists, especially chained xspfs

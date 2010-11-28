@@ -50,6 +50,7 @@ class ECHONEST_EXPORT Track
 public:
  
   Track();
+  explicit Track( const QByteArray& id );
   Track( const Track& other );
   Track& operator=( const Track& track );
   ~Track();
@@ -107,7 +108,37 @@ public:
    */
   int bitrate() const;  
   void setBitrate( int );
-    
+  
+  /**
+   * If this track is fetched from a tracks bucket of a song search, the following information
+   *  will be populated for some id spaces.
+   */
+  
+  /**
+   * The catalog this track is from, if not a native Echo Nest track
+   */
+  QString catalog() const;
+  void setCatalog( const QString& catalog );
+  
+  /**
+   * The foreign id of this track, that is in the \c catalog catalog.
+   */
+  QByteArray foreignId() const;
+  void setForeignId( const QByteArray& id );
+  
+  /**
+   * The release image associated with this track
+   */
+  QUrl releaseImage() const;
+  void setReleaseImage( const QUrl& imgUrl );
+  
+  /**
+   * The preview url for this track, if it exists
+   */
+  QUrl previewUrl() const;
+  void setPreviewUrl( const QUrl& preview );
+  
+  
   /**
    * The analysis status
    */
@@ -183,6 +214,7 @@ private:
     QSharedDataPointer<TrackData> d;
 };
 
+typedef QVector<Track> Tracks;
 ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::Track& track);
 
 
