@@ -44,6 +44,13 @@ Echonest::ParseError::ParseError(Echonest::ErrorType error): exception()
     type = error;
 }
 
+Echonest::ParseError::ParseError(Echonest::ErrorType error, const QString& text): exception()
+{
+    type =  error;
+    extraText = text;
+}
+
+
 Echonest::ParseError::~ParseError() throw()
 {}
 
@@ -59,6 +66,11 @@ void Echonest::ParseError::setNetworkError( QNetworkReply::NetworkError error ) 
 
 const char* Echonest::ParseError::what() const throw()
 {
+
+    // If we have specific error text, return that first
+    if( !extraText.isEmpty() )
+        return extraText.toLatin1().constData();
+    
     switch( type )
     {
         case UnknownError:

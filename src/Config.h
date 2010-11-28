@@ -59,7 +59,8 @@ namespace Echonest{
     class ECHONEST_EXPORT ParseError : public std::exception
     {
     public:
-        ParseError( ErrorType error );
+        explicit ParseError( ErrorType error );
+        ParseError( ErrorType error, const QString& text );
         virtual ~ParseError() throw();
     
         ErrorType errorType() const throw();
@@ -74,6 +75,7 @@ namespace Echonest{
         virtual const char* what() const throw ();
     private:
         ErrorType type;
+        QString extraText;
         QNetworkReply::NetworkError nError;
     };
     
