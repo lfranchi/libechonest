@@ -17,6 +17,7 @@
 #include "Playlist.h"
 #include "Playlist_p.h"
 #include "Parsing_p.h"
+#include <QtNetwork/QNetworkReply>
 
 Echonest::DynamicPlaylist::DynamicPlaylist()
     : d( new DynamicPlaylistData )
@@ -118,6 +119,14 @@ Echonest::SongList Echonest::DynamicPlaylist::parseStaticPlaylist(QNetworkReply*
     
     Echonest::SongList songs = Echonest::Parser::parseSongList( xml );
     return songs;
+}
+
+QByteArray Echonest::DynamicPlaylist::parseXSPFPlaylist(QNetworkReply* reply) throw( Echonest::ParseError )
+{
+    QByteArray data = reply->readAll();
+    Echonest::Parser::checkForErrors( reply );
+    
+    return data;
 }
 
 QNetworkReply* Echonest::DynamicPlaylist::generateInternal(const Echonest::DynamicPlaylist::PlaylistParams& params, const QByteArray& type)
@@ -237,6 +246,8 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "audio";
         case Echonest::DynamicPlaylist::DMCA :
             return "dmca";
+        case Echonest::DynamicPlaylist::ChainXSPF :
+            return "chain_xspf";
     }
     return QByteArray();
 }

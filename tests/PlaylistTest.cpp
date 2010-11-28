@@ -20,6 +20,7 @@
 #include "Playlist.h"
 
 #include <QDebug>
+#include <QtXml/QDomDocument>
 #include <QVariant>
 #include <QNetworkReply>
 
@@ -110,6 +111,40 @@ void PlaylistTest::testStatic2()
     }
         
 }
+
+void PlaylistTest::testStaticXSPF()
+{
+    DynamicPlaylist::PlaylistParams p;
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Artist, QLatin1String( "balmorhea" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Artist, QLatin1String( "tallest man on earth" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Artist, QLatin1String( "explosions in the sky" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::ArtistMaxFamiliarity, 0.4 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Format, QLatin1String( "xspf" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::MaxDanceability, 0.5 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistType ) );
+    Echonest::SongInformation info( Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity | Echonest::SongInformation::Tracks );
+    info.setIdSpaces( QStringList() << QLatin1String( "musicbrainz" ) << QLatin1String( "7digital" ) << QLatin1String( "playme" ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( info ) )  );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Limit, true ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 40 ) );
+    
+    QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
+    
+    qDebug() << reply->url().toString();
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&artist=balmorhea&artist=tallest+man+on+earth&artist=explosions+in+the+sky&artist_max_familiarity=0.4&format=xspf&max_danceability=0.5&type=artist&bucket=tracks&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&bucket=id:musicbrainz&bucket=id:7digital&bucket=id:playme&limit=true&results=40" ) );
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    QByteArray xspf = DynamicPlaylist::parseXSPFPlaylist( reply );
+    
+    // verify it's valid
+    QDomDocument doc;
+    QVERIFY( doc.setContent( xspf ) );
+    QVERIFY( !xspf.isEmpty() );
+    
+}
+
 
 void PlaylistTest::testDynamic1()
 {
@@ -226,6 +261,45 @@ void PlaylistTest::testDynamic2()
     QVERIFY( song.artistFamiliarity() == -1 ); // make sure we are in a new playlist, and we didn't ask for this info so it shouldn't be there
     
 }
+
+void PlaylistTest::testDynamicChainXSPF()
+{
+    DynamicPlaylist::PlaylistParams p;
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "pink floyd^-1" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "the who" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "queen" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "led zeppelin^2" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "-the beatles" ) ) ); //exclude
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistType ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::ArtistMinHotttnesss, .7 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::ArtistMaxFamiliarity, .3 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::MinLoudness, -10 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Mode, 1 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::ChainXSPF, true ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Format, QLatin1String( "xspf" ) ) );
+    Echonest::SongInformation info( Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity | Echonest::SongInformation::Tracks );
+    info.setIdSpaces( QStringList() << QLatin1String( "musicbrainz" ) << QLatin1String( "7digital" ) << QLatin1String( "playme" ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( info ) )  );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Limit, true ) );
+    
+    DynamicPlaylist playlist;
+    QNetworkReply* reply = playlist.start( p );
+    
+    qDebug() << reply->url().toString();
+//     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/playlist/dynamic?api_key=JGJCRKWLXLBZIFAZB&artist=pink+floyd^-1&artist=the+who&artist=queen&artist=led+zeppelin^2&artist=-the+beatles&type=artist&artist_min_hotttnesss=0.7&artist_max_familiarity=0.3&min_loudness=-10&mode=1&chain_xspf=true&format=xspf&bucket=audio_summary&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity" ) );
+    
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    QByteArray xspf = Echonest::DynamicPlaylist::parseXSPFPlaylist( reply );
+    
+    //     qDebug() << "xspf:" << xspf;    // verify it's valid
+    QDomDocument doc;
+    QVERIFY( doc.setContent( xspf ) );
+    QVERIFY( !xspf.isEmpty() );
+    
+}
+
 
 QTEST_MAIN( PlaylistTest )
 

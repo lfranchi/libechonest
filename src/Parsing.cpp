@@ -23,7 +23,7 @@
 // QJSon
 #include <qjson/parser.h>
 
-#include <QNetworkReply>
+#include <QtNetwork/QNetworkReply>
 #include <QDateTime>
 #include <QStringBuilder>
 
@@ -36,8 +36,8 @@ void Echonest::Parser::checkForErrors( QNetworkReply* reply ) throw( Echonest::P
 //     if( !reply->isFinished() )
 //         throw ParseError( Echonest::UnfinishedQuery );
 //     
-    if( reply->error() != QNetworkReply::NoError ) {   
-        ParseError err(  Echonest::NetworkError );
+    if( reply->error() != QNetworkReply::NoError && reply->error() != QNetworkReply::UnknownContentError ) {    // let UnknownContentError through so we parse it in readStatus with the proper error message
+        ParseError err( Echonest::NetworkError );
         err.setNetworkError( reply->error() );
         
         throw err;
@@ -55,7 +55,6 @@ void Echonest::Parser::readStatus( QXmlStreamReader& xml ) throw( Echonest::Pars
             if( xml.atEnd() || xml.name() != "status" )
                 throw ParseError( UnknownParseError );
             
-            // only check the error code for now
             xml.readNextStartElement();
             double version = xml.readElementText().toDouble();
             // TODO use version for something?
@@ -67,7 +66,7 @@ void Echonest::Parser::readStatus( QXmlStreamReader& xml ) throw( Echonest::Pars
             xml.readNextStartElement();
             
             if( code != Echonest::NoError ) {
-                throw ParseError( code );
+                throw ParseError( code, msg );
             }
             
             xml.readNext();

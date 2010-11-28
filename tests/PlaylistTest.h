@@ -27,8 +27,10 @@ private slots:
     
     void testStatic1();
     void testStatic2();
+    void testStaticXSPF();
     void testDynamic1();
     void testDynamic2();
+    void testDynamicChainXSPF();
 };
 
 #endif

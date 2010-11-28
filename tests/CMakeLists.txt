@@ -12,7 +12,7 @@ macro(add_echonest_test _source)
     get_filename_component(_name ${_source} NAME_WE)
     qt4_automoc(${_name} ${_source})
     add_executable(${_name} ${_source})
-    target_link_libraries(${_name} echonest ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY} ${QTCORE_QTNETWORK_LIBRARY})
+    target_link_libraries(${_name} echonest ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY} ${QTCORE_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} )
     add_test(${_name}-test ${EXECUTABLE_OUTPUT_PATH}/${_name})
 endmacro(add_echonest_test)
 

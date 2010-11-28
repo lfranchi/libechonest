@@ -98,7 +98,7 @@ namespace Echonest{
          */
         enum PlaylistParam {
             Type, /// The type of playlist to generate. Value is the DynamicPlaylist::ArtistTypeEnum enum
-            Format, /// Either xml (default) or xspf. If the result is xspf, the raw xspf playlist is returned, else the xml is parsed and exposed programmatically.
+            Format, /// Either xml (default) or xspf. If the result is xspf, the raw xspf playlist is returned, else the xml is parsed and exposed programmatically. If using XSPF, you must specify a catalog, the tracks bucket, and limit = true
             Pick,   /// How the artists are picked for each artist in ArtistType playlists. Value is Playlist::ArtistPick enum value.
             Variety, /// 0 < variety < 1        The maximum variety of artists to be represented in the playlist. A higher number will allow for more variety in the artists.
             ArtistId, ///  ID(s) of seed artist(s) for the playlist
@@ -133,7 +133,8 @@ namespace Echonest{
             Sort, /// SortingType enum, the type of sorting to use, 
             Limit, /// true, false    if true songs will be limited to those that appear in the catalog specified by the id: bucket
             Audio, /// true, false,  if true songs will be limited to those that have associated audio
-            DMCA /// true, false    Only valid for dynamic playlists. Sets if playlist will follow DMCA rules (see web api doc for details)
+            DMCA, /// true, false    Only valid for dynamic playlists. Sets if playlist will follow DMCA rules (see web api doc for details)
+            ChainXSPF /// true, false    If true, returns an xspf for this dynamic playlist with 2 items. The second item will be a link to the API call for the next track in the chain. Please note that this sidesteps libechonest's handling of the tracks.
         };
         
         typedef QPair< PlaylistParam, QVariant > PlaylistParamData;
@@ -184,10 +185,16 @@ namespace Echonest{
         Song parseNextSong( QNetworkReply* reply );
         
         /** 
-         * Generate a static playlist, according to the desired criteria.
+         * Generate a static playlist, according to the desired criteria. Use parseXSPFPlaylist if
+         *  you pass format=xspf to \c staticPlaylist().
          */
         static QNetworkReply* staticPlaylist( const PlaylistParams& params );
         static SongList parseStaticPlaylist( QNetworkReply* reply ) throw( ParseError );
+        
+        /**
+         * Parse an xspf playlist. Returns the full xspf content with no modifications.
+         */
+        static QByteArray parseXSPFPlaylist( QNetworkReply* reply ) throw( ParseError );
         
     private:
         static QByteArray playlistParamToString( PlaylistParam param );
