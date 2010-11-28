@@ -103,6 +103,12 @@ namespace Echonest
         QString foreign_id;
     } ForeignId;
     
+    typedef struct {
+        qreal latitude;
+        qreal longitude;
+        QString location;
+    } ArtistLocation;
+    
     typedef QVector< ForeignId > ForeignIds;
     
     Analysis::AnalysisStatus statusToEnum( const QString& status );
@@ -118,6 +124,7 @@ namespace Echonest
     CatalogTypes::Action literalToCatalogUpdateAction( const QByteArray& type );
     
     ECHONEST_EXPORT QDebug operator<<(QDebug d, const ForeignId& id);
+    ECHONEST_EXPORT QDebug operator<<(QDebug d, const ArtistLocation& id);
 }
 
 #endif

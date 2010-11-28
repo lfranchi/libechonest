@@ -47,9 +47,9 @@ void SongTest::testSearch1()
     Q_FOREACH( Echonest::Song song, songs ) {
         QVERIFY( song.title().toLower() == QLatin1String( "float on" ) );
         QVERIFY( song.artistName().toLower() == QLatin1String( "modest mouse" ) );
-        QVERIFY( song.artistLocation().toLower() == QLatin1String( "issaquah, wa" ) );
+        QVERIFY( song.artistLocation().location.toLower() == QLatin1String( "issaquah, wa" ) );
         QVERIFY( song.hotttnesss() == -1 );
-//         qDebug() << song.hotttnesss() << song.artistHotttnesss() << song.artistFamiliarity() << song.artistLocation();
+        qDebug() << song.hotttnesss() << song.artistHotttnesss() << song.artistFamiliarity() << song.artistLocation();
         
         // now fetch some more info and make sure everything is still sane
         QNetworkReply* moreInfo = song.fetchInformation( Echonest::SongInformation( Echonest::SongInformation::Hotttnesss ) );
@@ -60,7 +60,7 @@ void SongTest::testSearch1()
         
         QVERIFY( song.title().toLower() == QLatin1String( "float on" ) );
         QVERIFY( song.artistName().toLower() == QLatin1String( "modest mouse" ) );
-        QVERIFY( song.artistLocation().toLower() == QLatin1String( "issaquah, wa" ) );
+        QVERIFY( song.artistLocation().location.toLower() == QLatin1String( "issaquah, wa" ) );
         // make sure we got the new info
         QVERIFY( song.hotttnesss() != -1 );
         

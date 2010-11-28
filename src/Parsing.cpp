@@ -114,12 +114,7 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
         else if( xml.name() == "tracks" && xml.isStartElement() ) {
             song.setTracks( parseSongTrackBucket( xml ) );
         } else if( xml.name() == "artist_location" && xml.isStartElement() ) {
-            while( !( xml.name() ==  "location" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
-                xml.readNextStartElement();
-                if( xml.name() == "location" )
-                    song.setArtistLocation( xml.readElementText() );
-            }
-            xml.readNext();
+            song.setArtistLocation( parseSongArtistLocation( xml ) );
         } else if( xml.name() == "audio_summary" && xml.isStartElement() ) {
             song.setAudioSummary( parseAudioSummary( xml ) );
         }
@@ -130,6 +125,34 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
     return song;
 }
 
+
+Echonest::ArtistLocation Echonest::Parser::parseSongArtistLocation( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    if( xml.atEnd() || xml.name() != "artist_location" ) {
+        throw ParseError( Echonest::UnknownParseError );
+    }
+    /**
+     * while( !( xml.name() ==  "location" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
+     x ml.readNex*tStartElement();
+     if( xml.name() == "location" )
+         song.setArtistLocation( xml.readElementText() );
+}
+xml.readNext();
+**/
+    Echonest::ArtistLocation location;
+    while( !( xml.name() == "artist_location" && xml.tokenType() == QXmlStreamReader::EndElement ) ) {
+        if( xml.name() == "latitude" && xml.isStartElement() ) {
+            location.latitude = xml.readElementText().toDouble();
+        } else if( xml.name() == "longitude" && xml.isStartElement() ) {
+            location.longitude = xml.readElementText().toDouble();
+        } else if( xml.name() == "location" && xml.isStartElement() ) {
+            location.location = xml.readElementText();
+        } 
+        xml.readNext();
+    }
+    
+    return location;
+}
 
 Echonest::Tracks Echonest::Parser::parseSongTrackBucket( QXmlStreamReader& xml ) throw( Echonest::ParseError )
 {

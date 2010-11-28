@@ -124,3 +124,7 @@ QDebug Echonest::operator<<(QDebug d, const Echonest::ForeignId& id)
     return d.maybeSpace() << QString::fromLatin1( "Foreign Id(%1, %2)" ).arg( id.catalog ).arg( id.foreign_id );
 }
 
+QDebug Echonest::operator<<(QDebug d, const Echonest::ArtistLocation& loc)
+{
+    return d.maybeSpace() << QString::fromLatin1( "Artist Location(%1, %2, %3)" ).arg( loc.location ).arg( loc.latitude ).arg( loc.longitude );
+}

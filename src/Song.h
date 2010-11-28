@@ -151,8 +151,8 @@ public:
   /**
    * The location of this artist.
    */
-  QString artistLocation() const;
-  void setArtistLocation( const QString& artistLocation );
+  ArtistLocation artistLocation() const;
+  void setArtistLocation( const ArtistLocation& artistLocation );
   
   /**
    *  This fetches the data from The Echo Nest for the requested data, so it

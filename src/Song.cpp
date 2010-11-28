@@ -151,12 +151,12 @@ void Echonest::Song::setArtistFamiliarity(qreal artistFamiliarity)
     d->artistFamiliarity = artistFamiliarity;
 }
 
-QString Echonest::Song::artistLocation() const
+Echonest::ArtistLocation Echonest::Song::artistLocation() const
 {
     return d->artistLocation;
 }
 
-void Echonest::Song::setArtistLocation(const QString& artistLocation)
+void Echonest::Song::setArtistLocation(const Echonest::ArtistLocation& artistLocation)
 {
     d->artistLocation = artistLocation;
 }
@@ -204,7 +204,7 @@ void Echonest::Song::parseInformation( QNetworkReply* reply ) throw( ParseError 
         setArtistHotttnesss( newSong.artistHotttnesss() );
     if( newSong.artistFamiliarity() >= 0 )
         setArtistFamiliarity( newSong.artistFamiliarity() );
-    if( !newSong.artistLocation().isEmpty() )
+    if( !newSong.artistLocation().location.isEmpty() )
         setArtistLocation( newSong.artistLocation() );
     
 }

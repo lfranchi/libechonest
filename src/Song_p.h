@@ -28,7 +28,7 @@
 class SongData : public QSharedData
 {
 public:
-    SongData() : hotttnesss( -1 ), artistHotttnesss( -1 ), artistFamiliarity( -1 ) {}
+    SongData() : hotttnesss( -1 ), artistHotttnesss( -1 ), artistFamiliarity( -1 ) { artistLocation.latitude = -1; artistLocation.longitude = -1; }
    
     SongData(const SongData& other)
     {
@@ -58,7 +58,7 @@ public:
     qreal hotttnesss;
     qreal artistHotttnesss;
     qreal artistFamiliarity;
-    QString artistLocation;
+    Echonest::ArtistLocation artistLocation;
     
     
 };
