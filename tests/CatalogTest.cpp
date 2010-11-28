@@ -199,7 +199,7 @@ void CatalogTest::testCreateUpdateDeleteSong()
     qDebug() << ticket;
     
     QVERIFY( !ticket.isEmpty() );
-    // now check the ticket status after 5s
+    // now check the ticket status after 10s
     QTest::qWait( 10000 );
     reply = Echonest::Catalog::status( ticket );
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );

@@ -34,6 +34,7 @@ namespace Echonest {
 typedef QVector< QPair< QByteArray, QString > > CatalogStatusItem;
 typedef struct CatalogStatusStruct {
     CatalogTypes::TicketStatus status;
+    QString details;
     
     int items_updated;
     CatalogStatusItem items; // List of [ item_id, info ]

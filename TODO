@@ -1,4 +1,4 @@
 TODO list
 ========
-* Add parsing of catalog ticket items
+* Add parsing of catalog ticket items. NOTE: I am unable to get any ticket items in my catalog/status calls, so skipping this for now
 * Add support for xspf playlists, especially chained xspfs

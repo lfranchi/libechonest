@@ -1014,6 +1014,8 @@ Echonest::CatalogStatus Echonest::Parser::parseCatalogStatus( QXmlStreamReader& 
     while( xml.name() != "response" || !xml.isEndElement() ) {
         if( xml.name() == "ticket_status" && xml.isStartElement() )
             status.status = Echonest::literalToCatalogStatus( xml.readElementText().toLatin1() );
+        else if( xml.name() == "details" && xml.isStartElement() )
+            status.details = xml.readElementText();
         else if( xml.name() == "items_updated" && xml.isStartElement() )
             status.items_updated = xml.readElementText().toInt();
         else if( xml.name() == "update_info" && xml.isStartElement() )

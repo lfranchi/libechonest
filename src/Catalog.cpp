@@ -259,7 +259,9 @@ void Echonest::Catalog::parseRead(QNetworkReply* reply) throw( Echonest::ParseEr
 Echonest::CatalogStatus Echonest::Catalog::parseStatus(QNetworkReply* reply) throw( Echonest::ParseError )
 {
     Echonest::Parser::checkForErrors( reply );
-    QXmlStreamReader xml( reply->readAll() );
+    QByteArray data = reply->readAll();
+//     qDebug() << data;
+    QXmlStreamReader xml( data );
     Echonest::Parser::readStatus( xml );
     
     Echonest::CatalogStatus status = Echonest::Parser::parseCatalogStatus( xml );
