@@ -4,7 +4,7 @@ To tag
 2) run tag command with given git hash
 3) Commit
 
-4) checkout, roll tarball
+4) checkout
 5) Remove contents of test_data/ folder in tests
 6) Remove various unneeded files, TAGGING, tag_command.sh, etc
 7) create tarball, upload
