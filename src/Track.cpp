@@ -284,6 +284,7 @@ Echonest::Track Echonest::Track::parseProfile( QNetworkReply* finishedReply ) th
     Echonest::Parser::readStatus( xml );
     Echonest::Track track = Echonest::Parser::parseTrack( xml );
     
+    finishedReply->deleteLater();
     return track;
 }
 

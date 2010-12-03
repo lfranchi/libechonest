@@ -222,6 +222,7 @@ QPair< QString, QByteArray > Echonest::Catalog::parseDelete( QNetworkReply* repl
     Echonest::Parser::readStatus( xml );
     
     // TODO, after create works :)
+    reply->deleteLater();
     return asd;
 }
 
@@ -233,6 +234,7 @@ Echonest::Catalogs Echonest::Catalog::parseList(QNetworkReply* reply) throw( Ech
     
     Echonest::Catalogs catalogs = Echonest::Parser::parseCatalogList( xml );
     
+    reply->deleteLater();
     return catalogs;
 }
 
@@ -244,6 +246,7 @@ void Echonest::Catalog::parseProfile(QNetworkReply* reply) throw( Echonest::Pars
     
     Echonest::Catalog catalog = Echonest::Parser::parseCatalog( xml, true );
     d = catalog.d;
+    reply->deleteLater();
 }
 
 void Echonest::Catalog::parseRead(QNetworkReply* reply) throw( Echonest::ParseError )
@@ -254,6 +257,7 @@ void Echonest::Catalog::parseRead(QNetworkReply* reply) throw( Echonest::ParseEr
     
     Echonest::Catalog catalog = Echonest::Parser::parseCatalog( xml, true );
     d = catalog.d;
+    reply->deleteLater();
 }
 
 Echonest::CatalogStatus Echonest::Catalog::parseStatus(QNetworkReply* reply) throw( Echonest::ParseError )
@@ -265,6 +269,7 @@ Echonest::CatalogStatus Echonest::Catalog::parseStatus(QNetworkReply* reply) thr
     Echonest::Parser::readStatus( xml );
     
     Echonest::CatalogStatus status = Echonest::Parser::parseCatalogStatus( xml );
+    reply->deleteLater();
     return status;
 }
 
@@ -275,6 +280,7 @@ QByteArray Echonest::Catalog::parseTicket(QNetworkReply* reply) throw( Echonest:
     Echonest::Parser::readStatus( xml );
     
     QByteArray ticket = Echonest::Parser::parseCatalogTicket( xml );
+    reply->deleteLater();
     return ticket;
 }
 
@@ -287,6 +293,7 @@ Echonest::Catalog Echonest::Catalog::parseCreate(QNetworkReply* reply) throw( Ec
     Echonest::Parser::readStatus( xml );
     
     Catalog c = Echonest::Parser::parseNewCatalog( xml );
+    reply->deleteLater();
     return c;
 }
 
@@ -297,6 +304,7 @@ QNetworkReply* Echonest::Catalog::updatePrivate( QUrl& url, const Echonest::Cata
     
     QByteArray payload = Generator::catalogEntriesToJson( entries );
     url.addEncodedQueryItem( "data", payload );
+
     return Echonest::doPost( url );
 }
 

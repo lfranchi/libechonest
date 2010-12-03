@@ -206,6 +206,7 @@ void Echonest::Song::parseInformation( QNetworkReply* reply ) throw( ParseError 
         setArtistFamiliarity( newSong.artistFamiliarity() );
     if( !newSong.artistLocation().location.isEmpty() )
         setArtistLocation( newSong.artistLocation() );
+    reply->deleteLater();
     
 }
 
@@ -217,7 +218,8 @@ QVector< Echonest::Song > Echonest::Song::parseSearch( QNetworkReply* reply ) th
     
     Echonest::Parser::readStatus( xml );
     QVector<Echonest::Song> songs = Echonest::Parser::parseSongList( xml );
-
+    
+    reply->deleteLater();
     return songs;
     
 }

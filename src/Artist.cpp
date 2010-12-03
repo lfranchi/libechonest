@@ -434,6 +434,7 @@ int Echonest::Artist::parseProfile( QNetworkReply* reply ) throw( Echonest::Pars
     
     int numResults = Echonest::Parser::parseArtistInfoOrProfile( xml, *this );
     
+    reply->deleteLater();
     return numResults;
 }
 
@@ -448,6 +449,7 @@ Echonest::Artists Echonest::Artist::parseSearch( QNetworkReply* reply ) throw( E
     
     Echonest::Artists artists = Echonest::Parser::parseArtists( xml );
     
+    reply->deleteLater();
     return artists;
 }
 
@@ -471,6 +473,7 @@ Echonest::TermList Echonest::Artist::parseTopTerms( QNetworkReply* reply ) throw
     
     Echonest::TermList terms = Echonest::Parser::parseTermList( xml );
     
+    reply->deleteLater();
     return terms;
 }
 

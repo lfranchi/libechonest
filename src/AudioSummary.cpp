@@ -189,6 +189,7 @@ void Echonest::AudioSummary::parseFullAnalysis( QNetworkReply* reply ) throw( Ec
 {
     Echonest::Parser::checkForErrors( reply );
     Echonest::Parser::parseDetailedAudioSummary( reply, *this );
+    reply->deleteLater();
 }
 
 QString Echonest::AudioSummary::sampleMD5() const

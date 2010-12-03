@@ -63,6 +63,7 @@ Echonest::Song Echonest::DynamicPlaylist::parseStart(QNetworkReply* reply) throw
     
     d->currentSong = songs.front();
     
+    reply->deleteLater();
     return d->currentSong;
 }
 
@@ -118,6 +119,7 @@ Echonest::SongList Echonest::DynamicPlaylist::parseStaticPlaylist(QNetworkReply*
     Echonest::Parser::readStatus( xml );
     
     Echonest::SongList songs = Echonest::Parser::parseSongList( xml );
+    reply->deleteLater();
     return songs;
 }
 
@@ -126,6 +128,7 @@ QByteArray Echonest::DynamicPlaylist::parseXSPFPlaylist(QNetworkReply* reply) th
     QByteArray data = reply->readAll();
     Echonest::Parser::checkForErrors( reply );
     
+    reply->deleteLater();
     return data;
 }
 
