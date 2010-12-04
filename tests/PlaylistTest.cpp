@@ -23,6 +23,7 @@
 #include <QtXml/QDomDocument>
 #include <QVariant>
 #include <QNetworkReply>
+#include <QtNetwork/QNetworkReply>
 
 using namespace Echonest;
 
@@ -223,6 +224,7 @@ void PlaylistTest::testDynamic2()
     QVERIFY( !song.id().isEmpty() );
     QVERIFY( !song.title().isEmpty() );
     
+    // GET NEXT
     reply = playlist.fetchNextSong( 1 );
     
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -233,6 +235,7 @@ void PlaylistTest::testDynamic2()
     QVERIFY( !song.id().isEmpty() );
     QVERIFY( !song.title().isEmpty() );
     
+    // GET NEXT
     reply = playlist.fetchNextSong( 1 );
     
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -243,9 +246,23 @@ void PlaylistTest::testDynamic2()
     QVERIFY( !song.id().isEmpty() );
     QVERIFY( !song.title().isEmpty() );
     
+    // GET NEXT
+    DynamicPlaylist::DynamicControls controls;
+    controls.append( DynamicPlaylist::DynamicControl( DynamicPlaylist::Steer, QLatin1String( "energy^2" ) ) );
+    controls.append( DynamicPlaylist::DynamicControl( DynamicPlaylist::Rating, QLatin1String( "4" ) ) );
+    reply = playlist.fetchNextSong( controls );
+    qDebug() << "Control URL:" << reply->url().toString();
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    song = playlist.parseNextSong( reply );
+    
+    qDebug() << "next steered:" << song;
+    QVERIFY( !song.id().isEmpty() );
+    QVERIFY( !song.title().isEmpty() );
     QByteArray oldId = playlist.sessionId();
     // now reset it
     p.clear();
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistRadioType ) );
     p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "pink floyd" ) ) );
     reply = playlist.start( p );
     qDebug() << reply->url().toString();

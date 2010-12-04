@@ -101,6 +101,17 @@ void Echonest::Song::setArtistName(const QString& artistName)
     d->artistName = artistName;
 }
 
+QString Echonest::Song::release() const
+{
+    return d->release;
+}
+
+void Echonest::Song::setRelease(const QString& release)
+{
+    d->release = release;
+}
+
+
 QVector< Echonest::Track > Echonest::Song::tracks() const
 {
     return d->tracks;

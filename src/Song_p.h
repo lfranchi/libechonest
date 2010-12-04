@@ -51,6 +51,7 @@ public:
     QString title;
     QString artistName;
     QByteArray artistId;
+    QString release;
     
     // The rest are optional that require manual fetching to populate
     Echonest::AudioSummary audioSummary;

@@ -103,6 +103,8 @@ public:
   QByteArray artistId() const;
   void setArtistId( const QByteArray& artistId );
   
+  QString release() const;
+  void setRelease( const QString& release );
 
   /** 
    * The following require fetching from The Echo Nest, so call

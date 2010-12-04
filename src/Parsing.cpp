@@ -104,6 +104,8 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
             song.setArtistId( xml.readElementText().toLatin1() );
         else if( xml.name() == "artist_name" && xml.isStartElement() )
             song.setArtistName( xml.readElementText() );
+        else if( xml.name() == "release" && xml.isStartElement() )
+            song.setRelease( xml.readElementText() );
         else if( xml.name() == "song_hotttnesss" && xml.isStartElement() )
             song.setHotttnesss( xml.readElementText().toDouble() );
         else if( xml.name() == "artist_hotttnesss" && xml.isStartElement() )

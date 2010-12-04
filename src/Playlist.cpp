@@ -99,6 +99,19 @@ QNetworkReply* Echonest::DynamicPlaylist::fetchNextSong(int rating)
     
 }
 
+QNetworkReply* Echonest::DynamicPlaylist::fetchNextSong(const DynamicControls& controls)
+{
+    QUrl url = Echonest::baseGetQuery( "playlist", "dynamic" );
+    url.addEncodedQueryItem( "session_id", d->sessionId );
+    
+    DynamicControls::const_iterator iter = controls.begin();
+    for( ; iter != controls.end(); ++iter ) {
+        url.addEncodedQueryItem( dynamicControlToString( iter->first ), iter->second.toUtf8() );
+    }
+    
+    return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
+}
+
 
 Echonest::Song Echonest::DynamicPlaylist::parseNextSong(QNetworkReply* reply)
 {
@@ -153,6 +166,15 @@ QNetworkReply* Echonest::DynamicPlaylist::generateInternal(const Echonest::Dynam
             case ArtistDescriptionType:
                 url.addEncodedQueryItem(  playlistParamToString( iter->first ), "artist-description" );
                 break;
+            case CatalogType:
+                url.addEncodedQueryItem(  playlistParamToString( iter->first ), "catalog" );
+                break;
+            case CatalogRadioType:
+                url.addEncodedQueryItem(  playlistParamToString( iter->first ), "catalog-radio" );
+                break;
+            case SongRadioType:
+                url.addEncodedQueryItem(  playlistParamToString( iter->first ), "song-radio" );
+                break;
             }
                 
         } else if( iter->first == Sort ) {
@@ -189,6 +211,8 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "artist";
         case Echonest::DynamicPlaylist::ArtistSeedCatalog :
             return "artist_seed_catalog";
+        case Echonest::DynamicPlaylist::SourceCatalog :
+            return "source_catalog";
         case Echonest::DynamicPlaylist::SongId :
             return "song_id";
         case Echonest::DynamicPlaylist::Description :
@@ -329,6 +353,23 @@ QByteArray Echonest::DynamicPlaylist::playlistSortToString(Echonest::DynamicPlay
             return "key-desc";
     }
     return QByteArray();
+}
+
+QByteArray Echonest::DynamicPlaylist::dynamicControlToString(Echonest::DynamicPlaylist::DynamicControlItem control)
+{
+    switch( control )
+    {
+        case Steer:
+            return "steer";
+        case SteerDescription:
+            return "steer_description";
+        case Rating:
+            return "rating";
+        case Ban:
+            return "ban";
+        default:
+            return "";
+    }
 }
 
 

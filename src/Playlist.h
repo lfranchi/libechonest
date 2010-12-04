@@ -47,7 +47,10 @@ namespace Echonest{
         enum ArtistTypeEnum {
             ArtistType,
             ArtistRadioType,
-            ArtistDescriptionType
+            ArtistDescriptionType,
+            CatalogType,
+            CatalogRadioType,
+            SongRadioType
         };
         
         /**
@@ -104,6 +107,7 @@ namespace Echonest{
             ArtistId, ///  ID(s) of seed artist(s) for the playlist
             Artist, /// Artist names of seeds for playlist
             ArtistSeedCatalog, /// ID of seed artist catalog for the playlist
+            SourceCatalog, /// ID of catalog (artist or song) for catalog type playlists
             SongId, /// IDs of seed songs for the playlist
             Description, /// Textual description for sort of songs that can be included in the playlist
             Results, /// 0-100, how many sonsg to include in the playlist, default 15
@@ -139,6 +143,21 @@ namespace Echonest{
         
         typedef QPair< PlaylistParam, QVariant > PlaylistParamData;
         typedef QVector< PlaylistParamData > PlaylistParams;
+        
+        /**
+         * The various controls for a dynamic playlist.
+         * 
+         * Please see The Echo Nest API documentation for more information
+         */
+        enum DynamicControlItem {
+          Steer = 0,
+          SteerDescription,
+          Rating,
+          Ban
+        };
+        typedef QPair< DynamicControlItem, QString > DynamicControl;
+        typedef QVector< DynamicControl > DynamicControls;
+        
         
         DynamicPlaylist();
         virtual ~DynamicPlaylist();
@@ -179,9 +198,11 @@ namespace Echonest{
          * If the playlist has no more songs, the returned song object will be have no name nor id. 
          * 
          * @param rating The rating for the song that was just played. Ranges from 1 (lowest) to 5 (highest)
+         * @param controls The controls to apply when fetching the next track.
          * 
          */
-        QNetworkReply* fetchNextSong( int rating = -1);
+        QNetworkReply* fetchNextSong( int rating = -1 );
+        QNetworkReply* fetchNextSong( const DynamicControls& controls );
         Song parseNextSong( QNetworkReply* reply );
         
         /** 
@@ -201,6 +222,7 @@ namespace Echonest{
         static QNetworkReply* generateInternal( const PlaylistParams& params, const QByteArray& type );
         static QByteArray playlistSortToString(SortingType sorting);
         static QByteArray playlistArtistPickToString(ArtistPick pick);
+        static QByteArray dynamicControlToString(DynamicControlItem control);
         
         QSharedDataPointer<DynamicPlaylistData> d;
     };
