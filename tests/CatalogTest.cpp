@@ -72,6 +72,7 @@ void CatalogTest::testProfile()
     
     c.parseProfile( reply );
     qDebug() << c;
+    QEXPECT_FAIL( "", "catalog/profile returns 0 for number of catalog entries, bug filed", Abort );
     QCOMPARE( c.total(), 3 );
 }
 
