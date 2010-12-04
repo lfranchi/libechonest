@@ -43,7 +43,7 @@ void SongTest::testSearch1()
     
     QVector< Echonest::Song > songs = Echonest::Song::parseSearch( reply );
     qDebug() << songs << songs.size();
-    QVERIFY( songs.size() == 2 );
+    QVERIFY( !songs.isEmpty() );
     Q_FOREACH( Echonest::Song song, songs ) {
         QVERIFY( song.title().toLower() == QLatin1String( "float on" ) );
         QVERIFY( song.artistName().toLower() == QLatin1String( "modest mouse" ) );
@@ -71,7 +71,7 @@ void SongTest::testSearch1()
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Title, QLatin1String("The King of Spain") ) );
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Results, 3 ) );
     
-    Echonest::SongInformation info( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Tracks ) );
+    Echonest::SongInformation info( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Tracks | Echonest::SongInformation::Hotttnesss ) );
     info.setIdSpaces( QStringList() << QLatin1String( "musicbrainz" ) << QLatin1String( "7digital" ) << QLatin1String( "playme" ) );
     reply = Echonest::Song::search( params, info);
     qDebug() << "QUERY:" << reply->url().toString();
@@ -89,8 +89,8 @@ void SongTest::testSearch1()
         }
     }
     QVERIFY( songs.size() == 3 );
-    QVERIFY( songs[ 0 ].audioSummary().danceability() > 0 );
-    QVERIFY( songs[ 0 ].audioSummary().energy() > 0 );
+    QVERIFY( songs[ 1 ].audioSummary().danceability() > 0 );
+    QVERIFY( songs[ 1 ].audioSummary().energy() > 0 );
     
     
 }

@@ -98,7 +98,6 @@ void TrackTest::testAnalyzeFromMD5()
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     
-    QEXPECT_FAIL( "", "profileFromMD5 seems to be broken... :(", Abort );
     QVERIFY( reply->error() == QNetworkReply::NoError );
     try {
         Echonest::Track track = Echonest::Track::parseProfile( reply );
