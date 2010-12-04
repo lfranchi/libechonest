@@ -255,8 +255,55 @@ void PlaylistTest::testDynamic2()
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     song = playlist.parseNextSong( reply );
-    
     qDebug() << "next steered:" << song;
+    QVERIFY( !song.id().isEmpty() );
+    QVERIFY( !song.title().isEmpty() );
+    
+    // GET NEXT
+    controls.clear();
+//     controls.append( DynamicPlaylist::DynamicControl( DynamicPlaylist::SteerDescription, QLatin1String( "harp^2" ) ) ); // TODO API gives error atm
+    controls.append( DynamicPlaylist::DynamicControl( DynamicPlaylist::Ban, QLatin1String( "artist" ) ) );
+    controls.append( DynamicPlaylist::DynamicControl( DynamicPlaylist::Ban, QLatin1String( "song" ) ) );
+    reply = playlist.fetchNextSong( controls );
+    qDebug() << "Control URL:" << reply->url().toString();
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    song = playlist.parseNextSong( reply );
+    qDebug() << "next steered:" << song;
+    QVERIFY( !song.id().isEmpty() );
+    QVERIFY( !song.title().isEmpty() );
+    
+    // GET INFO
+    reply = playlist.fetchSessionInfo();
+    qDebug() << "session info URL:" << reply->url().toString();
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    Echonest::SessionInfo info = playlist.parseSessionInfo( reply );
+    QVERIFY( !info.banned_artists.isEmpty() );
+    QVERIFY( !info.banned_songs.isEmpty() );
+    QVERIFY( !info.banned_songs.at( 0 ).artist_id.isEmpty() );
+    QVERIFY( !info.banned_songs.at( 0 ).artist_name.isEmpty() );
+    QVERIFY( !info.banned_songs.at( 0 ).id.isEmpty() );
+    QVERIFY( !info.banned_songs.at( 0 ).title.isEmpty() );
+    QVERIFY( !info.skipped_songs.isEmpty() );
+    QVERIFY( !info.skipped_songs.at( 0 ).artist_id.isEmpty() );
+    QVERIFY( !info.skipped_songs.at( 0 ).artist_name.isEmpty() );
+    QVERIFY( !info.skipped_songs.at( 0 ).id.isEmpty() );
+    QVERIFY( !info.skipped_songs.at( 0 ).title.isEmpty() );
+    QVERIFY( !info.rated_songs.isEmpty() );
+    QVERIFY( !info.rated_songs.at( 0 ).artist_id.isEmpty() );
+    QVERIFY( !info.rated_songs.at( 0 ).artist_name.isEmpty() );
+    QVERIFY( !info.rated_songs.at( 0 ).id.isEmpty() );
+    QVERIFY( !info.rated_songs.at( 0 ).title.isEmpty() );
+    QVERIFY( !info.history.isEmpty() );
+    QVERIFY( !info.history.at( 0 ).artist_id.isEmpty() );
+    QVERIFY( !info.history.at( 0 ).artist_name.isEmpty() );
+    QVERIFY( !info.history.at( 0 ).id.isEmpty() );
+    QVERIFY( !info.history.at( 0 ).title.isEmpty() );
+    QVERIFY( !info.playlist_type.isEmpty() );
+    QVERIFY( !info.rules.isEmpty() );
+    QVERIFY( !info.session_id.isEmpty() );
+    
     QVERIFY( !song.id().isEmpty() );
     QVERIFY( !song.title().isEmpty() );
     QByteArray oldId = playlist.sessionId();

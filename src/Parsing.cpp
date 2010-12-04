@@ -716,9 +716,8 @@ Echonest::TermList Echonest::Parser::parseTermList( QXmlStreamReader& xml ) thro
     
     Echonest::TermList terms;
     while( xml.name() == "terms" && xml.isStartElement() ) {
-        
         Echonest::Term term;
-        
+//         qDebug() << "Parsing term outer item:" << xml.name() << xml.isStartElement();
         while( !xml.atEnd() && ( xml.name() != "terms" || !xml.isEndElement() ) ) {
             if( xml.name() == "frequency" )
                 term.setFrequency( xml.readElementText().toDouble() );
@@ -730,9 +729,12 @@ Echonest::TermList Echonest::Parser::parseTermList( QXmlStreamReader& xml ) thro
             xml.readNextStartElement();
         }
         terms.append( term );
+//         qDebug() << "Parsing exernal term item:" << xml.name() << xml.isStartElement();
         
         xml.readNext();
     }
+//     qDebug() << " done Parsing terms:" << xml.name() << xml.isStartElement();
+    
     return terms;
 }
 
@@ -1071,4 +1073,98 @@ Echonest::Catalog Echonest::Parser::parseNewCatalog( QXmlStreamReader& xml ) thr
     return c;
 }
 
+Echonest::SessionInfo Echonest::Parser::parseSessionInfo( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    Echonest::SessionInfo info;
+    
+    while( xml.name() != "response" || !xml.isEndElement() ) {
+//         qDebug() << "Parsing part of session info:" << xml.name() << xml.isStartElement();
+        if( xml.name() == "terms" && xml.isStartElement() ) {
+            info.terms = parseTermList( xml );
+            continue;
+        } else if( xml.name() == "rules" && xml.isStartElement() ) {
+            info.rules = parseRulesList( xml );
+            continue;
+        } else if( xml.name() == "session_id" && xml.isStartElement() )
+            info.session_id = xml.readElementText().toLatin1();
+        else if( xml.name() == "seeds" && xml.isStartElement() )
+            info.seeds.append( Artist( xml.readElementText().toLatin1() ) );
+        else if( xml.name() == "banned_artists" && xml.isStartElement() )
+            info.banned_artists.append( Artist( xml.readElementText().toLatin1() ) );
+        else if( xml.name() == "seed_songs" && xml.isStartElement() )
+            info.seed_songs.append( Song( xml.readElementText().toLatin1() ) );
+        else if( xml.name() == "seed_catalog" && xml.isStartElement() )
+            info.seed_catalogs.append( Catalog( xml.readElementText().toLatin1() ) );
+        else if( xml.name() == "playlist_type" && xml.isStartElement() )
+            info.playlist_type = xml.readElementText();
+        else if( xml.name() == "skipped_songs" && xml.isStartElement() ) {
+            info.skipped_songs = parseSessionSongItem( xml, QLatin1String( "skipped_songs" ) );
+            continue;
+        } else if( xml.name() == "banned_songs" && xml.isStartElement() ) {
+            info.banned_songs = parseSessionSongItem( xml, QLatin1String( "banned_songs" ) );
+            continue;
+        } else if( xml.name() == "rated_songs" && xml.isStartElement() ) {
+            info.rated_songs = parseSessionSongItem( xml, QLatin1String( "rated_songs" ) );
+            continue;
+        } else if( xml.name() == "history" && xml.isStartElement() ) {
+            info.history = parseSessionSongItem( xml, QLatin1String( "history" ) );
+            continue;
+        } 
+        xml.readNext();
+    }
+    return info;
+}
+
+
+QVector< QString > Echonest::Parser::parseRulesList( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    if( xml.atEnd() || xml.name() != "rules" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw Echonest::ParseError( Echonest::UnknownParseError );
+    
+    QVector< QString > rules;
+    while( xml.name() == "rules" && xml.isStartElement() ) {
+//         qDebug() << "Parsing start of rules:" << xml.name() << xml.isStartElement();
+        xml.readNextStartElement();
+        rules.append( xml.readElementText() );
+        xml.readNext();
+        xml.readNext();
+//         qDebug() << "Parsing end of rules:" << xml.name() << xml.isStartElement();
+    }
+    return rules;
+}
+
+QVector< Echonest::SessionItem > Echonest::Parser::parseSessionSongItem( QXmlStreamReader& xml, const QString& type ) throw( Echonest::ParseError )
+{
+    if( xml.atEnd() || xml.name() != type || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw Echonest::ParseError( Echonest::UnknownParseError );
+    
+    QVector< Echonest::SessionItem > items;
+    while( xml.name() == type && xml.isStartElement() ) {
+//         qDebug() << "Parsing exernal item:" << xml.name() << xml.isStartElement();
+        
+        Echonest::SessionItem item;
+        
+        while( !xml.atEnd() && ( xml.name() != type || !xml.isEndElement() ) ) {
+//             qDebug() << "Parsing internal item:" << xml.name() << xml.isStartElement();
+            if( xml.name() == "served_time" )
+                item.served_time = xml.readElementText().toDouble();
+            else if( xml.name() == "artist_id" )
+                item.artist_id = xml.readElementText().toLatin1();
+            else if( xml.name() == "id" )
+                item.id = xml.readElementText().toLatin1();
+            else if( xml.name() == "artist_name" )
+                item.artist_name= xml.readElementText();
+            else if( xml.name() == "title" )
+                item.title = xml.readElementText();
+            else if( xml.name() == "rating" )
+                item.rating = xml.readElementText().toInt();
+            
+            xml.readNextStartElement();
+        }
+        items.append( item );
+        
+        xml.readNext();
+    }
+    return items;
+}
 

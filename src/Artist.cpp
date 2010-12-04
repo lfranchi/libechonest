@@ -40,6 +40,12 @@ Echonest::Artist::Artist( const QString& name )
     setName( name );
 }
 
+Echonest::Artist::Artist( const QByteArray& id )
+: d( new ArtistData )
+{
+    init();
+    setId( id );
+}
 Echonest::Artist::Artist(const Echonest::Artist& other)
     : d( other.d )
 {

@@ -40,6 +40,12 @@ Echonest::Song::Song(const QByteArray& id, const QString& title, const QByteArra
     d->artistName = artistName;
 }
 
+Echonest::Song::Song(const QByteArray& id)
+:d( new SongData )
+{
+    d->id = id;
+}
+
 Echonest::Song::Song(const Echonest::Song& other)
     : d( other.d )
 {

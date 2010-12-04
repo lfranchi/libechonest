@@ -83,6 +83,7 @@ public:
   
   Song();
   Song( const QByteArray& id, const QString& title, const QByteArray& artistId, const QString& artistName );
+  Song( const QByteArray& id );
   Song( const Song& other );
   Song& operator=(const Song& song);
   virtual ~Song();

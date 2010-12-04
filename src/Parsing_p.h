@@ -19,10 +19,11 @@
 
 #include "Config.h"
 
-#include <QXmlStreamReader>
+#include <QtXml/QXmlStreamReader>
 #include "Song.h"
 #include "Artist.h"
 #include "Catalog.h"
+#include "Playlist.h"
 
 class QNetworkReply;
 
@@ -106,8 +107,12 @@ namespace Parser
     // parses a <tracks> chunk when asking for a song with tracks bucket in a catalog.read call
     Tracks parseCatalogSongTracks( QXmlStreamReader& xml ) throw( ParseError );
     
-}
-}
+    SessionInfo parseSessionInfo( QXmlStreamReader& xml ) throw( ParseError );
+    QVector< QString > parseRulesList( QXmlStreamReader& xml ) throw( ParseError );
+    QVector< SessionItem > parseSessionSongItem( QXmlStreamReader& xml, const QString& type ) throw( ParseError );
+    
+};
+};
 
 #endif
 

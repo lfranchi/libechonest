@@ -110,7 +110,7 @@ namespace Echonest
     } ArtistLocation;
     
     typedef QVector< ForeignId > ForeignIds;
-    
+        
     Analysis::AnalysisStatus statusToEnum( const QString& status );
     QString statusToString( Analysis::AnalysisStatus status );
     

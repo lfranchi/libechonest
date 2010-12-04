@@ -23,11 +23,39 @@
 
 #include <QSharedData>
 #include <QDebug>
+#include "Artist.h"
+#include <QtCore/QString>
+#include "Catalog.h"
 
 class QNetworkReply;
 class DynamicPlaylistData;
 
 namespace Echonest{
+    
+    typedef struct {
+        qreal served_time;
+        QByteArray artist_id;
+        QByteArray id;
+        QString artist_name;
+        QString title;
+        int rating;
+    } SessionItem;
+    
+    typedef struct {
+        TermList terms;
+        SongList seed_songs;
+//         description .. what data is in here?
+        Artists banned_artists;
+        QVector< QString > rules;
+        QByteArray session_id;
+        Artists seeds;
+        QVector< SessionItem > skipped_songs;
+        QVector< SessionItem > banned_songs;
+        QString playlist_type;
+        Catalogs seed_catalogs;
+        QVector< SessionItem > rated_songs;
+        QVector< SessionItem > history;
+    } SessionInfo;
     
     /**
      * This encapsulates an Echo Nest dynamic playlist. It contains a playlist ID and
@@ -158,7 +186,6 @@ namespace Echonest{
         typedef QPair< DynamicControlItem, QString > DynamicControl;
         typedef QVector< DynamicControl > DynamicControls;
         
-        
         DynamicPlaylist();
         virtual ~DynamicPlaylist();
         DynamicPlaylist( const DynamicPlaylist& other );
@@ -170,7 +197,7 @@ namespace Echonest{
          *  and the inital song will be populated and returned. The sessionId(), currentSong(), 
          *  and fetchNextSong() methods will then be useful.
          */
-        QNetworkReply* start( const PlaylistParams& params );
+        QNetworkReply* start( const PlaylistParams& params ) const;
         Song parseStart( QNetworkReply* ) throw( ParseError );
         
         /**
@@ -201,9 +228,15 @@ namespace Echonest{
          * @param controls The controls to apply when fetching the next track.
          * 
          */
-        QNetworkReply* fetchNextSong( int rating = -1 );
-        QNetworkReply* fetchNextSong( const DynamicControls& controls );
+        QNetworkReply* fetchNextSong( int rating = -1 ) const;
+        QNetworkReply* fetchNextSong( const DynamicControls& controls ) const;
         Song parseNextSong( QNetworkReply* reply );
+        
+        /**
+         * Returns a description of this dynamic playlist session
+         */
+        QNetworkReply* fetchSessionInfo() const;
+        SessionInfo parseSessionInfo( QNetworkReply* reply ) throw( ParseError );;
         
         /** 
          * Generate a static playlist, according to the desired criteria. Use parseXSPFPlaylist if

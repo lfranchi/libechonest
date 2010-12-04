@@ -95,6 +95,7 @@ namespace Echonest{
         Artist();
         Artist( const QByteArray& id, const QString& name );
         explicit Artist( const QString& name );
+        explicit Artist( const QByteArray& id );
         
         Artist( const Artist& other );
         Artist& operator=( const Artist& artist );
