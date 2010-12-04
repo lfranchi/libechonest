@@ -541,6 +541,8 @@ void ArtistTest::testSongs()
     
     qDebug() << testArtist.songs().size();
     QVERIFY( testArtist.songs().size() > 0 );
+    QVERIFY( !testArtist.songs().at(0).title().isEmpty() );
+    QVERIFY( !testArtist.songs().at(0).id().isEmpty() );
     
     qDebug() << testArtist.songs();
     

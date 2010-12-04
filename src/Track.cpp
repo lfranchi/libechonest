@@ -19,6 +19,7 @@
 #include "Track_p.h"
 #include <QNetworkReply>
 #include "Config.h"
+#include "Song.h"
 #include <qfileinfo.h>
 #include "Parsing_p.h"
 
@@ -202,6 +203,15 @@ void Echonest::Track::setReleaseImage(const QUrl& imgUrl)
     d->release_image = imgUrl;
 }
 
+Echonest::Song Echonest::Track::song() const
+{
+    return d->song;
+}
+
+void Echonest::Track::setSong(const Echonest::Song& song)
+{
+    d->song = song;
+}
 
 QNetworkReply* Echonest::Track::profileFromTrackId( const QByteArray& id )
 {

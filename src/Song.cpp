@@ -255,6 +255,8 @@ QByteArray Echonest::Song::searchParamToString( Echonest::Song::SearchParam para
             return "description";
         case Echonest::Song::ArtistId:
             return "artist_id";
+        case Echonest::Song::Start:
+            return "start";
         case Echonest::Song::Results:
             return "results";
         case Echonest::Song::MaxTempo:

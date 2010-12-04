@@ -19,6 +19,7 @@
 
 #include "AudioSummary.h"
 #include "Config.h"
+#include "Song.h"
 
 
 #include <QSharedData>
@@ -84,6 +85,9 @@ public:
     QByteArray foreign_id;
     QUrl release_image;
     QUrl preview_url;
+    
+    // song tracks have an associated song
+    Echonest::Song song;
     
     Echonest::AudioSummary audio_summary;
     

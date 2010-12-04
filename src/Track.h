@@ -34,7 +34,8 @@ class TrackData;
 
 namespace Echonest 
 {
-  
+    
+class Song;
 /**
  * Upload-based Echo Nest Track API. If you want to search The Echo Nest for songs, use the Song API. 
  *  If you want to upload your own files and retrieve the acoustic information about them, use this Track
@@ -138,6 +139,11 @@ public:
   QUrl previewUrl() const;
   void setPreviewUrl( const QUrl& preview );
   
+  /**
+   * The Echo Nest song associated with this track, if it exists
+   */
+  Song song() const;
+  void setSong( const Song& song );
   
   /**
    * The analysis status

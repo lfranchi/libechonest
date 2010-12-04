@@ -55,6 +55,7 @@ public:
       Combined,
       Description,
       ArtistId,
+      Start,
       Results,
       MaxTempo,
       MinTempo,

@@ -210,6 +210,8 @@ Echonest::Track Echonest::Parser::parseTrack( QXmlStreamReader& xml ) throw( Ech
             track.setAnalyzerVersion( xml.readElementText() );
         else if( xml.name() == "release" && xml.isStartElement() )
             track.setRelease( xml.readElementText() );
+        else if( xml.name() == "song_id" && xml.isStartElement() )
+            track.setSong( Echonest::Song( xml.readElementText().toLatin1() ) );
         else if( xml.name() == "audio_md5" && xml.isStartElement() )
             track.setAudioMD5( xml.readElementText().toLatin1() );
         else if( xml.name() == "bitrate" && xml.isStartElement() )
