@@ -72,7 +72,6 @@ void CatalogTest::testProfile()
     
     c.parseProfile( reply );
     qDebug() << c;
-    QEXPECT_FAIL( "", "catalog/profile returns 0 for number of catalog entries, bug filed", Abort );
     QCOMPARE( c.total(), 3 );
 }
 
@@ -113,11 +112,12 @@ void CatalogTest::testRead()
     QCOMPARE( c.songs().size(), 3 );
     
     foreach( const Echonest::Song& song, c.songs() ) {
-        QCOMPARE( song.tracks().size(), 4 );
-        QCOMPARE( song.tracks().at( 0 ).id().constData(), "TRXIFWD123E8589514" );
-        QCOMPARE( song.tracks().at( 1 ).id().constData(), "TRZMJVA128F42636CE" );
-        QCOMPARE( song.tracks().at( 2 ).id().constData(), "TRXKSJB128F92E8307" );
-        QCOMPARE( song.tracks().at( 3 ).id().constData(), "TRWYCBR128F9325C60" );
+        QCOMPARE( song.tracks().size(), 5 );
+        QCOMPARE( song.tracks().at( 0 ).id().constData(), "TRXKSJB128F92E8307" );
+        QCOMPARE( song.tracks().at( 1 ).id().constData(), "TRXIFWD123E8589514" );
+        QCOMPARE( song.tracks().at( 2 ).id().constData(), "TRCIYSH1254845BAEE" );
+        QCOMPARE( song.tracks().at( 3 ).id().constData(), "TRZMJVA128F42636CE" );
+        QCOMPARE( song.tracks().at( 4 ).id().constData(), "TRWYCBR128F9325C60" );
     }
     
     // test an artist catalog

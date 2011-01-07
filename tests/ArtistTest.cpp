@@ -431,12 +431,10 @@ void ArtistTest::testSearch()
     
     artists = Echonest::Artist::parseSearch( searchResult );
     foreach( const Echonest::Artist& artist, artists ) {
-        QVERIFY( !artist.foreignIds().isEmpty() );
         foreach( const Echonest::ForeignId& id, artist.foreignIds() ) {
             QVERIFY( !id.catalog.isEmpty() );
             QVERIFY( id.foreign_id.contains( QLatin1String( "CAXBXBZ12BF92A9AC2:artist:" ) ) );
         }
-                qDebug() << "foreign ids:" << artist.foreignIds();
     }
     
     
