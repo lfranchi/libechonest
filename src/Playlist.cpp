@@ -347,6 +347,10 @@ QByteArray Echonest::DynamicPlaylist::playlistSortToString(Echonest::DynamicPlay
             return "duration-asc";
         case SortDurationDescending:
             return "duration-desc";
+        case SortLoudnessAscending:
+            return "loudness-asc";
+        case SortLoudnessDescending:
+            return "loudness-desc";
         case SortArtistFamiliarityAscending:
             return "artist_familiarity-asc";
         case SortArtistFamiliarityDescending:

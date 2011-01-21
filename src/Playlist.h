@@ -89,6 +89,8 @@ namespace Echonest{
             SortTempoDescending,
             SortDurationAscending,
             SortDurationDescending,
+            SortLoudnessAscending,
+            SortLoudnessDescending,
             SortArtistFamiliarityAscending,
             SortArtistFamiliarityDescending,
             SortArtistHotttnessAscending,
