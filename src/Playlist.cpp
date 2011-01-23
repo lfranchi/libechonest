@@ -379,6 +379,14 @@ QByteArray Echonest::DynamicPlaylist::playlistSortToString(Echonest::DynamicPlay
             return "key-asc";
         case SortKeyDescending:
             return "key-desc";
+        case SortEnergyAscending:
+            return "energy-asc";
+        case SortEnergyDescending:
+            return "energy-desc";
+        case SortDanceabilityAscending:
+            return "danceability-asc";
+        case SortDanceabilityDescending:
+            return "danceability-desc";
     }
     return QByteArray();
 }

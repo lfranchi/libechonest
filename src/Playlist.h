@@ -104,7 +104,11 @@ namespace Echonest{
             SortModeAscending,
             SortModeDescending,
             SortKeyAscending,
-            SortKeyDescending
+            SortKeyDescending,
+            SortEnergyAscending,
+            SortEnergyDescending,
+            SortDanceabilityAscending,
+            SortDanceabilityDescending
         };
         
         /**
