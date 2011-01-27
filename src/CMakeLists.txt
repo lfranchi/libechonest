@@ -45,7 +45,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
 add_library( echonest SHARED ${LIBECHONEST_SRC} )
-target_link_libraries( echonest ${QJSON_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}  )
+target_link_libraries( echonest ${QJSON_LDFLAGS} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}  )
 set_target_properties( echonest PROPERTIES VERSION ${ECHONEST_LIB_VERSION} SOVERSION ${ECHONEST_LIB_VERSION_SONAME} )
 install( TARGETS echonest   RUNTIME DESTINATION bin
                             LIBRARY DESTINATION lib${LIB_SUFFIX}
