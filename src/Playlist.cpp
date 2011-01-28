@@ -276,13 +276,13 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
         case Echonest::DynamicPlaylist::SongMinHotttnesss :
             return "song_min_hotttnesss";
         case Echonest::DynamicPlaylist::ArtistMinLongitude :
-            return "artist_min_longitude";
+            return "min_longitude";
         case Echonest::DynamicPlaylist::ArtistMaxLongitude :
-            return "artist_max_longitude";
+            return "max_longitude";
         case Echonest::DynamicPlaylist::ArtistMinLatitude  :
-            return "artist_min_latitude";
+            return "min_latitude";
         case Echonest::DynamicPlaylist::ArtistMaxLatitude :
-            return "artist_max_latitude";
+            return "max_latitude";
         case Echonest::DynamicPlaylist::Mode :
             return "mode";
         case Echonest::DynamicPlaylist::Key :
