@@ -60,7 +60,7 @@ Echonest::Song Echonest::DynamicPlaylist::parseStart(QNetworkReply* reply) throw
     d->sessionId = Echonest::Parser::parsePlaylistSessionId( xml );
     Echonest::SongList songs = Echonest::Parser::parseSongList( xml );
     if( !songs.size() == 1 )
-        throw new Echonest::ParseError( UnknownParseError );
+        throw Echonest::ParseError( UnknownParseError );
     
     d->currentSong = songs.front();
     
