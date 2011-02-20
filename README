@@ -15,8 +15,9 @@ libechonest is developed by Leo Franchi (lfranchi@kde.org), and is available at 
 Dependencies
 ============
 
-    * Qt, only the QtCore and QtNetwork modules (www.qtsoftware.com)
+    * Qt, only the QtCore, QtNetwork and QtTest modules (www.qtsoftware.com)
     * CMake, Kitware's open source build system (http://cmake.org)
+    * QJson (http://qjson.sourceforge.net/).
 
 Installing
 ==========
