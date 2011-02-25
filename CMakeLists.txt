@@ -1,3 +1,6 @@
+# This file and all other CMakeLists.txt files in this project are
+# copyright Leo Franchi, 2010, and licensed under the MIT license.
+
 project( libechonest )
 
 cmake_minimum_required( VERSION 2.6 )
