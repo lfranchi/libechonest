@@ -17,7 +17,9 @@
 #include "Generator_p.h"
 #include "CatalogUpdateEntry.h"
 
-#include "serializer.h"
+// QJSon
+#include <qjson/serializer.h>
+
 #include <QVariant>
 #include <quuid.h>
 #include <QDebug>
