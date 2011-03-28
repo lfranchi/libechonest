@@ -1,5 +1,5 @@
 
-include_directories( ${QJSON_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories( ${QJSON_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} )
 
 set( LIBECHONEST_SRC
         Track.cpp
