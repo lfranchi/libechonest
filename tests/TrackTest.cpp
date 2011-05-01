@@ -1,5 +1,6 @@
 /****************************************************************************************
  * Copyright (c) 2010 Leo Franchi <lfranchi@kde.org>                                    *
+ * Copyright (c) 2011 Jeff Mitchell <mitchell@kde.org>                                  *
  *                                                                                      *
  * This program is free software; you can redistribute it and/or modify it under        *
  * the terms of the GNU General Public License as published by the Free Software        *
@@ -16,9 +17,6 @@
  
 #include "TrackTest.h"
 
-#include "Config.h"
-#include "Track.h"
-
 #include <QDebug>
 #include <QNetworkReply>
 #include <QFile>
@@ -26,6 +24,7 @@
 void TrackTest::initTestCase()
 {
     Echonest::Config::instance()->setAPIKey( "JGJCRKWLXLBZIFAZB" );
+    s_mainThread = QThread::currentThread();
 }
 
 
@@ -123,6 +122,29 @@ void TrackTest::testAnalyzerFromId()
     verifyTrack2( track );   
 }
 
+void TrackTest::testThreads()
+{
+    QSet< QThread* > threadSet;
+    for ( int i = 0; i < 4; ++i )
+    {
+        QThread *newThread = new QThread();
+        threadSet.insert( newThread );
+        TrackTestThreadObject *newTestObject = new TrackTestThreadObject();
+        newTestObject->moveToThread( newThread );
+        newThread->start();
+        QMetaObject::invokeMethod( newTestObject, "go" );
+    }
+    while ( !threadSet.isEmpty() )
+    {
+        Q_FOREACH( QThread* thread, threadSet.values() )
+        {
+            if ( thread->isRunning() )
+                QCoreApplication::processEvents( QEventLoop::AllEvents, 200 );
+            else
+                threadSet.remove( thread );
+        }
+    }
+}
 
 void TrackTest::verifyTrack1(const Echonest::Track& track)
 {

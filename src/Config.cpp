@@ -1,5 +1,6 @@
 /****************************************************************************************
  * Copyright (c) 2010 Leo Franchi <lfranchi@kde.org>                                    *
+ * Copyright (c) 2011 Jeff Mitchell <mitchell@kde.org>                                  *
  *                                                                                      *
  * This program is free software; you can redistribute it and/or modify it under        *
  * the terms of the GNU General Public License as published by the Free Software        *
@@ -17,6 +18,7 @@
 #include "Config.h"
 
 #include <QNetworkAccessManager>
+#include <QThread>
 #include <QDebug>
 
 Echonest::Config* Echonest::Config::s_instance = 0;
@@ -109,17 +111,22 @@ QNetworkReply::NetworkError Echonest::ParseError::networkError() const throw()
 
 class Echonest::ConfigPrivate {
 public:
-    ConfigPrivate() : nam( new QNetworkAccessManager )
+    ConfigPrivate()
     {
+        threadNamMap[QThread::currentThread()] = new QNetworkAccessManager();
     }
     
     ~ConfigPrivate()
     {
-        delete nam;
-        nam = 0;
+        QThread *currThread = QThread::currentThread();
+        if ( threadNamMap.contains( currThread ) )
+        {
+            delete threadNamMap[currThread];
+            threadNamMap.remove( currThread );
+        }
     }
     
-    QNetworkAccessManager* nam;
+    QMap< QThread*, QNetworkAccessManager* > threadNamMap;
     QByteArray apikey;
 };
 
@@ -147,18 +154,24 @@ QByteArray Echonest::Config::apiKey() const
 
 void Echonest::Config::setNetworkAccessManager(QNetworkAccessManager* nam)
 {
-    if( !nam )
+    if ( !nam )
         return;
     
-    if( d->nam ) {
-        delete d->nam;
+    QThread* currThread = QThread::currentThread();
+    if ( d->threadNamMap.contains( currThread )
+            && d->threadNamMap[currThread] ) {
+        delete d->threadNamMap[currThread];
     }
-    d->nam = nam;
+    d->threadNamMap[currThread] = nam;
 }
 
 QNetworkAccessManager* Echonest::Config::nam() const
 {
-    return d->nam;
+    QThread* currThread = QThread::currentThread();
+    if ( !d->threadNamMap.contains( currThread ) )
+        return 0;
+
+    return d->threadNamMap[currThread];
 }
 
 Echonest::Config* Echonest::Config::instance() {

@@ -1,5 +1,6 @@
 /****************************************************************************************
  * Copyright (c) 2010 Leo Franchi <lfranchi@kde.org>                                    *
+ * Copyright (c) 2011 Jeff Mitchell <mitchell@kde.org>                                  *
  *                                                                                      *
  * This program is free software; you can redistribute it and/or modify it under        *
  * the terms of the GNU General Public License as published by the Free Software        *
@@ -18,10 +19,13 @@
 #define ECHONEST_TRACK_TEST_H
 
 #include <QtTest/QtTest>
+#include <QNetworkAccessManager>
+#include <QThread>
 
-namespace Echonest {
-    class Track;
-}
+#include "Config.h"
+#include "Track.h"
+
+static QThread* s_mainThread;
 
 class TrackTest : public QObject
 {
@@ -33,11 +37,46 @@ private slots:
     void testAnalyzerFromId();
     void testProfileFromMD5();
     void testProfileFromId();
+
+    void testThreads();
     
 private:
     void testUploadLocalFile(); // slow and uploads an mp3, only enable on demand
     void verifyTrack1( const Echonest::Track& track );
     void verifyTrack2( const Echonest::Track& track );
 };
+
+class TrackTestThreadObject : public QObject
+{
+    Q_OBJECT
+
+public:
+    TrackTestThreadObject()
+    {
+    }
+
+    virtual ~TrackTestThreadObject()
+    {
+    }
+
+public slots:
+    void go()
+    {
+        Echonest::Config::instance()->setNetworkAccessManager( new QNetworkAccessManager() );
+
+        QByteArray id = "TROICNF12B048DE990";
+        QNetworkReply* reply = Echonest::Track::analyzeTrackId( id, true );
+        QEventLoop loop;
+        loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+        loop.exec();
+
+        QVERIFY( reply->error() == QNetworkReply::NoError );
+        qDebug() << "main thread is " << s_mainThread << " and current thread is " << QThread::currentThread();
+        QVERIFY( QThread::currentThread() != s_mainThread );
+        QThread::currentThread()->quit();
+    }
+
+};
+
 
 #endif
