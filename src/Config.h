@@ -102,7 +102,7 @@ namespace Echonest{
          *  the main thread and only make calls to libechonest from the main thread, you don't
          *  have to do any more work. However, if you are using multiple QNAMs in different threads,
          *  you must call this for each QNAM in each thread so that libechonest can use the proper
-         *  thread-local QNAM.
+         *  thread-local QNAM. This function is thread-safe.
          *
          * Note that in all threads, if you do not set a QNAM, a default one is created and returned.
          *

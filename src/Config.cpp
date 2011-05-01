@@ -20,6 +20,7 @@
 #include <QNetworkAccessManager>
 #include <QThread>
 #include <QDebug>
+#include <QMutex>
 
 Echonest::Config* Echonest::Config::s_instance = 0;
 
@@ -126,6 +127,7 @@ public:
         }
     }
 
+    QMutex accessMutex;
     QHash< QThread*, QNetworkAccessManager* > threadNamMap;
     QByteArray apikey;
 };
@@ -157,6 +159,7 @@ void Echonest::Config::setNetworkAccessManager(QNetworkAccessManager* nam)
     if( !nam )
         return;
 
+    QMutexLocker l( &d->accessMutex );
     QThread* currThread = QThread::currentThread();
     if ( d->threadNamMap.contains( currThread )
             && d->threadNamMap[ currThread ] ) {
@@ -167,6 +170,7 @@ void Echonest::Config::setNetworkAccessManager(QNetworkAccessManager* nam)
 
 QNetworkAccessManager* Echonest::Config::nam() const
 {
+    QMutexLocker l( &d->accessMutex );
     QThread* currThread = QThread::currentThread();
     if( !d->threadNamMap.contains( currThread ) )
     {
