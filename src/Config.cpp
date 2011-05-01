@@ -72,7 +72,7 @@ const char* Echonest::ParseError::what() const throw()
     // If we have specific error text, return that first
     if( !extraText.isEmpty() )
         return extraText.toLatin1().constData();
-    
+
     switch( type )
     {
         case UnknownError:
@@ -113,20 +113,20 @@ class Echonest::ConfigPrivate {
 public:
     ConfigPrivate()
     {
-        threadNamMap[QThread::currentThread()] = new QNetworkAccessManager();
+        threadNamMap[ QThread::currentThread() ] = new QNetworkAccessManager();
     }
-    
+
     ~ConfigPrivate()
     {
         QThread *currThread = QThread::currentThread();
-        if ( threadNamMap.contains( currThread ) )
+        if( threadNamMap.contains( currThread ) )
         {
-            delete threadNamMap[currThread];
+            delete threadNamMap[ currThread ];
             threadNamMap.remove( currThread );
         }
     }
-    
-    QMap< QThread*, QNetworkAccessManager* > threadNamMap;
+
+    QHash< QThread*, QNetworkAccessManager* > threadNamMap;
     QByteArray apikey;
 };
 
@@ -154,24 +154,24 @@ QByteArray Echonest::Config::apiKey() const
 
 void Echonest::Config::setNetworkAccessManager(QNetworkAccessManager* nam)
 {
-    if ( !nam )
+    if( !nam )
         return;
-    
+
     QThread* currThread = QThread::currentThread();
     if ( d->threadNamMap.contains( currThread )
-            && d->threadNamMap[currThread] ) {
-        delete d->threadNamMap[currThread];
+            && d->threadNamMap[ currThread ] ) {
+        delete d->threadNamMap[ currThread ];
     }
-    d->threadNamMap[currThread] = nam;
+    d->threadNamMap[ currThread ] = nam;
 }
 
 QNetworkAccessManager* Echonest::Config::nam() const
 {
     QThread* currThread = QThread::currentThread();
-    if ( !d->threadNamMap.contains( currThread ) )
+    if( !d->threadNamMap.contains( currThread ) )
         return 0;
 
-    return d->threadNamMap[currThread];
+    return d->threadNamMap[ currThread ];
 }
 
 Echonest::Config* Echonest::Config::instance() {
