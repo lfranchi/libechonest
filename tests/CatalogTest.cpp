@@ -166,7 +166,7 @@ void CatalogTest::testCreateUpdateDeleteSong()
 {
 
 //     {
-//         Echonest::Catalog c( "CABFFEA12FAA3E5516" );
+//         Echonest::Catalog c( "CAXQEKE12FAA3E3683" );
 //         QNetworkReply* reply = c.deleteCatalog();
 //     QEventLoop loop;
 //     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -233,7 +233,7 @@ void CatalogTest::testCreateUpdateDeleteSong()
 
 void CatalogTest::testCreateUpdateDeleteArtist()
 {
-        try {
+    try {
         QNetworkReply* reply = Echonest::Catalog::create( QLatin1String( "unittest_catalog_artist_X" ), Echonest::CatalogTypes::Artist );
     //
         QEventLoop loop;
