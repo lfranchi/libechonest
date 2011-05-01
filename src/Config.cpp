@@ -169,7 +169,11 @@ QNetworkAccessManager* Echonest::Config::nam() const
 {
     QThread* currThread = QThread::currentThread();
     if( !d->threadNamMap.contains( currThread ) )
-        return 0;
+    {
+        QNetworkAccessManager *newNam = new QNetworkAccessManager();
+        d->threadNamMap[ currThread ] = newNam;
+        return newNam;
+    }
 
     return d->threadNamMap[ currThread ];
 }

@@ -104,6 +104,8 @@ namespace Echonest{
          *  you must call this for each QNAM in each thread so that libechonest can use the proper
          *  thread-local QNAM.
          *
+         * Note that in all threads, if you do not set a QNAM, a default one is created and returned.
+         *
          * This will take over control of the object.
          */
         void setNetworkAccessManager( QNetworkAccessManager* nam );
