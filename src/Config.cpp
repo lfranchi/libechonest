@@ -114,21 +114,24 @@ class Echonest::ConfigPrivate {
 public:
     ConfigPrivate()
     {
-        threadNamMap[ QThread::currentThread() ] = new QNetworkAccessManager();
+        threadNamHash[ QThread::currentThread() ] = new QNetworkAccessManager();
     }
 
     ~ConfigPrivate()
     {
         QThread *currThread = QThread::currentThread();
-        if( threadNamMap.contains( currThread ) )
+        if( threadNamHash.contains( currThread ) )
         {
-            delete threadNamMap[ currThread ];
-            threadNamMap.remove( currThread );
+            if ( ourNamHash.contains( currThread ) && ourNamHash[ currThread ] )
+                delete threadNamHash[ currThread ];
+            threadNamHash.remove( currThread );
+            ourNamHash.remove( currThread );
         }
     }
 
     QMutex accessMutex;
-    QHash< QThread*, QNetworkAccessManager* > threadNamMap;
+    QHash< QThread*, QNetworkAccessManager* > threadNamHash;
+    QHash< QThread*, bool > ourNamHash;
     QByteArray apikey;
 };
 
@@ -161,25 +164,25 @@ void Echonest::Config::setNetworkAccessManager(QNetworkAccessManager* nam)
 
     QMutexLocker l( &d->accessMutex );
     QThread* currThread = QThread::currentThread();
-    if ( d->threadNamMap.contains( currThread )
-            && d->threadNamMap[ currThread ] ) {
-        delete d->threadNamMap[ currThread ];
-    }
-    d->threadNamMap[ currThread ] = nam;
+    if( d->threadNamHash.contains( currThread ) && d->ourNamHash.contains( currThread ) && d->ourNamHash[ currThread ] )
+        delete d->threadNamHash[ currThread ];
+    d->threadNamHash[ currThread ] = nam;
+    d->ourNamHash[ currThread ] = false;
 }
 
 QNetworkAccessManager* Echonest::Config::nam() const
 {
     QMutexLocker l( &d->accessMutex );
     QThread* currThread = QThread::currentThread();
-    if( !d->threadNamMap.contains( currThread ) )
+    if( !d->threadNamHash.contains( currThread ) )
     {
         QNetworkAccessManager *newNam = new QNetworkAccessManager();
-        d->threadNamMap[ currThread ] = newNam;
+        d->threadNamHash[ currThread ] = newNam;
+        d->ourNamHash[ currThread ] = true;
         return newNam;
     }
 
-    return d->threadNamMap[ currThread ];
+    return d->threadNamHash[ currThread ];
 }
 
 Echonest::Config* Echonest::Config::instance() {

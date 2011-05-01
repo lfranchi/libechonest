@@ -105,6 +105,7 @@ namespace Echonest{
          *  thread-local QNAM. This function is thread-safe.
          *
          * Note that in all threads, if you do not set a QNAM, a default one is created and returned.
+         *  In addition, if you set your own QNAM, you are responsible for deleting it.
          *
          * This will take over control of the object.
          */
