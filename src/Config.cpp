@@ -164,10 +164,15 @@ void Echonest::Config::setNetworkAccessManager(QNetworkAccessManager* nam)
 
     QMutexLocker l( &d->accessMutex );
     QThread* currThread = QThread::currentThread();
+    QNetworkAccessManager* oldNam = 0;
     if( d->threadNamHash.contains( currThread ) && d->ourNamHash.contains( currThread ) && d->ourNamHash[ currThread ] )
-        delete d->threadNamHash[ currThread ];
+        oldNam = d->threadNamHash[ currThread ];
+
     d->threadNamHash[ currThread ] = nam;
     d->ourNamHash[ currThread ] = false;
+
+    if( oldNam )
+      delete oldNam;
 }
 
 QNetworkAccessManager* Echonest::Config::nam() const
