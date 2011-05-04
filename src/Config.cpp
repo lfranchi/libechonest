@@ -122,16 +122,16 @@ public:
         QThread *currThread = QThread::currentThread();
         if( threadNamHash.contains( currThread ) )
         {
-            if ( ourNamHash.contains( currThread ) && ourNamHash[ currThread ] )
+            if ( ourNamSet.contains( currThread ) )
                 delete threadNamHash[ currThread ];
             threadNamHash.remove( currThread );
-            ourNamHash.remove( currThread );
+            ourNamSet.remove( currThread );
         }
     }
 
     QMutex accessMutex;
     QHash< QThread*, QNetworkAccessManager* > threadNamHash;
-    QHash< QThread*, bool > ourNamHash;
+    QSet< QThread* > ourNamSet;
     QByteArray apikey;
 };
 
@@ -165,14 +165,17 @@ void Echonest::Config::setNetworkAccessManager(QNetworkAccessManager* nam)
     QMutexLocker l( &d->accessMutex );
     QThread* currThread = QThread::currentThread();
     QNetworkAccessManager* oldNam = 0;
-    if( d->threadNamHash.contains( currThread ) && d->ourNamHash.contains( currThread ) && d->ourNamHash[ currThread ] )
+    if( d->threadNamHash.contains( currThread ) && d->ourNamSet.contains( currThread ) )
         oldNam = d->threadNamHash[ currThread ];
 
+    if( oldNam == nam )
+        return;
+
     d->threadNamHash[ currThread ] = nam;
-    d->ourNamHash[ currThread ] = false;
+    d->ourNamSet.remove( currThread );
 
     if( oldNam )
-      delete oldNam;
+        delete oldNam;
 }
 
 QNetworkAccessManager* Echonest::Config::nam() const
@@ -183,7 +186,7 @@ QNetworkAccessManager* Echonest::Config::nam() const
     {
         QNetworkAccessManager *newNam = new QNetworkAccessManager();
         d->threadNamHash[ currThread ] = newNam;
-        d->ourNamHash[ currThread ] = true;
+        d->ourNamSet.insert( currThread );
         return newNam;
     }
 
