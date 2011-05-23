@@ -336,6 +336,13 @@ namespace Echonest{
         static QNetworkReply* suggest( const QString& name, int results = 10 );
 
         /**
+         * Returns a list of terms of the given type, for use in other calls.
+         *
+         * \param type Which type of term to return, at the moment only 'style' or 'mood'
+         */
+        static QNetworkReply* listTerms( const QString& type = "style" );
+
+        /**
          * Parse the result of a fetchSimilar() call, which returns a list of artists similar to the
          *  original pair.
          */
@@ -362,6 +369,11 @@ namespace Echonest{
          * Returns a list of suggested artists
          */
         static Artists parseSuggest( QNetworkReply* ) throw( ParseError );
+
+        /**
+         * Parse the result of a termList query. Returns the list of values returned.
+         */
+        static QVector< QString > parseTermList( QNetworkReply* ) throw( ParseError );
 
     private:
         QUrl setupQuery( const QByteArray& methodName, int numResults = 0, int start = -1 ) const;

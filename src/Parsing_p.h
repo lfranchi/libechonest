@@ -86,9 +86,9 @@ namespace Parser
     void parseForeignArtistIds( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
 
     // parse a list of terms
-    TermList parseTermList( QXmlStreamReader& xml ) throw( ParseError );
+    TermList parseTopTermList( QXmlStreamReader& xml ) throw( ParseError );
+    QVector< QString > parseTermList( QXmlStreamReader& xml ) throw( ParseError );
 
-    // parse a list of terms
     Artists parseArtistSuggestList( QXmlStreamReader& xml ) throw( ParseError );
 
     License parseLicense( QXmlStreamReader& xml ) throw( ParseError );

@@ -51,6 +51,7 @@ private slots:
     void testSimilar();
     void testTermsUrl();
     void testTerms();
+    void testListTerms();
     void testSuggest();
     void testTopHotttUrl();
     void testTopHottt();

@@ -49,7 +49,7 @@ void SongTest::testSearch1()
         QLatin1String title = ( i == 0 ? QLatin1String( "float on" ) : QLatin1String( "blame it on the tetons" ) );
         QCOMPARE( song.title().toLower(), title );
         QCOMPARE( song.artistName().toLower(), QLatin1String( "modest mouse" ) );
-        QCOMPARE( song.artistLocation().location.toLower(), QLatin1String( "issaquah, wa" ) );
+        QCOMPARE( song.artistLocation().location.toLower(), QLatin1String( "issaquah" ) );
         QCOMPARE( song.hotttnesss(), -1. );
         qDebug() << song.hotttnesss() << song.artistHotttnesss() << song.artistFamiliarity() << song.artistLocation();
 
@@ -60,9 +60,9 @@ void SongTest::testSearch1()
         loop.exec();
         song.parseInformation( moreInfo );
 
-        QVERIFY( song.title().toLower() == title );
-        QVERIFY( song.artistName().toLower() == QLatin1String( "modest mouse" ) );
-        QVERIFY( song.artistLocation().location.toLower() == QLatin1String( "issaquah, wa" ) );
+        QCOMPARE( song.title().toLower(), title );
+        QCOMPARE( song.artistName().toLower(), QLatin1String( "modest mouse" ) );
+        QCOMPARE( song.artistLocation().location.toLower(), QLatin1String( "issaquah" ) );
         // make sure we got the new info
         QVERIFY( song.hotttnesss() != -1 );
 

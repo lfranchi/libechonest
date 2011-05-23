@@ -604,6 +604,30 @@ void ArtistTest::testTermsUrl()
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/terms?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID&sort=weight" ) );
 }
 
+void ArtistTest::testListTerms()
+{
+    QNetworkReply* reply = Artist::listTerms( QLatin1String( "style" ) );
+
+    qDebug() << reply->url().toString();
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    QVector< QString > terms = Artist::parseTermList( reply );
+
+    qDebug() << terms;
+    QVERIFY( terms.size() > 0 );
+
+    reply = Artist::listTerms( QLatin1String( "mood" ) );
+
+    qDebug() << reply->url().toString();
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    terms = Artist::parseTermList( reply );
+    qDebug() << terms;
+    QVERIFY( terms.size() > 0 );
+}
+
+
 void ArtistTest::testSuggest()
 {
     QNetworkReply* reply = Artist::suggest( QLatin1String( "balm" ), 12 );

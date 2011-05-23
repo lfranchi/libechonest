@@ -649,7 +649,7 @@ void Echonest::Parser::parseTerms( QXmlStreamReader& xml, Echonest::Artist& arti
 {
     if( xml.atEnd() || xml.name() != "terms" || xml.tokenType() != QXmlStreamReader::StartElement )
         throw Echonest::ParseError( Echonest::UnknownParseError );
-    artist.setTerms( parseTermList( xml ) );
+    artist.setTerms( parseTopTermList( xml ) );
 }
 
 Echonest::Artists Echonest::Parser::parseArtistSuggestList( QXmlStreamReader& xml ) throw( ParseError )
@@ -735,7 +735,7 @@ void Echonest::Parser::parseVideos( QXmlStreamReader& xml, Echonest::Artist& art
     artist.setVideos( videos );
 }
 
-Echonest::TermList Echonest::Parser::parseTermList( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+Echonest::TermList Echonest::Parser::parseTopTermList( QXmlStreamReader& xml ) throw( Echonest::ParseError )
 {
     if( xml.atEnd() || xml.name() != "terms" || xml.tokenType() != QXmlStreamReader::StartElement )
         throw Echonest::ParseError( Echonest::UnknownParseError );
@@ -760,6 +760,22 @@ Echonest::TermList Echonest::Parser::parseTermList( QXmlStreamReader& xml ) thro
         xml.readNext();
     }
 //     qDebug() << " done Parsing terms:" << xml.name() << xml.isStartElement();
+
+    return terms;
+}
+
+
+QVector< QString > Echonest::Parser::parseTermList( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    if( xml.atEnd() || xml.name() != "terms" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw Echonest::ParseError( Echonest::UnknownParseError );
+
+    QVector< QString > terms;
+    while( xml.name() != "response" || !xml.isEndElement() ) {
+        if( xml.name() == "name" && xml.isStartElement() )
+            terms.append( xml.readElementText() );
+        xml.readNextStartElement();
+    }
 
     return terms;
 }
@@ -1103,7 +1119,7 @@ Echonest::SessionInfo Echonest::Parser::parseSessionInfo( QXmlStreamReader& xml 
     while( xml.name() != "response" || !xml.isEndElement() ) {
 //         qDebug() << "Parsing part of session info:" << xml.name() << xml.isStartElement();
         if( xml.name() == "terms" && xml.isStartElement() ) {
-            info.terms = parseTermList( xml );
+            info.terms = parseTopTermList( xml );
             continue;
         } else if( xml.name() == "rules" && xml.isStartElement() ) {
             info.rules = parseRulesList( xml );

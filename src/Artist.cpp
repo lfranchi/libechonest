@@ -433,6 +433,15 @@ QNetworkReply* Echonest::Artist::topTerms(int numResults)
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
+QNetworkReply* Echonest::Artist::listTerms( const QString& type )
+{
+    QUrl url = Echonest::baseGetQuery( "artist", "list_terms" );
+    url.addEncodedQueryItem( "type", type.toUtf8() );
+
+    return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
+}
+
+
 QNetworkReply* Echonest::Artist::suggest( const QString& name, int results )
 {
     QUrl url = Echonest::baseGetQuery( "artist", "suggest" );
@@ -490,7 +499,7 @@ Echonest::TermList Echonest::Artist::parseTopTerms( QNetworkReply* reply ) throw
 
     Echonest::Parser::readStatus( xml );
 
-    Echonest::TermList terms = Echonest::Parser::parseTermList( xml );
+    Echonest::TermList terms = Echonest::Parser::parseTopTermList( xml );
 
     reply->deleteLater();
     return terms;
@@ -510,6 +519,19 @@ Echonest::Artists Echonest::Artist::parseSuggest( QNetworkReply* reply ) throw( 
     return artists;
 }
 
+QVector< QString > Echonest::Artist::parseTermList( QNetworkReply* reply ) throw( Echonest::ParseError )
+{
+    Echonest::Parser::checkForErrors( reply );
+
+    QXmlStreamReader xml( reply->readAll() );
+
+    Echonest::Parser::readStatus( xml );
+
+    QVector< QString > terms = Echonest::Parser::parseTermList( xml );
+
+    reply->deleteLater();
+    return terms;
+}
 
 QUrl Echonest::Artist::setupQuery( const QByteArray& methodName, int numResults, int start ) const
 {
