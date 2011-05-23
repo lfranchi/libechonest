@@ -36,43 +36,43 @@ namespace Parser
     */
 
     void checkForErrors( QNetworkReply* reply ) throw( ParseError );
-    
-    // read the start element and then the status element, throwing 
+
+    // read the start element and then the status element, throwing
     //  if the result code is not Success
     void readStatus( QXmlStreamReader& xml ) throw( ParseError );
-    
+
     // parses a <songs></songs> block and turns them into a list of Song object
     QVector< Song > parseSongList( QXmlStreamReader& xml ) throw( ParseError );
-   
+
     // parses a <song></song> block
     Song parseSong( QXmlStreamReader& xml ) throw( ParseError );
-    
+
     // parses a <artist_location> block
     ArtistLocation parseSongArtistLocation( QXmlStreamReader& xml ) throw( ParseError );
-    
+
     // parses a <track></track> block
     Track parseTrack( QXmlStreamReader& xml ) throw( ParseError );
-    
+
     // parses a <tracks> chunk when asking for a song with tracks bucket
     Tracks parseSongTrackBucket( QXmlStreamReader& xml ) throw( ParseError );
-    
+
     // parses an <audio_summary> chunk
     AudioSummary parseAudioSummary( QXmlStreamReader& xml ) throw( ParseError );
     // parses the json of the detailed audio summary
     void parseDetailedAudioSummary( QNetworkReply* reply, AudioSummary& summary ) throw( ParseError );
-    
+
     // parses a list of artists in an <artists></artists> block
     Echonest::Artists parseArtists( QXmlStreamReader& xml ) throw( ParseError );
-    
+
     // parses the contents of an artist fetch result, expects to be positioned after the readStatus() call
     // it could be a profile query, in which case it has a bunch of different artist attributes
     // or it could be a single fetch, in which case it starts with result number and offset.
     // the results are saved back into the artist
     int parseArtistInfoOrProfile( QXmlStreamReader&, Echonest::Artist& artist ) throw( ParseError );
-    
+
     // parse the individual artist attributes
     void parseArtistInfo( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
-    
+
     // parse each type of artist attribute
     void parseAudio( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
     void parseBiographies( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
@@ -84,14 +84,17 @@ namespace Parser
     void parseArtistSong( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
     void parseVideos( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
     void parseForeignArtistIds( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
-    
+
     // parse a list of terms
     TermList parseTermList( QXmlStreamReader& xml ) throw( ParseError );
-    
+
+    // parse a list of terms
+    Artists parseArtistSuggestList( QXmlStreamReader& xml ) throw( ParseError );
+
     License parseLicense( QXmlStreamReader& xml ) throw( ParseError );
-    
+
     QByteArray parsePlaylistSessionId( QXmlStreamReader& xml ) throw( ParseError );
-    
+
     // Catalog functions
     Catalogs parseCatalogList( QXmlStreamReader& xml ) throw( ParseError );
     Catalog parseCatalog( QXmlStreamReader& xml, bool justOne = false /* the catalog API is ugly :( */ ) throw( ParseError );
@@ -103,14 +106,14 @@ namespace Parser
     Echonest::CatalogStatusItem parseTicketUpdateInfo( QXmlStreamReader& xml ) throw( ParseError );
     QByteArray parseCatalogTicket( QXmlStreamReader& xml ) throw( ParseError );
     Catalog parseNewCatalog( QXmlStreamReader& xml ) throw( ParseError );
-    
+
     // parses a <tracks> chunk when asking for a song with tracks bucket in a catalog.read call
     Tracks parseCatalogSongTracks( QXmlStreamReader& xml ) throw( ParseError );
-    
+
     SessionInfo parseSessionInfo( QXmlStreamReader& xml ) throw( ParseError );
     QVector< QString > parseRulesList( QXmlStreamReader& xml ) throw( ParseError );
     QVector< SessionItem > parseSessionSongItem( QXmlStreamReader& xml, const QString& type ) throw( ParseError );
-    
+
 };
 };
 

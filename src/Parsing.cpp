@@ -652,6 +652,30 @@ void Echonest::Parser::parseTerms( QXmlStreamReader& xml, Echonest::Artist& arti
     artist.setTerms( parseTermList( xml ) );
 }
 
+Echonest::Artists Echonest::Parser::parseArtistSuggestList( QXmlStreamReader& xml ) throw( ParseError )
+{
+    if( xml.atEnd() || xml.name() != "artists" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw Echonest::ParseError( Echonest::UnknownParseError );
+
+    Echonest::Artists artists;
+
+    while( xml.name() != "artists" || !xml.isEndElement() ) {
+        QString name;
+        QByteArray id;
+        while( xml.name() != "artist" || !xml.isEndElement() ) {
+            if( xml.name() == "name" && xml.isStartElement() )
+                name = xml.readElementText();
+            else if( xml.name() == "id" && xml.isStartElement() )
+                id = xml.readElementText().toLatin1();
+            xml.readNextStartElement();
+        }
+        artists << Echonest::Artist( id, name );
+        xml.readNextStartElement();
+    }
+    return artists;
+}
+
+
 void Echonest::Parser::parseUrls( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
 {
     if( xml.atEnd() || xml.name() != "urls" || xml.tokenType() != QXmlStreamReader::StartElement )

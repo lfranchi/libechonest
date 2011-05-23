@@ -24,7 +24,7 @@ class ArtistTest : public QObject
     Q_OBJECT
 private slots:
     void initTestCase();
-    
+
     void testAudioUrl();
     void testAudio();
     void testBiographiesUrl();
@@ -51,6 +51,7 @@ private slots:
     void testSimilar();
     void testTermsUrl();
     void testTerms();
+    void testSuggest();
     void testTopHotttUrl();
     void testTopHottt();
     void testTopTermsUrl();
