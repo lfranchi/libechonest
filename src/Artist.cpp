@@ -558,6 +558,8 @@ QByteArray Echonest::Artist::searchParamToString(Echonest::Artist::SearchParam p
             return "reverse";
         case Sort:
             return "sort";
+        case Mood:
+            return "mood";
         default:
             return "";
     }

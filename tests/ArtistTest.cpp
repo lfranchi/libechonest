@@ -331,12 +331,12 @@ void ArtistTest::testSearchUrl()
     Artist::SearchParams params;
     params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "emo^2" ) ) );
     params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "female vocalist^2" ) ) );
-    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "-happy" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Mood, QLatin1String( "happy^2" ) ) );
     params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
     QNetworkReply* searchResult = Artist::search( params, ArtistInformation( ArtistInformation::Familiarity | ArtistInformation::Hotttnesss ) );
 
     qDebug() << searchResult->url().toString();
-    QVERIFY( searchResult->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/search?api_key=JGJCRKWLXLBZIFAZB&format=xml&description=emo^2&description=female+vocalist^2&description=-happy&fuzzy_match=true&limit=false&bucket=familiarity&bucket=hotttnesss" ) );
+    QCOMPARE( searchResult->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/artist/search?api_key=JGJCRKWLXLBZIFAZB&format=xml&description=emo^2&description=female+vocalist^2&mood=happy^2&fuzzy_match=true&limit=false&bucket=familiarity&bucket=hotttnesss" ) );
 
     params.clear();
     params.append( Artist::SearchParamEntry( Artist::MaxFamiliarity, 12.221 ) );
@@ -344,7 +344,7 @@ void ArtistTest::testSearchUrl()
     params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "alternative rock" ) ) );
     params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
     searchResult = Artist::search( params, ArtistInformation( ArtistInformation::Audio | ArtistInformation::Videos ), true );
-    QVERIFY( searchResult->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/search?api_key=JGJCRKWLXLBZIFAZB&format=xml&max_familiarity=12.221&min_hotttnesss=0.52&description=alternative+rock&fuzzy_match=true&limit=true&bucket=audio&bucket=video" ) );
+    QCOMPARE( searchResult->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/artist/search?api_key=JGJCRKWLXLBZIFAZB&format=xml&max_familiarity=12.221&min_hotttnesss=0.52&description=alternative+rock&fuzzy_match=true&limit=true&bucket=audio&bucket=video" ) );
 
 
 }
@@ -354,7 +354,7 @@ void ArtistTest::testSearch()
     Artist::SearchParams params;
     params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "emo^2" ) ) );
     params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "female vocalist^2" ) ) );
-    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "-happy" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Mood, QLatin1String( "happy^2" ) ) );
     params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
     QNetworkReply* searchResult = Artist::search( params, ArtistInformation( ArtistInformation::Familiarity | ArtistInformation::Hotttnesss ) );
 

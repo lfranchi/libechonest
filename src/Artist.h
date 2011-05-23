@@ -87,7 +87,8 @@ namespace Echonest{
             MinHotttnesss,
             Reverse,
             Sort,
-            IdSpace
+            IdSpace,
+            Mood
         };
         typedef QPair< Echonest::Artist::SearchParam, QVariant > SearchParamEntry;
         typedef QVector< SearchParamEntry > SearchParams;
