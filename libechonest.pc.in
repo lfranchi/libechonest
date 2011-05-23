@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=@LIB_INSTALL_DIR@
+includedir=@INCLUDE_INSTALL_DIR@
+
+Name: libechonest
+Description: libechonest is a qt-based library that makes the Echo Nest APIs easily accessible
+Version: @ECHONEST_LIB_MAJOR_VERSION@.@ECHONEST_LIB_MINOR_VERSION@.@ECHONEST_LIB_PATCH_VERSION@
+Requires: QtCore QtNetwork
+Libs: -L${libdir} -lechonest
+Cflags: -I${includedir}
