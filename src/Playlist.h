@@ -69,7 +69,7 @@ namespace Echonest{
     public:
         /**
          * The types of playlist that can be generated. Artist plays songs for the given artist,
-         *  ArtistRadio takes into account similar artists, adn ArtistDescription plays songs matching
+         *  ArtistRadio takes into account similar artists, and ArtistDescription plays songs matching
          *  the given description.
          */
         enum ArtistTypeEnum {
