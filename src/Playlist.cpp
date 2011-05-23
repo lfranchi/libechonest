@@ -55,15 +55,15 @@ Echonest::Song Echonest::DynamicPlaylist::parseStart(QNetworkReply* reply) throw
     QByteArray data = reply->readAll();
 //     qDebug() << data;
     QXmlStreamReader xml( data );
-    
+
     Echonest::Parser::readStatus( xml );
     d->sessionId = Echonest::Parser::parsePlaylistSessionId( xml );
     Echonest::SongList songs = Echonest::Parser::parseSongList( xml );
     if( !songs.size() == 1 )
         throw Echonest::ParseError( UnknownParseError );
-    
+
     d->currentSong = songs.front();
-    
+
     reply->deleteLater();
     return d->currentSong;
 }
@@ -92,25 +92,25 @@ QNetworkReply* Echonest::DynamicPlaylist::fetchNextSong(int rating) const
 {
     QUrl url = Echonest::baseGetQuery( "playlist", "dynamic" );
     url.addEncodedQueryItem( "session_id", d->sessionId );
-    
+
     if( rating > 0 )
         url.addEncodedQueryItem( "rating", QByteArray::number( rating ) );
-    
+
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
-    
+
 }
 
 QNetworkReply* Echonest::DynamicPlaylist::fetchNextSong(const DynamicControls& controls) const
 {
     QUrl url = Echonest::baseGetQuery( "playlist", "dynamic" );
     url.addEncodedQueryItem( "session_id", d->sessionId );
-    
+
     DynamicControls::const_iterator iter = controls.begin();
     for( ; iter != controls.end(); ++iter ) {
         QString value = iter->second;
         url.addEncodedQueryItem( dynamicControlToString( iter->first ), value.replace( QLatin1Char( ' ' ), QLatin1Char( '+' ) ).toUtf8() );
     }
-    
+
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
@@ -118,7 +118,7 @@ QNetworkReply* Echonest::DynamicPlaylist::fetchSessionInfo() const
 {
     QUrl url = Echonest::baseGetQuery( "playlist", "session_info" );
     url.addEncodedQueryItem( "session_id", d->sessionId );
-    
+
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
@@ -131,14 +131,14 @@ Echonest::Song Echonest::DynamicPlaylist::parseNextSong(QNetworkReply* reply)
 Echonest::SessionInfo Echonest::DynamicPlaylist::parseSessionInfo(QNetworkReply* reply) throw( Echonest::ParseError )
 {
     Echonest::Parser::checkForErrors( reply );
-    
+
     QXmlStreamReader xml( reply->readAll() );
-    
+
     Echonest::Parser::readStatus( xml );
-    
+
     reply->deleteLater();
     return Echonest::Parser::parseSessionInfo( xml );
-    
+
 }
 
 
@@ -150,11 +150,11 @@ QNetworkReply* Echonest::DynamicPlaylist::staticPlaylist(const Echonest::Dynamic
 Echonest::SongList Echonest::DynamicPlaylist::parseStaticPlaylist(QNetworkReply* reply) throw( Echonest::ParseError )
 {
     Echonest::Parser::checkForErrors( reply );
-    
+
     QXmlStreamReader xml( reply->readAll() );
-    
+
     Echonest::Parser::readStatus( xml );
-    
+
     Echonest::SongList songs = Echonest::Parser::parseSongList( xml );
     reply->deleteLater();
     return songs;
@@ -164,7 +164,7 @@ QByteArray Echonest::DynamicPlaylist::parseXSPFPlaylist(QNetworkReply* reply) th
 {
     QByteArray data = reply->readAll();
     Echonest::Parser::checkForErrors( reply );
-    
+
     reply->deleteLater();
     return data;
 }
@@ -172,14 +172,14 @@ QByteArray Echonest::DynamicPlaylist::parseXSPFPlaylist(QNetworkReply* reply) th
 QNetworkReply* Echonest::DynamicPlaylist::generateInternal(const Echonest::DynamicPlaylist::PlaylistParams& params, const QByteArray& type)
 {
     QUrl url = Echonest::baseGetQuery( "playlist", type );
-    
+
     Echonest::DynamicPlaylist::PlaylistParams::const_iterator iter = params.constBegin();
     for( ; iter < params.constEnd(); ++iter ) {
         if( iter->first == Format ) // If it's a format, we have to remove the xml format we automatically specify
             url.removeEncodedQueryItem( "format" );
-        
+
         if( iter->first == Type ) { // convert type enum to string
-            switch( static_cast<Echonest::DynamicPlaylist::ArtistTypeEnum>( iter->second.toInt() ) ) 
+            switch( static_cast<Echonest::DynamicPlaylist::ArtistTypeEnum>( iter->second.toInt() ) )
             {
             case ArtistType:
                 url.addEncodedQueryItem(  playlistParamToString( iter->first ), "artist" );
@@ -200,7 +200,7 @@ QNetworkReply* Echonest::DynamicPlaylist::generateInternal(const Echonest::Dynam
                 url.addEncodedQueryItem(  playlistParamToString( iter->first ), "song-radio" );
                 break;
             }
-                
+
         } else if( iter->first == Sort ) {
             url.addEncodedQueryItem( playlistParamToString( iter->first ), playlistSortToString( static_cast<Echonest::DynamicPlaylist::SortingType>( iter->second.toInt() ) ) );
         } else if( iter->first == Pick ) {
@@ -211,7 +211,7 @@ QNetworkReply* Echonest::DynamicPlaylist::generateInternal(const Echonest::Dynam
             url.addQueryItem( QLatin1String( playlistParamToString( iter->first ) ), iter->second.toString().replace( QLatin1Char( ' ' ), QLatin1Char( '+' ) ) );
         }
     }
-    
+
     qDebug() << "Creating playlist URL" << url;
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -299,6 +299,8 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "dmca";
         case Echonest::DynamicPlaylist::ChainXSPF :
             return "chain_xspf";
+        case Echonest::DynamicPlaylist::Mood :
+            return "mood";
     }
     return QByteArray();
 }

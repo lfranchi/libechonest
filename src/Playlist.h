@@ -31,7 +31,7 @@ class QNetworkReply;
 class DynamicPlaylistData;
 
 namespace Echonest{
-    
+
     typedef struct {
         qreal served_time;
         QByteArray artist_id;
@@ -40,7 +40,7 @@ namespace Echonest{
         QString title;
         int rating;
     } SessionItem;
-    
+
     typedef struct {
         TermList terms;
         SongList seed_songs;
@@ -56,7 +56,7 @@ namespace Echonest{
         QVector< SessionItem > rated_songs;
         QVector< SessionItem > history;
     } SessionInfo;
-    
+
     /**
      * This encapsulates an Echo Nest dynamic playlist. It contains a playlist ID and
      *  the current song, and can fetch the next song.
@@ -80,7 +80,7 @@ namespace Echonest{
             CatalogRadioType,
             SongRadioType
         };
-        
+
         /**
          * Different ways to sort a generated playlist
          */
@@ -110,7 +110,7 @@ namespace Echonest{
             SortDanceabilityAscending,
             SortDanceabilityDescending
         };
-        
+
         /**
          * Different ways of picking artists in Artist radios.
          */
@@ -128,7 +128,7 @@ namespace Echonest{
             PickModeDescending,
             PickKeyDescending
         };
-        
+
         /**
          * The various parameters that can be passed to the playlist building
          *  functions.
@@ -165,22 +165,23 @@ namespace Echonest{
             ArtistMaxLongitude, /// -180.0 < longitude < 180.0      the maximum longitude for the location of artists in the playlist
             ArtistMinLatitude,  /// -90.0 < latitude < 90.0 the minimum latitude for the location of artists in the playlist
             ArtistMaxLatitude, /// -90.0 < latitude < 90.0 the maximum latitude for the location of artists in the playlist
-            Mode, /// (minor, major) 0, 1     the mode of songs in the playlist 
+            Mode, /// (minor, major) 0, 1     the mode of songs in the playlist
             Key, /// (c, c-sharp, d, e-flat, e, f, f-sharp, g, a-flat, a, b-flat, b) 0 - 11  the key of songs in the playlist
             SongInformation, /// what sort of song information should be returned. Should be an Echonest::SongInformation object
-            Sort, /// SortingType enum, the type of sorting to use, 
+            Sort, /// SortingType enum, the type of sorting to use,
             Limit, /// true, false    if true songs will be limited to those that appear in the catalog specified by the id: bucket
             Audio, /// true, false,  if true songs will be limited to those that have associated audio
             DMCA, /// true, false    Only valid for dynamic playlists. Sets if playlist will follow DMCA rules (see web api doc for details)
-            ChainXSPF /// true, false    If true, returns an xspf for this dynamic playlist with 2 items. The second item will be a link to the API call for the next track in the chain. Please note that this sidesteps libechonest's handling of the tracks.
+            ChainXSPF, /// true, false    If true, returns an xspf for this dynamic playlist with 2 items. The second item will be a link to the API call for the next track in the chain. Please note that this sidesteps libechonest's handling of the tracks.
+            Mood /// A list of moods to limit this playlist to, for example "happy" or "sad". Multiple are okay. See the method Artist::listTerms for details on what moods are currently available
         };
-        
+
         typedef QPair< PlaylistParam, QVariant > PlaylistParamData;
         typedef QVector< PlaylistParamData > PlaylistParams;
-        
+
         /**
          * The various controls for a dynamic playlist.
-         * 
+         *
          * Please see The Echo Nest API documentation for more information
          */
         enum DynamicControlItem {
@@ -191,84 +192,84 @@ namespace Echonest{
         };
         typedef QPair< DynamicControlItem, QString > DynamicControl;
         typedef QVector< DynamicControl > DynamicControls;
-        
+
         DynamicPlaylist();
         virtual ~DynamicPlaylist();
         DynamicPlaylist( const DynamicPlaylist& other );
         DynamicPlaylist& operator=( const DynamicPlaylist& playlist );
-        
+
         /**
          * Start a dynamic playlist with the given parameters.
-         *  Once the QNetworkReply has finished, pass it to parseStart() 
-         *  and the inital song will be populated and returned. The sessionId(), currentSong(), 
+         *  Once the QNetworkReply has finished, pass it to parseStart()
+         *  and the inital song will be populated and returned. The sessionId(), currentSong(),
          *  and fetchNextSong() methods will then be useful.
          */
         QNetworkReply* start( const PlaylistParams& params ) const;
         Song parseStart( QNetworkReply* ) throw( ParseError );
-        
+
         /**
          * The session id of this dynamic playlist. If the playlist has ended, or has not been started,
          *  the result is empty.
-         * 
+         *
          */
         QByteArray sessionId() const;
         void setSessionId( const QByteArray& id );
-        
+
         /**
          * The current song of this dynamic playlist. Once this song has been played,
          *  or whenever is desired, call fetchNextSong() to get the next song.
          */
         Song currentSong() const;
         void setCurrentSong( const Song& song );
-        
+
         /**
          * Queries The Echo Nest for the next playable song in this
          *  dynamic playlist.
-         * 
+         *
          * Once the query has emitted the finished() signal, pass it to parseNextSong(), which will
          *  return the new song to play. It will also set the current song to the newly parsed song.
-         * 
-         * If the playlist has no more songs, the returned song object will be have no name nor id. 
-         * 
+         *
+         * If the playlist has no more songs, the returned song object will be have no name nor id.
+         *
          * @param rating The rating for the song that was just played. Ranges from 1 (lowest) to 5 (highest)
          * @param controls The controls to apply when fetching the next track.
-         * 
+         *
          */
         QNetworkReply* fetchNextSong( int rating = -1 ) const;
         QNetworkReply* fetchNextSong( const DynamicControls& controls ) const;
         Song parseNextSong( QNetworkReply* reply );
-        
+
         /**
          * Returns a description of this dynamic playlist session
          */
         QNetworkReply* fetchSessionInfo() const;
         SessionInfo parseSessionInfo( QNetworkReply* reply ) throw( ParseError );;
-        
-        /** 
+
+        /**
          * Generate a static playlist, according to the desired criteria. Use parseXSPFPlaylist if
          *  you pass format=xspf to \c staticPlaylist().
          */
         static QNetworkReply* staticPlaylist( const PlaylistParams& params );
         static SongList parseStaticPlaylist( QNetworkReply* reply ) throw( ParseError );
-        
+
         /**
          * Parse an xspf playlist. Returns the full xspf content with no modifications.
          */
         static QByteArray parseXSPFPlaylist( QNetworkReply* reply ) throw( ParseError );
-        
+
     private:
         static QByteArray playlistParamToString( PlaylistParam param );
         static QNetworkReply* generateInternal( const PlaylistParams& params, const QByteArray& type );
         static QByteArray playlistSortToString(SortingType sorting);
         static QByteArray playlistArtistPickToString(ArtistPick pick);
         static QByteArray dynamicControlToString(DynamicControlItem control);
-        
+
         QSharedDataPointer<DynamicPlaylistData> d;
     };
-    
+
     ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::DynamicPlaylist& playlist);
-    
-    
+
+
 }; // namespace
 
 
