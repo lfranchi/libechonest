@@ -340,7 +340,7 @@ namespace Echonest{
          *
          * \param type Which type of term to return, at the moment only 'style' or 'mood'
          */
-        static QNetworkReply* listTerms( const QString& type = "style" );
+        static QNetworkReply* listTerms( const QString& type = QLatin1String("style") );
 
         /**
          * Parse the result of a fetchSimilar() call, which returns a list of artists similar to the
