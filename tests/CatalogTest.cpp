@@ -114,10 +114,10 @@ void CatalogTest::testRead()
     foreach( const Echonest::Song& song, c.songs() ) {
         QCOMPARE( song.tracks().size(), 5 );
         QCOMPARE( song.tracks().at( 0 ).id().constData(), "TRCIYSH1254845BAEE" );
-        QCOMPARE( song.tracks().at( 1 ).id().constData(), "TRXIFWD123E8589514" );
-        QCOMPARE( song.tracks().at( 2 ).id().constData(), "TRCIYSH1254845BAEE" );
-        QCOMPARE( song.tracks().at( 3 ).id().constData(), "TRZMJVA128F42636CE" );
-        QCOMPARE( song.tracks().at( 4 ).id().constData(), "TRWYCBR128F9325C60" );
+        QCOMPARE( song.tracks().at( 1 ).id().constData(), "TRWYCBR128F9325C60" );
+        QCOMPARE( song.tracks().at( 2 ).id().constData(), "TRXIFWD123E8589514" );
+        QCOMPARE( song.tracks().at( 3 ).id().constData(), "TRXKSJB128F92E8307" );
+        QCOMPARE( song.tracks().at( 4 ).id().constData(), "TRZMJVA128F42636CE" );
     }
 
     // test an artist catalog
