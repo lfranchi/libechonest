@@ -630,8 +630,8 @@ void ArtistTest::testListTerms()
 
 void ArtistTest::testSuggest()
 {
-    QNetworkReply* reply = Artist::suggest( QLatin1String( "balm" ), 12 );
-//     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/terms?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=DummyDudeID&sort=frequency" ) );
+    QNetworkReply* reply = Artist::suggest( QLatin1String( "tallest ma" ), 12 );
+    QCOMPARE( reply->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/artist/suggest?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=tallest+ma&results=12" ) );
     qDebug() << reply->url().toString();
 
     QEventLoop loop;
@@ -641,9 +641,9 @@ void ArtistTest::testSuggest()
     Artists artists = Artist::parseSuggest( reply );
     qDebug() << "Got suggestions:" << artists;
 
-    QVERIFY( artists.count() == 12 );
-    QVERIFY( artists.first().name() == QLatin1String( "Balmorhea" ) );
-    QVERIFY( artists.first().id() == "ARTSD281187FB4DD0C" );
+    QCOMPARE( artists.count(), 2 );
+    QCOMPARE( artists.first().name(), QLatin1String( "The Tallest Man On Earth" ) );
+    QCOMPARE( artists.first().id(), QByteArray( "AREDHSB1187FB57583" ) );
 }
 
 

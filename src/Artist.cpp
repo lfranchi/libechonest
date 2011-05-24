@@ -436,7 +436,7 @@ QNetworkReply* Echonest::Artist::topTerms(int numResults)
 QNetworkReply* Echonest::Artist::listTerms( const QString& type )
 {
     QUrl url = Echonest::baseGetQuery( "artist", "list_terms" );
-    url.addEncodedQueryItem( "type", type.toUtf8() );
+    url.addQueryItem( QLatin1String( "type" ), type );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -445,7 +445,8 @@ QNetworkReply* Echonest::Artist::listTerms( const QString& type )
 QNetworkReply* Echonest::Artist::suggest( const QString& name, int results )
 {
     QUrl url = Echonest::baseGetQuery( "artist", "suggest" );
-    url.addEncodedQueryItem( "name", name.toUtf8() );
+    QString realname = name;
+    url.addQueryItem( QLatin1String( "name" ), realname.replace( QLatin1Char( ' ' ), QLatin1Char( '+' ) ) );
     url.addEncodedQueryItem( "results", QByteArray::number( results ) );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
