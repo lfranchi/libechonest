@@ -173,7 +173,8 @@ namespace Echonest{
             Audio, /// true, false,  if true songs will be limited to those that have associated audio
             DMCA, /// true, false    Only valid for dynamic playlists. Sets if playlist will follow DMCA rules (see web api doc for details)
             ChainXSPF, /// true, false    If true, returns an xspf for this dynamic playlist with 2 items. The second item will be a link to the API call for the next track in the chain. Please note that this sidesteps libechonest's handling of the tracks.
-            Mood /// A list of moods to limit this playlist to, for example "happy" or "sad". Multiple are okay. See the method Artist::listTerms for details on what moods are currently available
+            Mood, /// A mood to limit this playlist to, for example "happy" or "sad". Multiples of this param are okay. See the method Artist::listTerms for details on what moods are currently available
+            Style /// A style to limit this playlist to, for example "happy" or "sad". Multiples of this param are okay. See the method Artist::listTerms for details on what styles are currently available
         };
 
         typedef QPair< PlaylistParam, QVariant > PlaylistParamData;

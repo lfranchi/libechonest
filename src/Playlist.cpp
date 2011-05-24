@@ -301,6 +301,8 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "chain_xspf";
         case Echonest::DynamicPlaylist::Mood :
             return "mood";
+        case Echonest::DynamicPlaylist::Style :
+            return "style";
     }
     return QByteArray();
 }

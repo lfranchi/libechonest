@@ -91,13 +91,14 @@ void PlaylistTest::testStatic2()
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::MaxTempo, 100 ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Mode, 0 ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistDescriptionType ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Style, QLatin1String( "acoustic" ) ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity ) ) ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 7 ) );
 
     reply = DynamicPlaylist::staticPlaylist( p );
 
     qDebug() << reply->url().toString();
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&description=70s&description=folk^2&artist_min_familiarity=0.4&max_tempo=100&mode=0&type=artist-description&bucket=audio_summary&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&results=7" ) );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&description=70s&description=folk^2&artist_min_familiarity=0.4&max_tempo=100&mode=0&type=artist-description&style=acoustic&bucket=audio_summary&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&results=7" ) );
 
     QEventLoop loop2;
     loop2.connect( reply, SIGNAL(finished()), SLOT(quit()) );
