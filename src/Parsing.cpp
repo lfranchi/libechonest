@@ -659,6 +659,7 @@ Echonest::Artists Echonest::Parser::parseArtistSuggestList( QXmlStreamReader& xm
 
     Echonest::Artists artists;
 
+    xml.readNextStartElement();
     while( xml.name() != "artists" || !xml.isEndElement() ) {
         QString name;
         QByteArray id;
@@ -667,10 +668,10 @@ Echonest::Artists Echonest::Parser::parseArtistSuggestList( QXmlStreamReader& xm
                 name = xml.readElementText();
             else if( xml.name() == "id" && xml.isStartElement() )
                 id = xml.readElementText().toLatin1();
-            xml.readNextStartElement();
+            xml.readNext();
         }
         artists << Echonest::Artist( id, name );
-        xml.readNextStartElement();
+        xml.readNext();
     }
     return artists;
 }
