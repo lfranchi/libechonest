@@ -69,7 +69,7 @@ void ArtistTest::testAudio()
     testArtist.parseProfile( reply );
 
     qDebug() << testArtist.audio().size();
-    QVERIFY( testArtist.audio().size() == 3 );
+    QVERIFY( testArtist.audio().size() == 4 );
 
     qDebug() << testArtist.audio().at(0).artist() << testArtist.audio().at(0).date() << testArtist.audio().at(0).id() << testArtist.audio().at(0).length() << testArtist.audio().at(0).release() <<
                 testArtist.audio().at(0).title() << testArtist.audio().at(0).url() << testArtist.audio().at(0).title() << testArtist.audio().at(0).link();
@@ -644,6 +644,17 @@ void ArtistTest::testSuggest()
     QCOMPARE( artists.count(), 2 );
     QCOMPARE( artists.first().name(), QLatin1String( "The Tallest Man On Earth" ) );
     QCOMPARE( artists.first().id(), QByteArray( "AREDHSB1187FB57583" ) );
+
+    reply = Artist::suggest( QLatin1String( "matchbox 20" ), 12 );
+    QCOMPARE( reply->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/artist/suggest?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=matchbox+20&results=12" ) );
+    qDebug() << reply->url().toString();
+
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+
+    artists = Artist::parseSuggest( reply );
+    qDebug() << "Got suggestions:" << artists;
+    QCOMPARE( artists.size(), 0 );
 }
 
 
