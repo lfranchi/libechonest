@@ -396,8 +396,6 @@ void ArtistTest::testSearch()
         QVERIFY( artist.hotttnesss() >= 0 );
         QVERIFY( artist.news().size() > 0 );
         QVERIFY( artist.blogs().size() > 0 );
-        if( count != artists.size() - 1 ) // last artist returned has no audio
-            QVERIFY( artist.audio().size() > 0 );
         count++;
     }
 
