@@ -218,8 +218,8 @@ QNetworkReply* Echonest::Track::profileFromTrackId( const QByteArray& id )
     QUrl url = Echonest::baseGetQuery( "track", "profile" );
     url.addEncodedQueryItem( "id", id );
     url.addEncodedQueryItem( "bucket", "audio_summary" );
-    
-    
+
+
     qDebug() << "Creating profileFromTrackId URL" << url;
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -229,7 +229,7 @@ QNetworkReply* Echonest::Track::profileFromMD5( const QByteArray& md5 )
     QUrl url = Echonest::baseGetQuery( "track", "profile" );
     url.addEncodedQueryItem( "md5", md5 );
     url.addEncodedQueryItem( "bucket", "audio_summary" );
-    
+
     qDebug() << "Creating profileFromMD5 URL" << url;
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -242,7 +242,7 @@ QNetworkReply* Echonest::Track::uploadLocalFile( const QUrl& localFile, const QB
     url.addEncodedQueryItem( "bucket", "audio_summary" );
     url.addEncodedQueryItem( "wait", ( waitForResult ? "true" : "false" ) );
     QNetworkRequest request( url );
-    
+
     request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "application/octet-stream" ) );
 //     qDebug() << "Uploading local file to" << url;
     return Echonest::Config::instance()->nam()->post( request, data );
@@ -254,9 +254,11 @@ QNetworkReply* Echonest::Track::uploadURL( const QUrl& remoteURL, bool waitForRe
     url.addEncodedQueryItem( "url", remoteURL.toEncoded() );
     url.addEncodedQueryItem( "bucket", "audio_summary" );
     url.addEncodedQueryItem( "wait", ( waitForResult ? "true" : "false" ) );
-    
+
     qDebug() << "Uploading URL:" << url;
-    return Echonest::Config::instance()->nam()->post( QNetworkRequest( url ), QByteArray() );
+    QNetworkRequest req( url );
+    req.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "application/x-www-form-urlencoded" ) );
+    return Echonest::Config::instance()->nam()->post( req, QByteArray() );
 }
 
 QNetworkReply* Echonest::Track::analyzeTrackId( const QByteArray& id, bool wait )
@@ -265,7 +267,7 @@ QNetworkReply* Echonest::Track::analyzeTrackId( const QByteArray& id, bool wait 
     url.addEncodedQueryItem( "id", id );
     url.addEncodedQueryItem( "bucket", "audio_summary" );
     url.addEncodedQueryItem( "wait", ( wait ? "true" : "false" ) );
-    
+
     qDebug() << "Creating analyzeTrackId URL" << url;
     return Echonest::doPost( url );
 //     return Echonest::Config::instance()->nam()->post( QNetworkRequest( url ), QByteArray() );
@@ -277,7 +279,7 @@ QNetworkReply* Echonest::Track::analyzeTrackMD5( const QByteArray& md5, bool wai
     url.addEncodedQueryItem( "md5", md5 );
     url.addEncodedQueryItem( "bucket", "audio_summary" );
     url.addEncodedQueryItem( "wait", ( wait ? "true" : "false" ) );
-    
+
     qDebug() << "Creating analyzeTrackMD5 URL" << url;
     return Echonest::doPost( url );
 //     return Echonest::Config::instance()->nam()->post( QNetworkRequest( url ), QByteArray() );
@@ -288,12 +290,12 @@ Echonest::Track Echonest::Track::parseProfile( QNetworkReply* finishedReply ) th
     QByteArray data = finishedReply->readAll();
     qDebug() << data;
     Echonest::Parser::checkForErrors( finishedReply );
-    
+
     QXmlStreamReader xml( data );
-    
+
     Echonest::Parser::readStatus( xml );
     Echonest::Track track = Echonest::Parser::parseTrack( xml );
-    
+
     finishedReply->deleteLater();
     return track;
 }

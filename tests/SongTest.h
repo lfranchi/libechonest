@@ -24,9 +24,12 @@ class SongTest : public QObject
     Q_OBJECT
 private slots:
     void initTestCase();
-    
+
     void testSearch1();
     void testProfile();
+
+    void testIdentify();
+    void testIdentifyWithData();
 };
 
 #endif

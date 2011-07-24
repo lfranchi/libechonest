@@ -42,7 +42,7 @@ namespace  Echonest {
         // strip the extras
         QUrl url2( url.toString().mid( 0, url.toString().indexOf( QLatin1Char( '?' ) ) ) );
         QNetworkRequest request = QNetworkRequest( url2 );
-//             request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "multipart/form-data" ) );
+        request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "application/x-www-form-urlencoded" ) );
         return Echonest::Config::instance()->nam()->post( request, data );
     }
 };
@@ -51,7 +51,7 @@ class TrackData : public QSharedData
 {
 public:
     TrackData() {}
-    
+
     TrackData(const TrackData& other)
     {
         analyzer_version = other.analyzer_version;
@@ -67,9 +67,9 @@ public:
         foreign_id = other.foreign_id;
         release_image = other.release_image;
         preview_url = other.preview_url;
-        
+
     }
-    
+
     QString artist;
     QString analyzer_version;
     int bitrate;
@@ -85,12 +85,12 @@ public:
     QByteArray foreign_id;
     QUrl release_image;
     QUrl preview_url;
-    
+
     // song tracks have an associated song
     Echonest::Song song;
-    
+
     Echonest::AudioSummary audio_summary;
-    
+
 };
 
 #endif
