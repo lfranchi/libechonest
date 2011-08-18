@@ -78,10 +78,10 @@ void CatalogTest::testProfile()
 void CatalogTest::testRead()
 {
     Echonest::Catalog c( "CAWRKLJ12BF92BC7C3" );
-    QNetworkReply* reply = c.readSongCatalog( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Tracks | Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity | Echonest::SongInformation::ArtistLocation ) );
+    QNetworkReply* reply = c.readSongCatalog( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity | Echonest::SongInformation::ArtistLocation ) );
 
     qDebug() << reply->url().toString();
-    QCOMPARE( reply->url(), QUrl( QLatin1String( "http://developer.echonest.com/api/v4/catalog/read?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=audio_summary&bucket=tracks&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&bucket=artist_location&id=CAWRKLJ12BF92BC7C3" ) ) );
+    QCOMPARE( reply->url(), QUrl( QLatin1String( "http://developer.echonest.com/api/v4/catalog/read?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=audio_summary&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&bucket=artist_location&id=CAWRKLJ12BF92BC7C3" ) ) );
 
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -100,24 +100,24 @@ void CatalogTest::testRead()
     QVERIFY( !c.songs().at( 0 ).foreignId().isEmpty() );
     QVERIFY( c.songs().at( 0 ).artistHotttnesss() >= 0 );
     QVERIFY( c.songs().at( 0 ).artistFamiliarity() >= 0 );
-    QCOMPARE( c.songs().at( 0 ).request().itemId(), QByteArray( "d951f4d6-b678-4264-8193-cd90c6b3ee4d" ) );
+    QCOMPARE( c.songs().at( 0 ).request().itemId(), QByteArray( "1f2cc282-068b-4d0c-aa41-d0d3b1638986" ) );
     QCOMPARE( c.songs().at( 0 ).request().songName(), QLatin1String( "Your Hand In Mine" ) );
     QCOMPARE( c.songs().at( 0 ).request().artistName(), QLatin1String( "Explosions in the sky" ) );
-    QCOMPARE( c.songs().at( 1 ).request().itemId(), QByteArray( "1f2cc282-068b-4d0c-aa41-d0d3b1638986" ) );
+    QCOMPARE( c.songs().at( 1 ).request().itemId(), QByteArray( "a61a4ac1-55a8-4c04-8789-5693d5d285d6" ) );
     QCOMPARE( c.songs().at( 1 ).request().songName(), QLatin1String( "Your Hand In Mine" ) );
     QCOMPARE( c.songs().at( 1 ).request().artistName(), QLatin1String( "Explosions in the sky" ) );
-    QCOMPARE( c.songs().at( 2 ).request().itemId(), QByteArray( "a61a4ac1-55a8-4c04-8789-5693d5d285d6" ) );
+    QCOMPARE( c.songs().at( 2 ).request().itemId(), QByteArray( "d951f4d6-b678-4264-8193-cd90c6b3ee4d" ) );
     QCOMPARE( c.songs().at( 2 ).request().songName(), QLatin1String( "Your Hand In Mine" ) );
     QCOMPARE( c.songs().at( 2 ).request().artistName(), QLatin1String( "Explosions in the sky" ) );
     QCOMPARE( c.songs().size(), 3 );
 
     foreach( const Echonest::Song& song, c.songs() ) {
-        QCOMPARE( song.tracks().size(), 5 );
-        QCOMPARE( song.tracks().at( 0 ).id().constData(), "TRCIYSH1254845BAEE" );
-        QCOMPARE( song.tracks().at( 1 ).id().constData(), "TRWYCBR128F9325C60" );
-        QCOMPARE( song.tracks().at( 2 ).id().constData(), "TRXIFWD123E8589514" );
-        QCOMPARE( song.tracks().at( 3 ).id().constData(), "TRXKSJB128F92E8307" );
-        QCOMPARE( song.tracks().at( 4 ).id().constData(), "TRZMJVA128F42636CE" );
+        QCOMPARE( song.tracks().size(), 0 );
+//         QCOMPARE( song.tracks().at( 0 ).id().constData(), "TRCIYSH1254845BAEE" );
+//         QCOMPARE( song.tracks().at( 1 ).id().constData(), "TRWYCBR128F9325C60" );
+//         QCOMPARE( song.tracks().at( 2 ).id().constData(), "TRXIFWD123E8589514" );
+//         QCOMPARE( song.tracks().at( 3 ).id().constData(), "TRXKSJB128F92E8307" );
+//         QCOMPARE( song.tracks().at( 4 ).id().constData(), "TRZMJVA128F42636CE" );
     }
 
     // test an artist catalog
@@ -150,10 +150,10 @@ void CatalogTest::testRead()
     QVERIFY( !c2.artists().at( 0 ).dateAdded().isNull() );
     QVERIFY( !c2.artists().at( 0 ).id().isEmpty() );
     QVERIFY( !c2.artists().at( 0 ).foreignId().isEmpty() );
-    QCOMPARE( c2.artists().at( 0 ).request().itemId(), QByteArray( "f1bc85de-de19-4cc2-a77b-475a5b4afb7b" ) );
-    QCOMPARE( c2.artists().at( 0 ).request().artistName(), QLatin1String( "Balmorhea" ) );
-    QCOMPARE( c2.artists().at( 1 ).request().itemId(), QByteArray( "473cb167-6459-429a-b4a2-561702753d8b" ) );
-    QCOMPARE( c2.artists().at( 1 ).request().artistName(), QLatin1String( "Mono" ) );
+    QCOMPARE( c2.artists().at( 0 ).request().itemId(), QByteArray( "473cb167-6459-429a-b4a2-561702753d8b" ) );
+    QCOMPARE( c2.artists().at( 0 ).request().artistName(), QLatin1String( "Mono" ) );
+    QCOMPARE( c2.artists().at( 1 ).request().itemId(), QByteArray( "f1bc85de-de19-4cc2-a77b-475a5b4afb7b" ) );
+    QCOMPARE( c2.artists().at( 1 ).request().artistName(), QLatin1String( "Balmorhea" ) );
     QCOMPARE( c2.artists().size(), 2 );
 }
 
@@ -166,7 +166,7 @@ void CatalogTest::testCreateUpdateDeleteSong()
 {
 
 //     {
-//         Echonest::Catalog c( "CAXQEKE12FAA3E3683" );
+//         Echonest::Catalog c( "CAKOHPN131DA98630D" );
 //         QNetworkReply* reply = c.deleteCatalog();
 //     QEventLoop loop;
 //     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
