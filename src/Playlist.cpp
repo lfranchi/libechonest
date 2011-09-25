@@ -236,7 +236,7 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
         case Echonest::DynamicPlaylist::ArtistSeedCatalog :
             return "artist_seed_catalog";
         case Echonest::DynamicPlaylist::SourceCatalog :
-            return "source_catalog";
+            return "seed_catalog";
         case Echonest::DynamicPlaylist::SongId :
             return "song_id";
         case Echonest::DynamicPlaylist::Description :
@@ -303,6 +303,8 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "mood";
         case Echonest::DynamicPlaylist::Style :
             return "style";
+        case Echonest::DynamicPlaylist::Adventurousness :
+            return "adventurousness";
     }
     return QByteArray();
 }

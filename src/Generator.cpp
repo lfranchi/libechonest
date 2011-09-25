@@ -30,7 +30,7 @@ QByteArray Echonest::Generator::catalogEntriesToJson( const Echonest::CatalogUpd
     
     QVariant itms = catalogEntriesToVariant( items );
     QByteArray serialized = s.serialize( itms );
-    qDebug() << "Serialized:" << serialized;
+//    qDebug() << "Serialized:" << serialized;
     return serialized;
 }
 
@@ -40,7 +40,7 @@ QByteArray Echonest::Generator::catalogEntryToJson( const Echonest::CatalogUpdat
     
     QVariant itm = catalogEntryToVariant( item );
     QByteArray serialized = s.serialize( itm );
-    qDebug() << "Serialized:" << serialized;
+   // qDebug() << "Serialized:" << serialized;
     return serialized;
 }
 

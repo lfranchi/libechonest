@@ -73,7 +73,7 @@ public:
      * The Echo Nest fingerprint.
      */
     QByteArray fingerprint() const;
-    void setFingerpring( const QByteArray& id );
+    void setFingerprint( const QByteArray& id );
 
     /**
      * The song id. Rosetta id or Echo Nest ID.

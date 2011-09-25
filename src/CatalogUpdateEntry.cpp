@@ -79,7 +79,7 @@ QByteArray Echonest::CatalogUpdateEntry::fingerprint() const
     return d->fp_code;
 }
 
-void Echonest::CatalogUpdateEntry::setFingerpring(const QByteArray& id)
+void Echonest::CatalogUpdateEntry::setFingerprint(const QByteArray& id)
 {
     d->fp_code = id;
 }

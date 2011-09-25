@@ -66,6 +66,7 @@ void Echonest::Parser::readStatus( QXmlStreamReader& xml ) throw( Echonest::Pars
             xml.readNextStartElement();
 
             if( code != Echonest::NoError ) {
+                qDebug() << "Parse Error:" << code << msg;
                 throw ParseError( code, msg );
             }
 
@@ -1009,7 +1010,7 @@ void Echonest::Parser::parseCatalogRequestItem( QXmlStreamReader& xml, Echonest:
         } else if( xml.name() == "song_name" ) {
             request.setSongName( xml.readElementText() );
         } else if( xml.name() == "fp_code" ) {
-            request.setFingerpring( xml.readElementText().toLatin1() );
+            request.setFingerprint( xml.readElementText().toLatin1() );
         } else if( xml.name() == "song_id" ) {
             request.setSongId( xml.readElementText().toLatin1() );
         } else if( xml.name() == "artist_id" ) {
@@ -1089,14 +1090,16 @@ QByteArray Echonest::Parser::parseCatalogTicket( QXmlStreamReader& xml ) throw( 
 
 Echonest::Catalog Echonest::Parser::parseNewCatalog( QXmlStreamReader& xml ) throw( Echonest::ParseError )
 {
-    if( xml.atEnd() || xml.name() != "name" || xml.tokenType() != QXmlStreamReader::StartElement )
+    if( xml.atEnd() || xml.tokenType() != QXmlStreamReader::StartElement )
         throw Echonest::ParseError( Echonest::UnknownParseError );
 
     QString name;
     QByteArray id;
     Echonest::CatalogTypes::Type type = Echonest::CatalogTypes::Artist;
 
+    qDebug() << "Parsing new catalog...";
     while( xml.name() != "response" || !xml.isEndElement() ) {
+        qDebug() << "Parsing at:" << xml.name().toString();
         if( xml.name() == "name" && xml.isStartElement() )
             name = xml.readElementText();
         else if( xml.name() == "id" && xml.isStartElement() )
@@ -1105,6 +1108,7 @@ Echonest::Catalog Echonest::Parser::parseNewCatalog( QXmlStreamReader& xml ) thr
             type = Echonest::literalToCatalogType( xml.readElementText().toLatin1() );
 
         xml.readNextStartElement();
+        qDebug() << "Parsing next at:" << xml.name().toString();
     }
     Echonest::Catalog c = Echonest::Catalog( id );
     c.setName( name );

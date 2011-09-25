@@ -264,7 +264,7 @@ Echonest::CatalogStatus Echonest::Catalog::parseStatus(QNetworkReply* reply) thr
 {
     Echonest::Parser::checkForErrors( reply );
     QByteArray data = reply->readAll();
-//     qDebug() << data;
+     qDebug() << data;
     QXmlStreamReader xml( data );
     Echonest::Parser::readStatus( xml );
     
@@ -276,7 +276,9 @@ Echonest::CatalogStatus Echonest::Catalog::parseStatus(QNetworkReply* reply) thr
 QByteArray Echonest::Catalog::parseTicket(QNetworkReply* reply) throw( Echonest::ParseError )
 {
     Echonest::Parser::checkForErrors( reply );
-    QXmlStreamReader xml( reply->readAll() );
+    QByteArray data = reply->readAll();
+    qDebug() << data;
+    QXmlStreamReader xml( data );
     Echonest::Parser::readStatus( xml );
     
     QByteArray ticket = Echonest::Parser::parseCatalogTicket( xml );
@@ -287,7 +289,7 @@ QByteArray Echonest::Catalog::parseTicket(QNetworkReply* reply) throw( Echonest:
 Echonest::Catalog Echonest::Catalog::parseCreate(QNetworkReply* reply) throw( Echonest::ParseError )
 {
     QByteArray data = reply->readAll();
-//     qDebug() << data;
+    qDebug() << data;
     Echonest::Parser::checkForErrors( reply );
     QXmlStreamReader xml( data  );
     Echonest::Parser::readStatus( xml );
