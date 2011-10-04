@@ -84,6 +84,11 @@ void Echonest::CatalogUpdateEntry::setFingerprint(const QByteArray& id)
     d->fp_code = id;
 }
 
+void Echonest::CatalogUpdateEntry::setFingerpring(const QByteArray& id)
+{
+   setFingerprint(id);
+}
+
 QString Echonest::CatalogUpdateEntry::artistName() const
 {
     return d->artist_name;

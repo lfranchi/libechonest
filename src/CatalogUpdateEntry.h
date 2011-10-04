@@ -75,6 +75,8 @@ public:
     QByteArray fingerprint() const;
     void setFingerprint( const QByteArray& id );
 
+    // deprecated
+    void setFingerpring( const QByteArray& id );
     /**
      * The song id. Rosetta id or Echo Nest ID.
      */
