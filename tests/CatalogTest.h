@@ -26,15 +26,18 @@ class CatalogTest : public QObject
 private slots:
     void initTestCase();
     void cleanupTestCase();
-    
+
+
+    void testCreateUpdateDeleteSong();
+
+private:
     void testList();
     void testProfile();
     void testRead();
     void testStatus();
-    void testCreateUpdateDeleteSong();
+
     void testCreateUpdateDeleteArtist();
-    
-private:
+
     Echonest::Catalog m_songC;
     Echonest::Catalog m_artistC;
 };

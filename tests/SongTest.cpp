@@ -48,7 +48,7 @@ void SongTest::testSearch1()
     QVERIFY( !songs.isEmpty() );
     for(int i = 0; i < songs.size(); i++) {
         Echonest::Song song = songs.value(i);
-        QLatin1String title = ( i == 0 ? QLatin1String( "float on" ) : QLatin1String( "blame it on the tetons" ) );
+        QLatin1String title = QLatin1String( "float on" );
         QCOMPARE( song.title().toLower(), title );
         QCOMPARE( song.artistName().toLower(), QLatin1String( "modest mouse" ) );
         QCOMPARE( song.artistLocation().location.toLower(), QLatin1String( "issaquah" ) );

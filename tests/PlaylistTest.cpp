@@ -63,6 +63,7 @@ void PlaylistTest::testStatic2()
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Artist, QLatin1String( "tallest man on earth" ) ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Artist, QLatin1String( "bon iver" ) ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Artist, QLatin1String( "mumford and sons" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Artist, QLatin1String( "Florence + The Machine" ) ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::ArtistMaxFamiliarity, 0.4 ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::MinDanceability, 0.7 ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistType ) );
@@ -71,8 +72,8 @@ void PlaylistTest::testStatic2()
 
     QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
 
-    qDebug() << reply->url().toString();
-    QCOMPARE( reply->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&artist=tallest+man+on+earth&artist=bon+iver&artist=mumford+and+sons&artist_max_familiarity=0.4&min_danceability=0.7&type=artist&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&results=4" ) );
+    qDebug() << reply->url().toEncoded();
+    QCOMPARE( QLatin1String( reply->url().toEncoded() ), QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&artist=tallest+man+on+earth&artist=bon+iver&artist=mumford+and+sons&artist=Florence+%2B+The+Machine&artist_max_familiarity=0.4&min_danceability=0.7&type=artist&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&results=4" ) );
 
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );

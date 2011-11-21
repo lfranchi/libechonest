@@ -69,7 +69,7 @@ void ArtistTest::testAudio()
     testArtist.parseProfile( reply );
 
     qDebug() << testArtist.audio().size();
-    QVERIFY( testArtist.audio().size() == 5 );
+    QVERIFY( testArtist.audio().size() == 2 );
 
     qDebug() << testArtist.audio().at(0).artist() << testArtist.audio().at(0).date() << testArtist.audio().at(0).id() << testArtist.audio().at(0).length() << testArtist.audio().at(0).release() <<
                 testArtist.audio().at(0).title() << testArtist.audio().at(0).url() << testArtist.audio().at(0).title() << testArtist.audio().at(0).link();
@@ -107,6 +107,22 @@ void ArtistTest::testBiographies()
     QVERIFY( testArtist.biographies().size() == 13 );
 
 //     qDebug() << testArtist.biographies().at( 0 ).license().type << testArtist.biographies().at( 0 ).site() << testArtist.biographies().at( 0 ).text() << testArtist.biographies().at( 0 ).url();
+
+    try {
+        testArtist = Artist();
+        testArtist.setName( QLatin1String( "Florence + The Machine" ) );
+        reply = testArtist.fetchBiographies();
+        qDebug() << reply->url().toString();
+
+        loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+        loop.exec();
+        testArtist.parseProfile( reply );
+
+        qDebug() << testArtist.biographies().size();
+        QVERIFY( testArtist.biographies().size() == 8 );
+    } catch ( Echonest::ParseError& e ) {
+        QVERIFY( false );
+    }
 
 }
 
@@ -490,7 +506,7 @@ void ArtistTest::testSimilar()
     artists.clear();
     params.clear();
     params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Devo" ) ) );
-    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "The New Pornographers" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Florence + The Machine" ) ) );
     params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Lady Gaga" ) ) );
     params.append( Artist::SearchParamEntry( Artist::MinFamiliarity, 0.5 ) );
 

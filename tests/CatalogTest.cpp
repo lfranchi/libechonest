@@ -25,7 +25,7 @@
 
 void CatalogTest::initTestCase()
 {
-    Echonest::Config::instance()->setAPIKey( "JGJCRKWLXLBZIFAZB" );
+    Echonest::Config::instance()->setAPIKey( "JRIHWEP6GPOER2QQ6" );
 }
 
 void CatalogTest::testList()
@@ -165,12 +165,12 @@ void CatalogTest::testStatus()
 void CatalogTest::testCreateUpdateDeleteSong()
 {
 
-//     {
-//         Echonest::Catalog c( "CAKOHPN131DA98630D" );
-//         QNetworkReply* reply = c.deleteCatalog();
-//     QEventLoop loop;
-//     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-//     loop.exec(); exit(1);}
+    {
+        Echonest::Catalog c( "CAQBYCW132B7313E1A" );
+        QNetworkReply* reply = c.deleteCatalog();
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec(); exit(1);}
 
     try {
         QNetworkReply* reply = Echonest::Catalog::create( QLatin1String( "unittest_catalog_song_X" ), Echonest::CatalogTypes::Song );
