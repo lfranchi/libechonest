@@ -26,9 +26,14 @@ set( ECHONEST_LIB_VERSION_SONAME "${ECHONEST_LIB_MAJOR_VERSION}.${ECHONEST_LIB_M
 if (CMAKE_COMPILER_IS_GNUCXX)
     ADD_DEFINITIONS( -Wall -Wundef -Wcast-align -Wchar-subscripts -Wpointer-arith
        -Wwrite-strings -Wpacked -Wformat-security -Wmissing-format-attribute
-       -Wold-style-cast -Woverloaded-virtual -Wnon-virtual-dtor -Werror )
+       -Wold-style-cast -Woverloaded-virtual -Wnon-virtual-dtor )
     if ( NOT WIN32 )
         add_definitions( -fvisibility=hidden )
+    endif()
+
+    # disable -Werror on ARM since Qt containers cause a lot of alignment warnings
+    if ( NOT CMAKE_SYSTEM_PROCESSOR MATCHES "arm" )
+        add_definitions( -Werror )
     endif()
 
 # to be added:
