@@ -115,6 +115,7 @@ public:
     ConfigPrivate()
     {
         threadNamHash[ QThread::currentThread() ] = new QNetworkAccessManager();
+        ourNamSet.insert( QThread::currentThread() );
     }
 
     ~ConfigPrivate()
