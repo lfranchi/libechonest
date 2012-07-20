@@ -177,10 +177,10 @@ void PlaylistTest::testDynamic1()
 
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
-    
+
     Song song = playlist.parseNext( reply ).first.first();
 //     qDebug() << "next:" << song;
-    
+
     QVERIFY( !song.id().isEmpty() );
     QVERIFY( !song.title().isEmpty() );
 
@@ -236,7 +236,7 @@ void PlaylistTest::testDynamic2()
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     Echonest::Song song = playlist.parseNext( reply ).first.first();
-    
+
 //     qDebug() << "next:" << song;
     QVERIFY( !song.id().isEmpty() );
     QVERIFY( !song.title().isEmpty() );
@@ -267,12 +267,12 @@ void PlaylistTest::testDynamic2()
     DynamicPlaylist::PlaylistParams steering;
     steering.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::TargetEnergy, QLatin1String( ".8" ) ) );
     steering.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::ArtistMinFamiliarity, QLatin1String( ".5" ) ) );
-    
+
     reply = playlist.steer( steering );
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     playlist.parseSteer( reply );
-    
+
     reply = playlist.next( 1 );
 //     qDebug() << "Control URL:" << reply->url().toString();
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -286,14 +286,14 @@ void PlaylistTest::testDynamic2()
     steering.clear();
     steering.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::TargetLoudness, QLatin1String( ".9" ) ) );
     steering.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::MoreLikeThis, QLatin1String( "last" ) ) );
-    
+
     reply = playlist.steer( steering );
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     playlist.parseSteer( reply );
 
     playlist.next();
-    
+
     reply = playlist.next( 1 );
 //     qDebug() << "Control URL:" << reply->url().toString();
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -351,7 +351,7 @@ void PlaylistTest::testDynamic2()
     reply = playlist.next();
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
-    
+
     song = playlist.parseNext( reply ).first.first();
 //     qDebug() << "new:" << song << song.artistFamiliarity() << song.artistHotttnesss();
 
@@ -367,7 +367,7 @@ void PlaylistTest::testDynamic2()
 
     playlist.parseDeleteSession(reply);
     Q_ASSERT(playlist.sessionId().isEmpty());
-    
+
 }
 
 void PlaylistTest::testNewDynamicAPI()

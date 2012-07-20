@@ -867,7 +867,7 @@ Echonest::SongList Echonest::Parser::parseDynamicLookahead( QXmlStreamReader& xm
 
         xml.readNext();
     }
-    
+
     return lookahead;
 }
 

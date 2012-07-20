@@ -116,10 +116,10 @@ QPair<Echonest::SongList, Echonest::SongList> Echonest::DynamicPlaylist::parseNe
     QXmlStreamReader xml( reply->readAll() );
 
     Echonest::Parser::readStatus( xml );
-    
+
     Echonest::SongList lookahead = Echonest::Parser::parseDynamicLookahead( xml );
     Echonest::SongList results = Echonest::Parser::parseSongList( xml );
-    
+
     reply->deleteLater();
 
     return qMakePair(results, lookahead);
@@ -133,7 +133,7 @@ QNetworkReply* Echonest::DynamicPlaylist::feedback(const Echonest::DynamicPlayli
     foreach( const Echonest::DynamicPlaylist::DynamicFeedbackParamData& param, feedback ) {
         url.addEncodedQueryItem(dynamicFeedbackToString(param.first), param.second);
     }
-    
+
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
@@ -216,7 +216,7 @@ void Echonest::DynamicPlaylist::parseSteer(QNetworkReply* reply) const throw( Ec
     QXmlStreamReader xml( reply->readAll() );
 
     Echonest::Parser::readStatus( xml );
-    
+
     reply->deleteLater();
 }
 

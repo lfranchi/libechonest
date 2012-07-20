@@ -24,7 +24,7 @@ class PlaylistTest : public QObject
     Q_OBJECT
 private slots:
     void initTestCase();
-    
+
     void testStatic1();
     void testStatic2();
     void testStaticXSPF();

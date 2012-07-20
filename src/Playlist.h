@@ -42,9 +42,9 @@ namespace Echonest{
         QVariantMap ratingsMap;
         // TODO favorites_map
         // TODO constraints
-        
+
     } SessionInfo;
-    
+
     /**
      * This encapsulates an Echo Nest dynamic playlist. It contains a playlist ID and
      *  the current song, and can fetch the next song.
@@ -310,7 +310,7 @@ namespace Echonest{
          */
         QNetworkReply* deleteSession() const;
         void parseDeleteSession(QNetworkReply* reply);
-        
+
         /**
          * Generate a static playlist, according to the desired criteria. Use parseXSPFPlaylist if
          *  you pass format=xspf to \c staticPlaylist().
