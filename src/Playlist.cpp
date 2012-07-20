@@ -527,23 +527,6 @@ QByteArray Echonest::DynamicPlaylist::playlistSortToString(Echonest::DynamicPlay
     return QByteArray();
 }
 
-QByteArray Echonest::DynamicPlaylist::dynamicControlToString(Echonest::DynamicPlaylist::DynamicControlItem control)
-{
-    switch( control )
-    {
-        case Steer:
-            return "steer";
-        case SteerDescription:
-            return "steer_description";
-        case Rating:
-            return "rating";
-        case Ban:
-            return "ban";
-        default:
-            return "";
-    }
-}
-
 QByteArray Echonest::DynamicPlaylist::dynamicFeedbackToString(Echonest::DynamicPlaylist::DynamicFeedbackParam param)
 {
     switch( param )

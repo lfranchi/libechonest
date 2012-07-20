@@ -194,20 +194,8 @@ namespace Echonest{
 
         typedef QPair< DynamicFeedbackParam, QByteArray > DynamicFeedbackParamData;
         typedef QVector< DynamicFeedbackParamData > DynamicFeedback;
-        
-        /**
-         * The various controls for a dynamic playlist.
-         *
-         * Please see The Echo Nest API documentation for more information
-         */
-        enum DynamicControlItem {
-          Steer = 0,
-          SteerDescription,
-          Rating,
-          Ban
-        };
-        typedef QPair< DynamicControlItem, QString > DynamicControl;
-        typedef QVector< DynamicControl > DynamicControls;
+
+        typedef QPair< SongList, SongList > FetchPair;
 
         DynamicPlaylist();
         virtual ~DynamicPlaylist();
@@ -328,7 +316,6 @@ namespace Echonest{
         static QNetworkReply* generateInternal( const PlaylistParams& params, const QByteArray& type );
         static QByteArray playlistSortToString(SortingType sorting);
         static QByteArray playlistArtistPickToString(ArtistPick pick);
-        static QByteArray dynamicControlToString(DynamicControlItem control);
         static QByteArray dynamicFeedbackToString(DynamicFeedbackParam param);
 
         QSharedDataPointer<DynamicPlaylistData> d;
