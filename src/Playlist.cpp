@@ -43,13 +43,13 @@ Echonest::DynamicPlaylist& Echonest::DynamicPlaylist::operator=(const Echonest::
     return *this;
 }
 
-QNetworkReply* Echonest::DynamicPlaylist::start(const Echonest::DynamicPlaylist::PlaylistParams& params) const
+QNetworkReply* Echonest::DynamicPlaylist::create(const Echonest::DynamicPlaylist::PlaylistParams& params) const
 {
     // params are the same, if user passes in format parsing will throw, but it should be expected..
-    return generateInternal( params, "dynamic" );
+    return generateInternal( params, "dynamic/create" );
 }
 
-Echonest::Song Echonest::DynamicPlaylist::parseStart(QNetworkReply* reply) throw( Echonest::ParseError )
+void Echonest::DynamicPlaylist::parseCreate(QNetworkReply* reply) throw( Echonest::ParseError )
 {
     Echonest::Parser::checkForErrors( reply );
     QByteArray data = reply->readAll();
@@ -58,14 +58,14 @@ Echonest::Song Echonest::DynamicPlaylist::parseStart(QNetworkReply* reply) throw
 
     Echonest::Parser::readStatus( xml );
     d->sessionId = Echonest::Parser::parsePlaylistSessionId( xml );
-    Echonest::SongList songs = Echonest::Parser::parseSongList( xml );
-    if( !songs.size() == 1 )
-        throw Echonest::ParseError( UnknownParseError );
 
-    d->currentSong = songs.front();
 
-    reply->deleteLater();
-    return d->currentSong;
+    Q_ASSERT( !d->sessionId.isEmpty() );
+}
+
+QNetworkReply* Echonest::DynamicPlaylist::restart(const Echonest::DynamicPlaylist::PlaylistParams& params) const
+{
+    return generateInternal( params, "dynamic/restart" );
 }
 
 QByteArray Echonest::DynamicPlaylist::sessionId() const
@@ -88,47 +88,139 @@ void Echonest::DynamicPlaylist::setCurrentSong(const Echonest::Song& song)
     d->currentSong = song;
 }
 
-QNetworkReply* Echonest::DynamicPlaylist::fetchNextSong(int rating) const
+QNetworkReply* Echonest::DynamicPlaylist::next( int results, int lookahead ) const
 {
-    QUrl url = Echonest::baseGetQuery( "playlist", "dynamic" );
+    QUrl url = Echonest::baseGetQuery( "playlist/dynamic", "next" );
     url.addEncodedQueryItem( "session_id", d->sessionId );
-
-    if( rating > 0 )
-        url.addEncodedQueryItem( "rating", QByteArray::number( rating ) );
+    url.addEncodedQueryItem( "results", QByteArray::number( results ) );
+    url.addEncodedQueryItem( "lookahead", QByteArray::number( lookahead ) );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
-
 }
 
-QNetworkReply* Echonest::DynamicPlaylist::fetchNextSong(const DynamicControls& controls) const
+QNetworkReply* Echonest::DynamicPlaylist::fetchInfo() const
 {
-    QUrl url = Echonest::baseGetQuery( "playlist", "dynamic" );
+    QUrl url = Echonest::baseGetQuery( "playlist/dynamic", "info" );
     url.addEncodedQueryItem( "session_id", d->sessionId );
 
-    DynamicControls::const_iterator iter = controls.begin();
-    for( ; iter != controls.end(); ++iter ) {
-        QString value = iter->second;
-        url.addEncodedQueryItem( dynamicControlToString( iter->first ), Echonest::escapeSpacesAndPluses( value ) );
+    return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
+}
+
+
+QPair<Echonest::SongList, Echonest::SongList> Echonest::DynamicPlaylist::parseNext(QNetworkReply* reply) throw( Echonest::ParseError )
+{
+    Echonest::Parser::checkForErrors( reply );
+
+//     const QByteArray data = reply->readAll();
+//     qDebug() << data;
+    QXmlStreamReader xml( reply->readAll() );
+
+    Echonest::Parser::readStatus( xml );
+    
+    Echonest::SongList lookahead = Echonest::Parser::parseDynamicLookahead( xml );
+    Echonest::SongList results = Echonest::Parser::parseSongList( xml );
+    
+    reply->deleteLater();
+
+    return qMakePair(results, lookahead);
+}
+
+QNetworkReply* Echonest::DynamicPlaylist::feedback(const Echonest::DynamicPlaylist::DynamicFeedback& feedback) const
+{
+    QUrl url = Echonest::baseGetQuery( "playlist/dynamic", "feedback" );
+    url.addEncodedQueryItem( "session_id", d->sessionId );
+
+    foreach( const Echonest::DynamicPlaylist::DynamicFeedbackParamData& param, feedback ) {
+        url.addEncodedQueryItem(dynamicFeedbackToString(param.first), param.second);
+    }
+    
+    return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
+}
+
+void Echonest::DynamicPlaylist::parseFeedback(QNetworkReply* reply) const throw( Echonest::ParseError )
+{
+    Echonest::Parser::checkForErrors( reply );
+
+    QXmlStreamReader xml( reply->readAll() );
+
+    Echonest::Parser::readStatus( xml );
+
+    reply->deleteLater();
+}
+
+QNetworkReply* Echonest::DynamicPlaylist::steer(const Echonest::DynamicPlaylist::PlaylistParams& steerParams) const
+{
+    QUrl url = Echonest::baseGetQuery( "playlist/dynamic", "steer" );
+    url.addEncodedQueryItem( "session_id", d->sessionId );
+
+    foreach( const Echonest::DynamicPlaylist::PlaylistParamData& param, steerParams ) {
+        // HACK ARG min/max functions for steering are min_foo_bar, but params for static/initial seeds are foo_min_bar. can't reuse :(
+        QByteArray str;
+        switch ( param.first )
+        {
+            case Echonest::DynamicPlaylist::ArtistMinFamiliarity:
+                str = "min_artist_familiarity";
+                break;
+            case Echonest::DynamicPlaylist::ArtistMaxFamiliarity:
+                str = "max_artist_familiarity";
+                break;
+            case Echonest::DynamicPlaylist::ArtistMinHotttnesss:
+                str = "min_artist_hotttnesss";
+                break;
+            case Echonest::DynamicPlaylist::ArtistMaxHotttnesss:
+                str = "max_artist_hotttnesss";
+                break;
+            case Echonest::DynamicPlaylist::SongMinHotttnesss:
+                str = "min_song_hotttnesss";
+                break;
+            case Echonest::DynamicPlaylist::SongMaxHotttnesss:
+                str = "max_song_hotttnesss";
+                break;
+            case Echonest::DynamicPlaylist::MinEnergy:
+                str = "min_energy";
+                break;
+            case Echonest::DynamicPlaylist::MaxEnergy:
+                str = "max_energy";
+                break;
+            case Echonest::DynamicPlaylist::MinDanceability:
+                str = "min_danceability";
+                break;
+            case Echonest::DynamicPlaylist::MaxDanceability:
+                str = "max_danceability";
+                break;
+            case Echonest::DynamicPlaylist::MinLoudness:
+                str = "min_loudness";
+                break;
+            case Echonest::DynamicPlaylist::MaxLoudness:
+                str = "max_loudness";
+                break;
+            case Echonest::DynamicPlaylist::MinTempo:
+                str = "min_tempo";
+                break;
+            case Echonest::DynamicPlaylist::MaxTempo:
+                str = "max_tempo";
+                break;
+            default:
+                str = playlistParamToString( param.first );
+        }
+        url.addEncodedQueryItem(str, param.second.toString().toUtf8());
     }
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
-QNetworkReply* Echonest::DynamicPlaylist::fetchSessionInfo() const
+void Echonest::DynamicPlaylist::parseSteer(QNetworkReply* reply) const throw( Echonest::ParseError )
 {
-    QUrl url = Echonest::baseGetQuery( "playlist", "session_info" );
-    url.addEncodedQueryItem( "session_id", d->sessionId );
+    Echonest::Parser::checkForErrors( reply );
 
-    return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
+    QXmlStreamReader xml( reply->readAll() );
+
+    Echonest::Parser::readStatus( xml );
+    
+    reply->deleteLater();
 }
 
-
-Echonest::Song Echonest::DynamicPlaylist::parseNextSong(QNetworkReply* reply)
-{
-    return parseStart( reply );
-}
-
-Echonest::SessionInfo Echonest::DynamicPlaylist::parseSessionInfo(QNetworkReply* reply) throw( Echonest::ParseError )
+Echonest::SessionInfo Echonest::DynamicPlaylist::parseInfo(QNetworkReply* reply) throw( Echonest::ParseError )
 {
     Echonest::Parser::checkForErrors( reply );
 
@@ -141,6 +233,26 @@ Echonest::SessionInfo Echonest::DynamicPlaylist::parseSessionInfo(QNetworkReply*
 
 }
 
+QNetworkReply* Echonest::DynamicPlaylist::deleteSession() const
+{
+    QUrl url = Echonest::baseGetQuery( "playlist/dynamic", "delete" );
+    url.addEncodedQueryItem( "session_id", d->sessionId );
+
+    return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
+}
+
+void Echonest::DynamicPlaylist::parseDeleteSession(QNetworkReply* reply)
+{
+    Echonest::Parser::checkForErrors( reply );
+
+    QXmlStreamReader xml( reply->readAll() );
+
+    Echonest::Parser::readStatus( xml );
+
+    d->sessionId.clear();
+
+    reply->deleteLater();
+}
 
 QNetworkReply* Echonest::DynamicPlaylist::staticPlaylist(const Echonest::DynamicPlaylist::PlaylistParams& params)
 {
@@ -212,7 +324,7 @@ QNetworkReply* Echonest::DynamicPlaylist::generateInternal(const Echonest::Dynam
         }
     }
 
-    qDebug() << "Creating playlist URL" << url;
+//     qDebug() << "Creating playlist URL" << url;
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
@@ -305,6 +417,24 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "style";
         case Echonest::DynamicPlaylist::Adventurousness :
             return "adventurousness";
+        case Echonest::DynamicPlaylist::MoreLikeThis :
+            return "more_like_this";
+        case Echonest::DynamicPlaylist::LessLikeThis :
+            return "less_like_this";
+        case Echonest::DynamicPlaylist::TargetTempo :
+            return "target_tempo";
+        case Echonest::DynamicPlaylist::TargetDanceability :
+            return "target_danceability";
+        case Echonest::DynamicPlaylist::TargetEnergy :
+            return "target_energy";
+        case Echonest::DynamicPlaylist::TargetLoudness :
+            return "target_loudness";
+        case Echonest::DynamicPlaylist::TargetArtistFamiliarity :
+            return "target_artist_familiarity";
+        case Echonest::DynamicPlaylist::TargetArtistHotttnesss :
+            return "target_artist_hotttnesss";
+        case Echonest::DynamicPlaylist::TargetSongHotttnesss :
+            return "target_song_hotttnesss";
     }
     return QByteArray();
 }
@@ -414,6 +544,31 @@ QByteArray Echonest::DynamicPlaylist::dynamicControlToString(Echonest::DynamicPl
     }
 }
 
+QByteArray Echonest::DynamicPlaylist::dynamicFeedbackToString(Echonest::DynamicPlaylist::DynamicFeedbackParam param)
+{
+    switch( param )
+    {
+        case BanArtist:
+            return "ban_artist";
+        case FavoriteArtist:
+            return "favorite_artist";
+        case BanSong:
+            return "ban_song";
+        case FavoriteSong:
+            return "favorite_song";
+        case SkipSong:
+            return "skip_song";
+        case PlaySong:
+            return "play_song";
+        case UnplaySong:
+            return "unplay_song";
+        case RateSong:
+            return "rate_song";
+        default:
+            Q_ASSERT(false);
+            return "";
+    }
+}
 
 QDebug Echonest::operator<<(QDebug d, const Echonest::DynamicPlaylist& playlist)
 {

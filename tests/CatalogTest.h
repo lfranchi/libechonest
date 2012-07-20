@@ -30,8 +30,8 @@ private slots:
 
     void testCreateUpdateDeleteSong();
 
-private:
     void testList();
+private:
     void testProfile();
     void testRead();
     void testStatus();

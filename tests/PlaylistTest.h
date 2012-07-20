@@ -30,6 +30,7 @@ private slots:
     void testStaticXSPF();
     void testDynamic1();
     void testDynamic2();
+    void testNewDynamicAPI();
     void testDynamicChainXSPF();
 };
 

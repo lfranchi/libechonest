@@ -837,6 +837,40 @@ QByteArray Echonest::Parser::parsePlaylistSessionId( QXmlStreamReader& xml ) thr
     return sessionId;
 }
 
+Echonest::SongList Echonest::Parser::parseDynamicLookahead( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    if( xml.atEnd() || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw Echonest::ParseError( Echonest::UnknownParseError );
+
+    Echonest::SongList lookahead;
+
+    // Might not be any
+    if ( xml.name() != "lookahead" )
+        return lookahead;
+
+    while( !xml.atEnd() && ( xml.name() == "lookahead" && xml.tokenType() == QXmlStreamReader::StartElement ) ) {
+        // Read each lookahead track
+        Echonest::Song song;
+        while( !xml.atEnd() && ( xml.name() != "lookahead" || xml.tokenType() != QXmlStreamReader::EndElement ) ) {
+            if( xml.name() == "id" && xml.isStartElement() )
+                song.setId( xml.readElementText().toLatin1() );
+            else if( xml.name() == "title" && xml.isStartElement() )
+                song.setTitle( xml.readElementText() );
+            else if( xml.name() == "artist_id" && xml.isStartElement() )
+                song.setArtistId( xml.readElementText().toLatin1() );
+            else if( xml.name() == "artist_name" && xml.isStartElement() )
+                song.setArtistName( xml.readElementText() );
+
+            xml.readNext();
+        }
+        lookahead.append(song);
+
+        xml.readNext();
+    }
+    
+    return lookahead;
+}
+
 // Catalogs parseCatalogList( QXmlStreamReader& xml ) throw( ParseError );
 Echonest::Catalogs Echonest::Parser::parseCatalogList( QXmlStreamReader& xml ) throw( Echonest::ParseError )
 {
@@ -1123,6 +1157,11 @@ Echonest::SessionInfo Echonest::Parser::parseSessionInfo( QXmlStreamReader& xml 
 
     while( xml.name() != "response" || !xml.isEndElement() ) {
 //         qDebug() << "Parsing part of session info:" << xml.name() << xml.isStartElement();
+        // TODO
+    /** Sample output:
+     http://files.lfranchi.com/echonest_dynamic_info.xml
+
+
         if( xml.name() == "terms" && xml.isStartElement() ) {
             info.terms = parseTopTermList( xml );
             continue;
@@ -1153,7 +1192,7 @@ Echonest::SessionInfo Echonest::Parser::parseSessionInfo( QXmlStreamReader& xml 
         } else if( xml.name() == "history" && xml.isStartElement() ) {
             info.history = parseSessionSongItem( xml, QLatin1String( "history" ) );
             continue;
-        }
+        }*/
         xml.readNext();
     }
     return info;
@@ -1176,7 +1215,8 @@ QVector< QString > Echonest::Parser::parseRulesList( QXmlStreamReader& xml ) thr
     }
     return rules;
 }
-
+/*
+ * TODO port to API v2
 QVector< Echonest::SessionItem > Echonest::Parser::parseSessionSongItem( QXmlStreamReader& xml, const QString& type ) throw( Echonest::ParseError )
 {
     if( xml.atEnd() || xml.name() != type || xml.tokenType() != QXmlStreamReader::StartElement )
@@ -1210,5 +1250,5 @@ QVector< Echonest::SessionItem > Echonest::Parser::parseSessionSongItem( QXmlStr
         xml.readNext();
     }
     return items;
-}
+}*/
 

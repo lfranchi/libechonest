@@ -33,30 +33,18 @@ class DynamicPlaylistData;
 namespace Echonest{
 
     typedef struct {
-        qreal served_time;
-        QByteArray artist_id;
-        QByteArray id;
-        QString artist_name;
-        QString title;
-        int rating;
-    } SessionItem;
-
-    typedef struct {
-        TermList terms;
-        SongList seed_songs;
-//         description .. what data is in here?
-        Artists banned_artists;
-        QVector< QString > rules;
         QByteArray session_id;
-        Artists seeds;
-        QVector< SessionItem > skipped_songs;
-        QVector< SessionItem > banned_songs;
-        QString playlist_type;
-        Catalogs seed_catalogs;
-        QVector< SessionItem > rated_songs;
-        QVector< SessionItem > history;
+        Artists banned_artists;
+        Artists favorited_artists;
+        SongList banned_songs;
+        SongList favorited_songs;
+        QVariantMap options;
+        QVariantMap ratingsMap;
+        // TODO favorites_map
+        // TODO constraints
+        
     } SessionInfo;
-
+    
     /**
      * This encapsulates an Echo Nest dynamic playlist. It contains a playlist ID and
      *  the current song, and can fetch the next song.
@@ -175,12 +163,38 @@ namespace Echonest{
             ChainXSPF, /// true, false    If true, returns an xspf for this dynamic playlist with 2 items. The second item will be a link to the API call for the next track in the chain. Please note that this sidesteps libechonest's handling of the tracks.
             Mood, /// A mood to limit this playlist to, for example "happy" or "sad". Multiples of this param are okay. See the method Artist::listTerms for details on what moods are currently available
             Style, /// A style to limit this playlist to, for example "happy" or "sad". Multiples of this param are okay. See the method Artist::listTerms for details on what styles are currently available
-            Adventurousness
+            Adventurousness, /// A value of 0 means no adventurousness, only known and preferred music will be played. A value of 1 means high adventurousness, mostly unknown music will be played. This parameter only applies to catalog and catalog-radio type playlists.
+            MoreLikeThis, /// When steering: Supply a song id to steer this session towards. Can be boosted from 0-5 like so: SO12341234^2. Default is 1
+            LessLikeThis, /// When steering: Supply a song id to steer this session away from. Can be boosted from 0-5 like so: SO12341234^2. Default is 1
+            TargetTempo, /// When steering: 0.0 < tempo < 500. (BPM). Target a desired tempo for the songs in this dynamic playlist session
+            TargetLoudness, /// When steering: -100. < loudness < 100. (BPM)dB. Target a desired loudness for the songs in this dynamic playlist session
+            TargetDanceability, /// When steering: 0.0 < danceability < 1. Target a desired danceability for the songs in this dynamic playlist session
+            TargetEnergy, /// When steering: 0.0 < energy < 1.Target a desired energy for the songs in this dynamic playlist session
+            TargetSongHotttnesss, /// When steering: 0.0 < song_hotttnesss < 1.Target a desired song_hotttnesss for the songs in this dynamic playlist session
+            TargetArtistHotttnesss, /// When steering: 0.0 < artist_hottttnesss < 1.Target a desired artist_hottttnesss for the songs in this dynamic playlist session
+            TargetArtistFamiliarity, /// When steering: 0.0 < artist_familiarity < 1.Target a desired energy for the artist_familiarity in this dynamic playlist session
+        };
+
+        /**
+         * The types of feedback that can be used to steer a dynamic playlist
+         */
+        enum DynamicFeedbackParam {
+            BanArtist, /// Ban this artist from this dynamic session. [artist_id, track_id, song_id, "last"]
+            FavoriteArtist, /// Mark this artist as 'liked' for this session. [artist_id, track_id, song_id, "last"]
+            BanSong, /// Ban this song from this dynamic session. [track_id, song_id, "last"]
+            SkipSong, /// Mark this song as skipped by the user. Will not appear for the rest of the session. [track_id, song_id, "last"]
+            FavoriteSong, /// Mark this song as a favorite. [track_id, song_id, "last"]
+            PlaySong, /// Mark this song as played. Unneeded unless you want to pre-seed a station. [track_id, song_id, "last"]
+            UnplaySong, /// Remove a song from a dynamic session's history. Will not blacklist the song. [track_id, song_id, "last"]
+            RateSong, /// Rate the desired song. [track_id, song_id, "last"]^[0-10]. E.g: "last^3" or "TRTLKZV12E5AC92E11^5"
         };
 
         typedef QPair< PlaylistParam, QVariant > PlaylistParamData;
         typedef QVector< PlaylistParamData > PlaylistParams;
 
+        typedef QPair< DynamicFeedbackParam, QByteArray > DynamicFeedbackParamData;
+        typedef QVector< DynamicFeedbackParamData > DynamicFeedback;
+        
         /**
          * The various controls for a dynamic playlist.
          *
@@ -203,11 +217,21 @@ namespace Echonest{
         /**
          * Start a dynamic playlist with the given parameters.
          *  Once the QNetworkReply has finished, pass it to parseStart()
-         *  and the inital song will be populated and returned. The sessionId(), currentSong(),
-         *  and fetchNextSong() methods will then be useful.
+         *
+         *  To fetch tracks, call fetchNextSong(). The info() method can be used
+         *   to extract session information
          */
-        QNetworkReply* start( const PlaylistParams& params ) const;
-        Song parseStart( QNetworkReply* ) throw( ParseError );
+        QNetworkReply* create( const PlaylistParams& params ) const;
+        void parseCreate( QNetworkReply* ) throw( ParseError );
+
+        /**
+         * Retart a dynamic playlist with the given parameters.
+         *  Once the QNetworkReply has finished, pass it to parseStart()
+         *
+         * This is the same as start(), except it maintains the history from an
+         *  already-existing playing station.
+         */
+        QNetworkReply* restart( const PlaylistParams& params ) const;
 
         /**
          * The session id of this dynamic playlist. If the playlist has ended, or has not been started,
@@ -225,28 +249,68 @@ namespace Echonest{
         void setCurrentSong( const Song& song );
 
         /**
-         * Queries The Echo Nest for the next playable song in this
+         * Queries The Echo Nest for the next playable song(s) in this
          *  dynamic playlist.
          *
-         * Once the query has emitted the finished() signal, pass it to parseNextSong(), which will
-         *  return the new song to play. It will also set the current song to the newly parsed song.
-         *
-         * If the playlist has no more songs, the returned song object will be have no name nor id.
-         *
-         * @param rating The rating for the song that was just played. Ranges from 1 (lowest) to 5 (highest)
-         * @param controls The controls to apply when fetching the next track.
-         *
+         * \param @results How many results to return, 1-5. This lets you
+         *                 reduce the calls if you need more than one. Default is 1.
+         * \param @lookahead The potential next songs (after the results)
+         *                   if there is no steering applied. 0-5, default of 0.
          */
-        QNetworkReply* fetchNextSong( int rating = -1 ) const;
-        QNetworkReply* fetchNextSong( const DynamicControls& controls ) const;
-        Song parseNextSong( QNetworkReply* reply );
+        QNetworkReply* next( int results = 1, int lookahead = 0 ) const;
+
+        /**
+         * Return the result of a dynamic/next API call. This will return two lists:
+         * the "next" list and the "lookahead" list. Consult the \ref next() docs
+         * and The Echo Nest documentation for more information.
+         */
+        QPair<SongList, SongList> parseNext( QNetworkReply* reply ) throw( ParseError );
+
+        /**
+         * Returns feedback to The Echo Nest for the currently playing dynamic
+         *  playlist.
+         *
+         * See The Echo Nest api documentation for complete details.
+         *
+         * \param feedback A list of feedback items to apply.
+         */
+        QNetworkReply* feedback(const DynamicFeedback& feedback) const;
+
+        /**
+         * Parses the result of the feedback call.
+         *
+         * Will throw an exception if the return code is not successful (as other parse methods do).
+         */
+        void parseFeedback(QNetworkReply* reply) const throw( ParseError );
+
+        /**
+         * Modifies the upcoming tracks in this dynamic playlist session by steering it.
+         *
+         * Steering is additive, and can be reset for a dynamic playlist by calling reset.
+         *
+         * \param steerParams The desired steering params. Only use the enum values that correspond to valid steering commands.
+         */
+        QNetworkReply* steer(const PlaylistParams& steerParams) const;
+
+        /**
+         * Parses the result of the steer call.
+         *
+         * Will throw an exception if the return code is not successful (as other parse methods do).
+         */
+        void parseSteer(QNetworkReply* reply) const throw( ParseError );
 
         /**
          * Returns a description of this dynamic playlist session
          */
-        QNetworkReply* fetchSessionInfo() const;
-        SessionInfo parseSessionInfo( QNetworkReply* reply ) throw( ParseError );
+        QNetworkReply* fetchInfo() const;
+        SessionInfo parseInfo( QNetworkReply* reply ) throw( ParseError );
 
+        /**
+         * Deletes a currently active playlist session. A non-commercial API can have, at most 1,000 active playlist sessions.
+         */
+        QNetworkReply* deleteSession() const;
+        void parseDeleteSession(QNetworkReply* reply);
+        
         /**
          * Generate a static playlist, according to the desired criteria. Use parseXSPFPlaylist if
          *  you pass format=xspf to \c staticPlaylist().
@@ -265,6 +329,7 @@ namespace Echonest{
         static QByteArray playlistSortToString(SortingType sorting);
         static QByteArray playlistArtistPickToString(ArtistPick pick);
         static QByteArray dynamicControlToString(DynamicControlItem control);
+        static QByteArray dynamicFeedbackToString(DynamicFeedbackParam param);
 
         QSharedDataPointer<DynamicPlaylistData> d;
     };

@@ -94,6 +94,7 @@ namespace Parser
     License parseLicense( QXmlStreamReader& xml ) throw( ParseError );
 
     QByteArray parsePlaylistSessionId( QXmlStreamReader& xml ) throw( ParseError );
+    SongList parseDynamicLookahead( QXmlStreamReader& xml ) throw( ParseError );
 
     // Catalog functions
     Catalogs parseCatalogList( QXmlStreamReader& xml ) throw( ParseError );
@@ -112,7 +113,7 @@ namespace Parser
 
     SessionInfo parseSessionInfo( QXmlStreamReader& xml ) throw( ParseError );
     QVector< QString > parseRulesList( QXmlStreamReader& xml ) throw( ParseError );
-    QVector< SessionItem > parseSessionSongItem( QXmlStreamReader& xml, const QString& type ) throw( ParseError );
+//     QVector< SessionItem > parseSessionSongItem( QXmlStreamReader& xml, const QString& type ) throw( ParseError );
 
 }
 }
