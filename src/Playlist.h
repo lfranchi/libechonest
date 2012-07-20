@@ -49,7 +49,7 @@ namespace Echonest{
      * This encapsulates an Echo Nest dynamic playlist. It contains a playlist ID and
      *  the current song, and can fetch the next song.
      *
-     *  See http://developer.echonest.com/docs/v4/playlist.html#dynamic
+     *  See http://developer.echonest.com/docs/v4/playlist.html
      *   for more information
      */
     class ECHONEST_EXPORT DynamicPlaylist
