@@ -1,7 +1,7 @@
 libechonest
 ===========
 
-libechonest is a collection of C++/Qt classes designed to make a developer's life 
+libechonest is a collection of C++/Qt classes designed to make a developer's life
 easy when trying to use the APIs provided by The Echo Nest. More information about
 the APIs can be found here:
 
@@ -32,7 +32,7 @@ Using libechonest
 ===============
 The c++ API is meant to be as close to the Echo Nest API as possible. All Echo Nest
 API functions have been copied into their respective c++ equivalents, and string values
-converted to enums where reasonable. 
+converted to enums where reasonable.
 
 See the unit tests in tests/ for examples on how to use the classes.
 
@@ -50,5 +50,5 @@ Thank you for tuning in!
 leo
 
 -------
-This README, and libechonest in general, is inspired from Max Howell's liblastfm,
+This README, and libechonest in general, is inspired by Max Howell's liblastfm,
  at http://www.github.com/mxcl/liblastfm.
