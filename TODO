@@ -1,4 +1,5 @@
 TODO list
 ========
+* Implement DynamicPlaylist::parseInfo
 * Add parsing of catalog ticket items. NOTE: I am unable to get any ticket items in my catalog/status calls, so skipping this for now
-* iImplement Catalog::parseDelete
+* Implement Catalog::parseDelete
