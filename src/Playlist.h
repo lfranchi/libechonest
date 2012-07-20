@@ -264,7 +264,7 @@ namespace Echonest{
          * the "next" list and the "lookahead" list. Consult the \ref next() docs
          * and The Echo Nest documentation for more information.
          */
-        QPair<SongList, SongList> parseNext( QNetworkReply* reply ) throw( ParseError );
+        FetchPair parseNext( QNetworkReply* reply ) throw( ParseError );
 
         /**
          * Returns feedback to The Echo Nest for the currently playing dynamic

@@ -107,7 +107,7 @@ QNetworkReply* Echonest::DynamicPlaylist::fetchInfo() const
 }
 
 
-QPair<Echonest::SongList, Echonest::SongList> Echonest::DynamicPlaylist::parseNext(QNetworkReply* reply) throw( Echonest::ParseError )
+Echonest::DynamicPlaylist::FetchPair Echonest::DynamicPlaylist::parseNext(QNetworkReply* reply) throw( Echonest::ParseError )
 {
     Echonest::Parser::checkForErrors( reply );
 
