@@ -371,6 +371,8 @@ QByteArray Echonest::Song::searchParamToString( Echonest::Song::SearchParam para
             return "key";
         case Echonest::Song::Sort:
             return "sort";
+        case Echonest::Song::SongType:
+            return "song_type";
     }
     return QByteArray();
 }

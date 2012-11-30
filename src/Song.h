@@ -77,7 +77,8 @@ public:
       MinEnergy,
       Mode,
       Key,
-      Sort
+      Sort,
+      SongType
   };
   typedef QPair< Echonest::Song::SearchParam, QVariant > SearchParamData;
   typedef QVector< SearchParamData > SearchParams;
