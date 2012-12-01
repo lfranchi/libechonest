@@ -180,6 +180,21 @@ void Echonest::Song::setArtistLocation(const Echonest::ArtistLocation& artistLoc
     d->artistLocation = artistLocation;
 }
 
+QList< QString > Echonest::Song::songTypes() const
+{
+    return d->songTypes;
+}
+
+void Echonest::Song::setSongTypes(const QList< QString >& songTypes)
+{
+    d->songTypes = songTypes;
+}
+
+void Echonest::Song::addSongType(const QString& songType)
+{
+    d->songTypes.append( songType );
+}
+
 QNetworkReply* Echonest::Song::fetchInformation( Echonest::SongInformation information ) const
 {
     QUrl url = Echonest::baseGetQuery( "song", "profile" );
@@ -412,6 +427,8 @@ void Echonest::Song::addQueryInformation(QUrl& url, Echonest::SongInformation in
         url.addEncodedQueryItem( "bucket", "artist_familiarity" );
     if( information.flags().testFlag( Echonest::SongInformation::ArtistLocation ) )
         url.addEncodedQueryItem( "bucket", "artist_location" );
+    if( information.flags().testFlag( Echonest::SongInformation::SongType ) )
+        url.addEncodedQueryItem( "bucket", "song_type" );
 
     if( !information.idSpaces().isEmpty() ) {
         foreach( const QString& idSpace, information.idSpaces() )

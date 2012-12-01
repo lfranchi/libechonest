@@ -435,6 +435,8 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "target_artist_hotttnesss";
         case Echonest::DynamicPlaylist::TargetSongHotttnesss :
             return "target_song_hotttnesss";
+        case Echonest::DynamicPlaylist::SongType :
+            return "song_type";
     }
     return QByteArray();
 }
