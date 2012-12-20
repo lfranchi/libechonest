@@ -12,10 +12,12 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../
 
 macro(add_echonest_test _source)
     get_filename_component(_name ${_source} NAME_WE)
-    qt4_automoc(${_name} ${_source})
+#     qt4_automoc(${_name} ${_source})
+    set(CMAKE_AUTOMOC ON)
     add_executable(${_name} ${_source})
-    target_link_libraries(${_name} echonest ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY} ${QTCORE_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} )
+    target_link_libraries(${_name} echonest ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY} ${QTCORE_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QJSON_LIBRARIES} )
     add_test(${_name}-test ${EXECUTABLE_OUTPUT_PATH}/${_name})
+    qt5_use_modules(${_name} Network Test)
 endmacro(add_echonest_test)
 
 add_echonest_test( ArtistTest.cpp )

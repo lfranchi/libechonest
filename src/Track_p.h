@@ -25,6 +25,7 @@
 #include <QSharedData>
 #include <QString>
 #include <QNetworkReply>
+#include <QUrlQuery>
 
 namespace  Echonest {
     inline QNetworkReply* doPost(const QUrl& url)
@@ -32,10 +33,10 @@ namespace  Echonest {
         // UGLY :( Build url, then extract the encded query items, put them in the POST body, and send that to the url minus the encoded params.
         // The final data
         QByteArray data;
-        int size = url.encodedQueryItems().size();
+        int size = QUrlQuery( url ).queryItems().size();
         for( int i = 0; i < size; i++ ) {
-            const QPair< QByteArray, QByteArray > item = url.encodedQueryItems().at( i );
-            data.append( item.first + "=" + item.second + "&" );
+            const QPair< QString, QString > item = QUrlQuery( url ).queryItems().at( i );
+            data.append( item.first.toLatin1() + "=" + item.second.toLatin1() + "&" );
         }
         data.truncate( data.size() - 1 ); // remove extra &
         //qDebug() << "Sending data:" << data << "for method:" << url.path();

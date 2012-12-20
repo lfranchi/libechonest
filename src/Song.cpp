@@ -20,14 +20,17 @@
 #include "Song_p.h"
 #include "AudioSummary.h"
 
-#include <QNetworkReply>
-#include <QDebug>
-
-#include <QtNetwork/QNetworkReply>
 #include "Parsing_p.h"
-#include <qxmlstream.h>
+
 #include <qjson/serializer.h>
 #include <qjson/parser.h>
+
+#include <QNetworkReply>
+#include <QDebug>
+#include <QUrlQuery>
+#include <qxmlstream.h>
+#include <QtNetwork/QNetworkReply>
+
 
 Echonest::Song::Song()
     : d( new SongData )
@@ -198,7 +201,11 @@ void Echonest::Song::addSongType(const QString& songType)
 QNetworkReply* Echonest::Song::fetchInformation( Echonest::SongInformation information ) const
 {
     QUrl url = Echonest::baseGetQuery( "song", "profile" );
-    url.addEncodedQueryItem( "id", d->id );
+
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem( QLatin1String( "id" ), QString::fromLatin1( d->id ) );
+    url.setQuery( urlQuery );
+
     addQueryInformation( url, information );
 
     qDebug() << "Creating fetchInformation URL" << url;
@@ -212,7 +219,11 @@ QNetworkReply* Echonest::Song::search( const Echonest::Song::SearchParams& param
 
     SearchParams::const_iterator iter = params.constBegin();
     for( ; iter < params.constEnd(); ++iter )
-        url.addEncodedQueryItem( searchParamToString( iter->first ), Echonest::escapeSpacesAndPluses( iter->second.toString() ) );
+    {
+        QUrlQuery urlQuery( url );
+        urlQuery.addQueryItem( QString::fromLatin1( searchParamToString( iter->first ) ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( iter->second.toString() ) ) );
+        url.setQuery( urlQuery );
+    }
 
     qDebug() << "Creating search URL" << url;
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
@@ -423,25 +434,28 @@ QByteArray Echonest::Song::identifyParamToString( Echonest::Song::IdentifyParam 
 
 void Echonest::Song::addQueryInformation(QUrl& url, Echonest::SongInformation information)
 {
+    QUrlQuery urlQuery( url );
     if( information.flags().testFlag( Echonest::SongInformation::AudioSummaryInformation ) )
-        url.addEncodedQueryItem( "bucket", "audio_summary" );
+        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "audio_summary" ) );
     if( information.flags().testFlag( Echonest::SongInformation::Tracks ) )
-        url.addEncodedQueryItem( "bucket", "tracks" );
+        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "tracks" ) );
     if( information.flags().testFlag( Echonest::SongInformation::Hotttnesss ) )
-        url.addEncodedQueryItem( "bucket", "song_hotttnesss" );
+        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "song_hotttnesss" ) );
     if( information.flags().testFlag( Echonest::SongInformation::ArtistHotttnesss ) )
-        url.addEncodedQueryItem( "bucket", "artist_hotttnesss" );
+        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "artist_hotttnesss" ) );
     if( information.flags().testFlag( Echonest::SongInformation::ArtistFamiliarity ) )
-        url.addEncodedQueryItem( "bucket", "artist_familiarity" );
+        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "artist_familiarity" ) );
     if( information.flags().testFlag( Echonest::SongInformation::ArtistLocation ) )
-        url.addEncodedQueryItem( "bucket", "artist_location" );
+        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "artist_location" ) );
     if( information.flags().testFlag( Echonest::SongInformation::SongType ) )
-        url.addEncodedQueryItem( "bucket", "song_type" );
+        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "song_type" ) );
 
     if( !information.idSpaces().isEmpty() ) {
         foreach( const QString& idSpace, information.idSpaces() )
-            url.addEncodedQueryItem( "bucket", "id:" + idSpace.toUtf8() );
+            urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "id:" + idSpace.toUtf8() ) );
     }
+
+    url.setQuery( urlQuery );
 }
 
 

@@ -21,6 +21,7 @@
 #include <QThread>
 #include <QDebug>
 #include <QMutex>
+#include <QUrlQuery>
 
 Echonest::Config* Echonest::Config::s_instance = 0;
 
@@ -37,8 +38,12 @@ QUrl Echonest::baseGetQuery(const QByteArray& type, const QByteArray& method)
 {
     QUrl url = baseUrl();
     url.setPath( QString::fromLatin1( "/api/v4/%1/%2" ).arg( QLatin1String( type ) ).arg( QLatin1String( method ) ) );
-    url.addEncodedQueryItem( "api_key", Echonest::Config::instance()->apiKey() );
-    url.addEncodedQueryItem( "format", "xml" );
+
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem( QLatin1String( "api_key" ), QString::fromLatin1( Echonest::Config::instance()->apiKey() ) );
+    urlQuery.addQueryItem( QLatin1String( "format" ), QLatin1String( "xml" ) );
+    url.setQuery( urlQuery );
+
     return url;
 }
 
