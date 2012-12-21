@@ -120,8 +120,8 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
         } else if( xml.name() == "audio_summary" && xml.isStartElement() ) {
             song.setAudioSummary( parseAudioSummary( xml ) );
         } else if( xml.name() == "song_type" && xml.isStartElement() ) {
-	    song.addSongType( xml.readElementText() );
-	}
+            song.addSongType( xml.readElementText() );
+        }
         xml.readNext();
     }
     xml.readNext(); // skip past the last </song>
