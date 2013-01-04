@@ -157,6 +157,29 @@ void SongTest::testIdentifyWithData()
 
 }
 
+void SongTest::testSearchSongType()
+{
+    Echonest::Song::SearchParams params;
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::SongType, QLatin1String("christmas") ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::SongType, QLatin1String("live") ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::Results, 30 ) );
+
+    QNetworkReply* reply = Echonest::Song::search( params, Echonest::SongInformation( Echonest::SongInformation::ArtistHotttnesss  | Echonest::SongInformation::ArtistLocation | Echonest::SongInformation::ArtistFamiliarity | Echonest::SongInformation::SongType ) );
+
+    qDebug() << "Test search:" << reply->url().toString();
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+
+    QVector< Echonest::Song > songs = Echonest::Song::parseSearch( reply );
+    qDebug() << songs << songs.size();
+    foreach( const Echonest::Song& s, songs) {
+      QVERIFY( s.songTypes().size() > 0 );
+      QCOMPARE( s.songTypes().contains( QLatin1String("christmas" ) ), QBool(true) );
+      QCOMPARE( s.songTypes().contains( QLatin1String("live" ) ), QBool(true) );
+    }
+}
+
 QTEST_MAIN(SongTest)
 
 #include "SongTest.moc"
