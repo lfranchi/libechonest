@@ -175,8 +175,8 @@ void SongTest::testSearchSongType()
     qDebug() << songs << songs.size();
     foreach( const Echonest::Song& s, songs) {
       QVERIFY( s.songTypes().size() > 0 );
-      QCOMPARE( s.songTypes().contains( QLatin1String("christmas" ) ), QBool(true) );
-      QCOMPARE( s.songTypes().contains( QLatin1String("live" ) ), QBool(true) );
+      QVERIFY( s.songTypes().contains( QLatin1String("christmas" ) ) );
+      QVERIFY( s.songTypes().contains( QLatin1String("live" ) ) );
     }
 }
 

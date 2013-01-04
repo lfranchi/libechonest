@@ -20,7 +20,6 @@ endmacro(add_echonest_test)
 
 add_echonest_test( ArtistTest.cpp )
 add_echonest_test( SongTest.cpp )
-add_echonest_test( SongTypeTest.cpp )
 add_echonest_test( TrackTest.cpp )
 add_echonest_test( PlaylistTest.cpp )
 add_echonest_test( CatalogTest.cpp )
