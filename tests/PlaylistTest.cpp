@@ -123,19 +123,18 @@ void PlaylistTest::testStaticWithSongType()
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongType, QLatin1String( "christmas" ) ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity | Echonest::SongInformation::SongType ) ) ) );
     p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 20 ) );
-    
+
     QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
 
     qDebug() << reply->url().toEncoded();
-    
+
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     SongList songs = DynamicPlaylist::parseStaticPlaylist( reply );
-    
+
     Q_FOREACH( const Song& song, songs ) {
-        qDebug() << song;
-	qDebug() << song.songTypes();
+        QVERIFY( song.songTypes().contains( QLatin1String("christmas" ) ) );
     }
 }
 
