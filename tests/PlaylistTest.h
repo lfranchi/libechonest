@@ -27,6 +27,7 @@ private slots:
 
     void testStatic1();
     void testStatic2();
+    void testStaticWithSongType();
     void testStaticXSPF();
     void testDynamic1();
     void testDynamic2();

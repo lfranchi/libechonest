@@ -60,7 +60,7 @@ public:
     qreal artistHotttnesss;
     qreal artistFamiliarity;
     Echonest::ArtistLocation artistLocation;
-    
+    QList<QString> songTypes;
     
 };
 

@@ -116,6 +116,28 @@ void PlaylistTest::testStatic2()
 
 }
 
+void PlaylistTest::testStaticWithSongType()
+{
+    DynamicPlaylist::PlaylistParams p;
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Artist, QLatin1String( "Dean Martin" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongType, QLatin1String( "christmas" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity | Echonest::SongInformation::SongType ) ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 20 ) );
+
+    QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
+
+    qDebug() << reply->url().toEncoded();
+
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    SongList songs = DynamicPlaylist::parseStaticPlaylist( reply );
+
+    Q_FOREACH( const Song& song, songs ) {
+        QVERIFY( song.songTypes().contains( QLatin1String("christmas" ) ) );
+    }
+}
+
 void PlaylistTest::testStaticXSPF()
 {
     DynamicPlaylist::PlaylistParams p;

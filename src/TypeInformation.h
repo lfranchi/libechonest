@@ -95,6 +95,7 @@ namespace Echonest {
             ArtistHotttnesss = 0x008,
             ArtistFamiliarity = 0x010,
             ArtistLocation = 0x020,
+            SongType = 0x40,
             
             NoInformation = 0x800
         };
