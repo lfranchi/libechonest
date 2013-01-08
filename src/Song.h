@@ -77,7 +77,8 @@ public:
       MinEnergy,
       Mode,
       Key,
-      Sort
+      Sort,
+      SongType
   };
   typedef QPair< Echonest::Song::SearchParam, QVariant > SearchParamData;
   typedef QVector< SearchParamData > SearchParams;
@@ -168,6 +169,13 @@ public:
    */
   ArtistLocation artistLocation() const;
   void setArtistLocation( const ArtistLocation& artistLocation );
+  
+  /**
+   * The type of the song (atm: christmas, studio, live)
+   */
+  QList< QString > songTypes() const;
+  void setSongTypes( const QList< QString >& songTypes );
+  void addSongType( const QString& songType );
 
   /**
    *  This fetches the data from The Echo Nest for the requested data, so it

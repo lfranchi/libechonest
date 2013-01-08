@@ -30,6 +30,8 @@ private slots:
 
     void testIdentify();
     void testIdentifyWithData();
+
+    void testSearchSongType();
 };
 
 #endif
