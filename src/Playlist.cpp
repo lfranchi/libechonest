@@ -311,6 +311,9 @@ QNetworkReply* Echonest::DynamicPlaylist::generateInternal(const Echonest::Dynam
             case SongRadioType:
                 url.addEncodedQueryItem(  playlistParamToString( iter->first ), "song-radio" );
                 break;
+            case GenreRadioType:
+                url.addEncodedQueryItem( playlistParamToString( iter->first ), "genre-radio" );
+                break;
             }
 
         } else if( iter->first == Sort ) {
@@ -437,6 +440,8 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "target_song_hotttnesss";
         case Echonest::DynamicPlaylist::SongType :
             return "song_type";
+        case Echonest::DynamicPlaylist::Genre :
+            return "genre";
     }
     return QByteArray();
 }
