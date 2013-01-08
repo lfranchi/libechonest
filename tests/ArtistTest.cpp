@@ -805,6 +805,18 @@ void ArtistTest::testVideos()
     qDebug() << testArtist.videos();
 }
 
+void ArtistTest::testGenres()
+{
+    Artist testArtist;
+    QNetworkReply* reply = testArtist.fetchGenres();
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+
+    QVector< QString > genres = testArtist.parseGenreList( reply );
+    QVERIFY( genres.size() > 0 );
+    QVERIFY( genres.contains( QLatin1String( "dub" ) ) );
+}
 
 QTEST_MAIN(ArtistTest)
 
