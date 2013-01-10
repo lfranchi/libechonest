@@ -373,7 +373,7 @@ QNetworkReply* Echonest::Artist::fetchSongs( int numResults, int offset  ) const
 
 QNetworkReply* Echonest::Artist::fetchTerms( Echonest::Artist::TermSorting sorting ) const
 {
-    QUrl url = setupQuery( "terms", 0, -1 );
+    QUrl url = setupQuery( "terms", 0, -1, false );
     if( sorting == Echonest::Artist::Weight )
         url.addEncodedQueryItem( "sort", "weight" );
     else if( sorting == Echonest::Artist::Frequency )
@@ -399,7 +399,7 @@ QNetworkReply* Echonest::Artist::fetchVideo(int numResults, int offset) const
 
 QNetworkReply *Echonest::Artist::fetchGenres() const
 {
-    QUrl url = setupQuery( "list_genres" );
+    QUrl url = setupQuery( "list_genres", 0, -1, false );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -556,18 +556,16 @@ QVector< QString > Echonest::Artist::parseGenreList( QNetworkReply* reply ) thro
     return genres;
 }
 
-QUrl Echonest::Artist::setupQuery( const QByteArray& methodName, int numResults, int start ) const
+QUrl Echonest::Artist::setupQuery( const QByteArray& methodName, int numResults, int start, bool requiresArtist = true ) const
 {
     QUrl url = Echonest::baseGetQuery( "artist", methodName );
     if( !d->id.isEmpty() )
         url.addEncodedQueryItem( "id", d->id );
     else if( !d->name.isEmpty() ) {
         url.addEncodedQueryItem( "name", Echonest::escapeSpacesAndPluses( d->name ) );
-    } else {
-        if (! (methodName == QByteArray( "list_genres" ) ) ) {
-            qWarning() << "Artist method" << methodName << "called on an artist object without name or id!";
-            return QUrl();
-        }
+    } else if (requiresArtist) {
+        qWarning() << "Artist method" << methodName << "called on an artist object without name or id!";
+        return QUrl();
     }
     if( numResults > 0 )
         url.addEncodedQueryItem( "results", QByteArray::number( numResults ) );
