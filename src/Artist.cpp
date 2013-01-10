@@ -563,7 +563,7 @@ QUrl Echonest::Artist::setupQuery( const QByteArray& methodName, int numResults,
         url.addEncodedQueryItem( "id", d->id );
     else if( !d->name.isEmpty() ) {
         url.addEncodedQueryItem( "name", Echonest::escapeSpacesAndPluses( d->name ) );
-    } else if ( methodName != "list_genres" || methodName != "terms" ) {
+    } else if ( methodName != "list_genres" && methodName != "terms" ) {
         qWarning() << "Artist method" << methodName << "called on an artist object without name or id!";
         return QUrl();
     }
