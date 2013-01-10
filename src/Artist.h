@@ -375,12 +375,12 @@ namespace Echonest{
         static Artists parseSuggest( QNetworkReply* ) throw( ParseError );
 
         /**
-         * Parse the result of a termList query. Returns the list of values returned.
+         * Parse the result of a termList query. Returns the list of terms delivered.
          */
         static QVector< QString > parseTermList( QNetworkReply* ) throw( ParseError );
 
         /**
-         * Parse the result of a genres query. Returns the list of values returned.
+         * Parse the result of a genres query. Returns the list of genres delivered.
          */
         static QVector< QString > parseGenreList( QNetworkReply* ) throw ( ParseError );
 
