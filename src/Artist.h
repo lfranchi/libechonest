@@ -277,6 +277,10 @@ namespace Echonest{
          */
         QNetworkReply* fetchVideo( int numResults = 0, int offset = -1 ) const;
 
+        /**
+         * Fetch a list of genres supported by echonest
+         */
+        QNetworkReply* fetchGenres() const;
 
         /**
          * Parse a completed QNetworkReply* that has fetched more information about this artist.
@@ -371,9 +375,14 @@ namespace Echonest{
         static Artists parseSuggest( QNetworkReply* ) throw( ParseError );
 
         /**
-         * Parse the result of a termList query. Returns the list of values returned.
+         * Parse the result of a termList query. Returns the list of terms delivered.
          */
         static QVector< QString > parseTermList( QNetworkReply* ) throw( ParseError );
+
+        /**
+         * Parse the result of a genres query. Returns the list of genres delivered.
+         */
+        static QVector< QString > parseGenreList( QNetworkReply* ) throw ( ParseError );
 
     private:
         QUrl setupQuery( const QByteArray& methodName, int numResults = 0, int start = -1 ) const;

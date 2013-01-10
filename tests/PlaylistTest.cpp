@@ -522,6 +522,30 @@ void PlaylistTest::testDynamicChainXSPF()
 
 }
 
+void PlaylistTest::testGenreRadio()
+{
+    DynamicPlaylist::PlaylistParams p;
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Genre, QLatin1String( "dance pop" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Type, Echonest::DynamicPlaylist::GenreRadioType ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity | Echonest::SongInformation::SongType ) ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 20 ) );
+
+    QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
+
+    qDebug() << reply->url().toEncoded();
+
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    SongList songs = DynamicPlaylist::parseStaticPlaylist( reply );
+    QVERIFY( songs.size() == 20 ); 
+
+    /*Q_FOREACH( const Song& song, songs ) {
+        //no usefull test code can be inserted here, because genres are not (yet?) supported in songs (e.g. to check via SongInformation if a song is genre "dance pop")
+        qDebug() << song;
+    }*/
+}
+
 
 QTEST_MAIN( PlaylistTest )
 

@@ -784,6 +784,21 @@ QVector< QString > Echonest::Parser::parseTermList( QXmlStreamReader& xml ) thro
     return terms;
 }
 
+QVector< QString > Echonest::Parser::parseGenreList( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    if( xml.atEnd() || xml.name() != "genres" || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw Echonest::ParseError( Echonest::UnknownParseError );
+
+    QVector< QString > genres;
+    while( xml.name() != "response" || !xml.isEndElement() ) {
+        if( xml.name() == "name" && xml.isStartElement() )
+            genres.append( xml.readElementText() );
+        xml.readNextStartElement();
+    }
+
+    return genres;
+}
+
 void Echonest::Parser::parseForeignArtistIds( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
 {
     if( xml.atEnd() || xml.name() != "foreign_ids" || xml.tokenType() != QXmlStreamReader::StartElement )

@@ -43,6 +43,7 @@ public:
         artistHotttnesss = other.artistHotttnesss;
         artistFamiliarity = other.artistFamiliarity;
         artistLocation = other.artistLocation;
+        songTypes = other.songTypes;
     }
     
     ~SongData() {}
