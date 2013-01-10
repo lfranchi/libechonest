@@ -66,7 +66,8 @@ namespace Echonest{
             ArtistDescriptionType,
             CatalogType,
             CatalogRadioType,
-            SongRadioType
+            SongRadioType,
+            GenreRadioType
         };
 
         /**
@@ -174,6 +175,7 @@ namespace Echonest{
             TargetArtistHotttnesss, /// When steering: 0.0 < artist_hottttnesss < 1.Target a desired artist_hottttnesss for the songs in this dynamic playlist session
             TargetArtistFamiliarity, /// When steering: 0.0 < artist_familiarity < 1.Target a desired energy for the artist_familiarity in this dynamic playlist session
             SongType, /// Type of Song (atm: Live, Studio, Christmas)
+            Genre, /// Genre Parameter needed for GenreRadio Playlist
         };
 
         /**

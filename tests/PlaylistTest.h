@@ -33,6 +33,8 @@ private slots:
     void testDynamic2();
     void testNewDynamicAPI();
     void testDynamicChainXSPF();
+
+    void testGenreRadio();
 };
 
 #endif
