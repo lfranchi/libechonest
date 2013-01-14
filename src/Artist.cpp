@@ -397,9 +397,9 @@ QNetworkReply* Echonest::Artist::fetchVideo(int numResults, int offset) const
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
-QNetworkReply *Echonest::Artist::fetchGenres() const
+QNetworkReply *Echonest::Artist::fetchGenres()
 {
-    QUrl url = setupQuery( "list_genres", 0, -1 );
+    QUrl url = baseGetQuery( "artist", "list_genres" );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -563,7 +563,7 @@ QUrl Echonest::Artist::setupQuery( const QByteArray& methodName, int numResults,
         url.addEncodedQueryItem( "id", d->id );
     else if( !d->name.isEmpty() ) {
         url.addEncodedQueryItem( "name", Echonest::escapeSpacesAndPluses( d->name ) );
-    } else if ( methodName != "list_genres" && methodName != "terms" ) {
+    } else if ( methodName != "terms" ) {
         qWarning() << "Artist method" << methodName << "called on an artist object without name or id!";
         return QUrl();
     }
