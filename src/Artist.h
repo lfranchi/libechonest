@@ -278,11 +278,6 @@ namespace Echonest{
         QNetworkReply* fetchVideo( int numResults = 0, int offset = -1 ) const;
 
         /**
-         * Fetch a list of genres supported by echonest
-         */
-        QNetworkReply* fetchGenres() const;
-
-        /**
          * Parse a completed QNetworkReply* that has fetched more information about this artist.
          *  This will update the artist object with the new values that have been fetched.
          *
@@ -345,6 +340,11 @@ namespace Echonest{
          * \param type Which type of term to return, at the moment only 'style' or 'mood'
          */
         static QNetworkReply* listTerms( const QString& type = QLatin1String("style") );
+
+        /**
+         * Fetch a list of genres supported by echonest
+         */
+        static QNetworkReply* fetchGenres();
 
         /**
          * Parse the result of a fetchSimilar() call, which returns a list of artists similar to the

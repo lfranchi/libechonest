@@ -807,13 +807,12 @@ void ArtistTest::testVideos()
 
 void ArtistTest::testGenres()
 {
-    Artist testArtist;
-    QNetworkReply* reply = testArtist.fetchGenres();
+    QNetworkReply* reply = Artist::fetchGenres();
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
 
-    QVector< QString > genres = testArtist.parseGenreList( reply );
+    QVector< QString > genres = Artist::parseGenreList( reply );
     QVERIFY( genres.size() > 0 );
     QVERIFY( genres.contains( QLatin1String( "dub" ) ) );
 }
