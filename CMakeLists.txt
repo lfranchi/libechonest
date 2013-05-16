@@ -31,11 +31,6 @@ if (CMAKE_COMPILER_IS_GNUCXX)
         add_definitions( -fvisibility=hidden )
     endif()
 
-    # disable -Werror on ARM since Qt containers cause a lot of alignment warnings
-    if ( NOT CMAKE_SYSTEM_PROCESSOR MATCHES "arm" )
-        add_definitions( -Werror )
-    endif()
-
 # to be added:
 #       -Wshadow
 # FIXME we might want this one back in, but Qt 4.4.3 spits gazillions of warnings with it on Linux-64:
