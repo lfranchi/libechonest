@@ -1,5 +1,8 @@
 To tag
 
+** REMEMBER TO BUMP CMAKELISTS VERSION **
+** REMEMBER TO BUMP MINOR (SOVERSION) IF NEW STUFF IS ADDED **
+
 1) edit TrackTest.h so as to not do the track upload test.
 2) run tag command with given git hash
 3) Commit
