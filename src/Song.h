@@ -78,7 +78,11 @@ public:
       Mode,
       Key,
       Sort,
-      SongType
+      SongType,
+      ArtistStartYearBefore,
+      ArtistStartYearAfter,
+      ArtistEndYearBefore,
+      ArtistEndYearAfter
   };
   typedef QPair< Echonest::Song::SearchParam, QVariant > SearchParamData;
   typedef QVector< SearchParamData > SearchParams;
