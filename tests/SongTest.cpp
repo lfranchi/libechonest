@@ -51,7 +51,7 @@ void SongTest::testSearch1()
         QLatin1String title = QLatin1String( "float on" );
         QCOMPARE( song.title().toLower(), title );
         QCOMPARE( song.artistName().toLower(), QLatin1String( "modest mouse" ) );
-        QCOMPARE( song.artistLocation().location.toLower(), QLatin1String( "issaquah, wa, us" ) );
+        QVERIFY( !song.artistLocation().location.isEmpty() );
         QCOMPARE( song.hotttnesss(), -1. );
         qDebug() << song.hotttnesss() << song.artistHotttnesss() << song.artistFamiliarity() << song.artistLocation();
 
@@ -64,7 +64,7 @@ void SongTest::testSearch1()
 
         QCOMPARE( song.title().toLower(), title );
         QCOMPARE( song.artistName().toLower(), QLatin1String( "modest mouse" ) );
-        QCOMPARE( song.artistLocation().location.toLower(), QLatin1String( "issaquah" ) );
+        QVERIFY( !song.artistLocation().location.isEmpty() );
         // make sure we got the new info
         QVERIFY( song.hotttnesss() != -1 );
 
@@ -92,7 +92,7 @@ void SongTest::testSearch1()
             QVERIFY( !track.foreignId().isEmpty() );
         }
     }
-    QVERIFY( songs.size() == 3 );
+    QVERIFY( songs.size() > 0 );
     QVERIFY( songs[ 1 ].audioSummary().danceability() > 0 );
     QVERIFY( songs[ 1 ].audioSummary().energy() > 0 );
 
@@ -152,7 +152,7 @@ void SongTest::testIdentify()
     QVERIFY( songs.size() > 0 );
     QCOMPARE( songs.first().artistName(), QLatin1String( "Bon Iver" ) );
     QCOMPARE( songs.first().artistId(), QByteArray( "ARKDTAM1187FB54026" ) );
-    QCOMPARE( songs.first().title(), QLatin1String( "01 Flume" ) );
+    QCOMPARE( songs.first().title(), QLatin1String( "Flume" ) );
     QCOMPARE( songs.first().id(), QByteArray( "SOJEVHC12A8C13C3E5" ) );
 }
 
@@ -177,6 +177,7 @@ void SongTest::testIdentifyWithData()
     QCOMPARE( songs.first().id(), QByteArray( "SOJEVHC12A8C13C3E5" ) );
 
 }
+
 
 void SongTest::testSearchSongType()
 {
