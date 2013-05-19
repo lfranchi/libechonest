@@ -99,6 +99,27 @@ void SongTest::testSearch1()
 
 }
 
+void SongTest::testSearch2()
+{
+    Echonest::Song::SearchParams params;
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::Description, QLatin1String("emo") ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::ArtistStartYearAfter, 1990 ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::ArtistStartYearBefore, 2000 ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::Results, 2 ) );
+
+    QNetworkReply* reply = Echonest::Song::search( params, Echonest::SongInformation( Echonest::SongInformation::ArtistHotttnesss  |
+                                                                                      Echonest::SongInformation::ArtistLocation |
+                                                                                      Echonest::SongInformation::ArtistFamiliarity ) );
+    qDebug() << "Test search:" << reply->url().toString();
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+
+    QVector< Echonest::Song > songs = Echonest::Song::parseSearch( reply );
+    qDebug() << songs << songs.size();
+    QVERIFY( !songs.isEmpty() );
+}
+
 void SongTest::testProfile()
 {
     Echonest::Song song;
