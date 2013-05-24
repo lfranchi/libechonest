@@ -331,7 +331,7 @@ QNetworkReply* Echonest::DynamicPlaylist::generateInternal(const Echonest::Dynam
                 urlQuery.addQueryItem(  QString::fromLatin1( playlistParamToString( iter->first ) ), QLatin1String( "song-radio" ) );
                 break;
             case GenreRadioType:
-                url.addEncodedQueryItem( playlistParamToString( iter->first ), "genre-radio" );
+                urlQuery.addQueryItem(  QString::fromLatin1( playlistParamToString( iter->first ) ), QLatin1String( "genre-radio" ) );
                 break;
             }
 

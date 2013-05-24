@@ -119,7 +119,7 @@ Echonest::Song Echonest::Parser::parseSong( QXmlStreamReader& xml ) throw( Echon
             song.setArtistLocation( parseSongArtistLocation( xml ) );
         } else if( xml.name() == QLatin1String( "audio_summary" ) && xml.isStartElement() ) {
             song.setAudioSummary( parseAudioSummary( xml ) );
-        } else if( xml.name() == "song_type" && xml.isStartElement() ) {
+        } else if( xml.name() == QLatin1String( "song_type" ) && xml.isStartElement() ) {
             song.addSongType( xml.readElementText() );
         }
         xml.readNext();
@@ -786,12 +786,12 @@ QVector< QString > Echonest::Parser::parseTermList( QXmlStreamReader& xml ) thro
 
 QVector< QString > Echonest::Parser::parseGenreList( QXmlStreamReader& xml ) throw( Echonest::ParseError )
 {
-    if( xml.atEnd() || xml.name() != "genres" || xml.tokenType() != QXmlStreamReader::StartElement )
+    if( xml.atEnd() || xml.name() != QLatin1String( "genres" ) || xml.tokenType() != QXmlStreamReader::StartElement )
         throw Echonest::ParseError( Echonest::UnknownParseError );
 
     QVector< QString > genres;
-    while( xml.name() != "response" || !xml.isEndElement() ) {
-        if( xml.name() == "name" && xml.isStartElement() )
+    while( xml.name() != QLatin1String( "response" ) || !xml.isEndElement() ) {
+        if( xml.name() == QLatin1String( "name" ) && xml.isStartElement() )
             genres.append( xml.readElementText() );
         xml.readNextStartElement();
     }
