@@ -123,6 +123,38 @@ void SongTest::testSearch2()
     QVERIFY( !songs.isEmpty() );
 }
 
+void SongTest::testSearch3()
+{
+    Echonest::Song::SearchParams params;
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::Description, QLatin1String("psychedelic") ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::Results, 3 ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::MinAcousticness, 0.1 ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::MaxAcousticness, 0.7 ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::MaxSpeechiness, 0.4 ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::MinLiveness, 0.4 ) );
+
+    QNetworkReply* reply = Echonest::Song::search( params, Echonest::SongInformation( Echonest::SongInformation::ArtistHotttnesss  |
+                                                                                      Echonest::SongInformation::ArtistLocation |
+                                                                                      Echonest::SongInformation::ArtistFamiliarity |
+                                                                                      Echonest::SongInformation::AudioSummaryInformation ) );
+    qDebug() << "Test search:" << reply->url().toString();
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+
+    QVector< Echonest::Song > songs = Echonest::Song::parseSearch( reply );
+    qDebug() << songs << songs.size();
+    QVERIFY( !songs.isEmpty() );
+    QVERIFY( songs[ 0 ].audioSummary().acousticness() >= 0.1 );
+    QVERIFY( songs[ 0 ].audioSummary().acousticness() <= 0.7 );
+    QVERIFY( songs[ 0 ].audioSummary().speechiness() <= 0.4 );
+    QVERIFY( songs[ 0 ].audioSummary().liveness() >= 0.4 );
+    QVERIFY( songs[ 1 ].audioSummary().acousticness() >= 0.1 );
+    QVERIFY( songs[ 1 ].audioSummary().acousticness() <= 0.7 );
+    QVERIFY( songs[ 1 ].audioSummary().speechiness() <= 0.4 );
+    QVERIFY( songs[ 1 ].audioSummary().liveness() >= 0.4 );
+}
+
 void SongTest::testProfile()
 {
     Echonest::Song song;
