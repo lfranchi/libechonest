@@ -97,6 +97,12 @@ namespace Echonest{
         qreal energy() const;
         void setEnergy( qreal energy );
         
+        /**
+         * The acousticness of this song, from 0 to 1.
+         */
+        qreal acousticness() const;
+        void setAcousticness( qreal acousticness );
+        
         /// The following require additional fetching to read ///
                          /** TODO: implement **/
         

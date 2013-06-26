@@ -268,6 +268,8 @@ Echonest::AudioSummary Echonest::Parser::parseAudioSummary( QXmlStreamReader& xm
             summary.setDanceability( xml.readElementText().toDouble() );
         else if( xml.name() == "energy" && xml.isStartElement() )
             summary.setEnergy( xml.readElementText().toDouble() );
+        else if( xml.name() == "acousticness" && xml.isStartElement() )
+            summary.setAcousticness( xml.readElementText().toDouble() );
 
         xml.readNext();
     }

@@ -337,3 +337,13 @@ void Echonest::AudioSummary::setEnergy(qreal energy)
     d->energy = energy;
 }
 
+qreal Echonest::AudioSummary::acousticness() const
+{
+    return d->acousticness;
+}
+
+void Echonest::AudioSummary::setAcousticness(qreal acousticness)
+{
+    d->acousticness = acousticness;
+}
+

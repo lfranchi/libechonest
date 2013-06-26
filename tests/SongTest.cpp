@@ -93,8 +93,9 @@ void SongTest::testSearch1()
         }
     }
     QVERIFY( songs.size() > 0 );
-    QVERIFY( songs[ 1 ].audioSummary().danceability() > 0 );
-    QVERIFY( songs[ 1 ].audioSummary().energy() > 0 );
+    QVERIFY( songs[ 0 ].audioSummary().danceability() > 0 );
+    QVERIFY( songs[ 0 ].audioSummary().energy() > 0 );
+    QVERIFY( songs[ 0 ].audioSummary().acousticness() > 0 );
 
 
 }
@@ -183,7 +184,7 @@ void SongTest::testSearchSongType()
 {
     Echonest::Song::SearchParams params;
     params.append( Echonest::Song::SearchParamData( Echonest::Song::SongType, QLatin1String("christmas") ) );
-    params.append( Echonest::Song::SearchParamData( Echonest::Song::SongType, QLatin1String("live") ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::SongType, QLatin1String("acoustic") ) );
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Results, 30 ) );
 
     QNetworkReply* reply = Echonest::Song::search( params, Echonest::SongInformation( Echonest::SongInformation::ArtistHotttnesss  | Echonest::SongInformation::ArtistLocation | Echonest::SongInformation::ArtistFamiliarity | Echonest::SongInformation::SongType ) );
@@ -198,7 +199,7 @@ void SongTest::testSearchSongType()
     foreach( const Echonest::Song& s, songs) {
       QVERIFY( s.songTypes().size() > 0 );
       QVERIFY( s.songTypes().contains( QLatin1String("christmas" ) ) );
-      QVERIFY( s.songTypes().contains( QLatin1String("live" ) ) );
+      QVERIFY( s.songTypes().contains( QLatin1String("acoustic" ) ) );
     }
 }
 

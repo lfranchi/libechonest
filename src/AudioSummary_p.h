@@ -25,8 +25,8 @@ class AudioSummaryData : public QSharedData
 {
 public:
     AudioSummaryData() : key( -1 ), tempo( -1 ), mode( -1 ), time_signature( -1 ), duration( -1 ), loudness( -1 ), samplerate( -1 ), danceability( -1 ), energy( -1 ),
-                         analysis_time( -1 ), status( -1 ), timestamp( -1 ), end_of_fade_in( -1 ), key_confidence( -1 ), mode_confidence( -1 ), num_samples( -1 ),
-                         start_of_fade_out( -1 ), tempo_confidence( -1 ), time_signature_confidence( -1 ) {}
+                         acousticness( -1 ), analysis_time( -1 ), status( -1 ), timestamp( -1 ), end_of_fade_in( -1 ), key_confidence( -1 ), mode_confidence( -1 ),
+                         num_samples( -1 ), start_of_fade_out( -1 ), tempo_confidence( -1 ), time_signature_confidence( -1 ) {}
     AudioSummaryData(const AudioSummaryData& other) : QSharedData( other )
     {
         key = other.key;
@@ -38,6 +38,7 @@ public:
         samplerate = other.samplerate;
         danceability = other.danceability;
         energy = other.energy;
+        acousticness = other.acousticness;
         
         analysis_url = other.analysis_url;
         
@@ -76,6 +77,7 @@ public:
     int samplerate;
     qreal danceability;
     qreal energy;
+    qreal acousticness;
     
     QUrl analysis_url; // used to fetch the following pieces of data
     
