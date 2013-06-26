@@ -103,6 +103,18 @@ namespace Echonest{
         qreal acousticness() const;
         void setAcousticness( qreal acousticness );
         
+        /**
+         * The speechiness of this song, from 0 to 1.
+         */
+        qreal speechiness() const;
+        void setSpeechiness( qreal speechiness );
+        
+        /**
+         * The liveness of this song, from 0 to 1.
+         */
+        qreal liveness() const;
+        void setLiveness( qreal liveness );
+        
         /// The following require additional fetching to read ///
                          /** TODO: implement **/
         

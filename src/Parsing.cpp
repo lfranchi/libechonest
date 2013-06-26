@@ -270,6 +270,10 @@ Echonest::AudioSummary Echonest::Parser::parseAudioSummary( QXmlStreamReader& xm
             summary.setEnergy( xml.readElementText().toDouble() );
         else if( xml.name() == "acousticness" && xml.isStartElement() )
             summary.setAcousticness( xml.readElementText().toDouble() );
+        else if( xml.name() == "speechiness" && xml.isStartElement() )
+            summary.setSpeechiness( xml.readElementText().toDouble() );
+        else if( xml.name() == "liveness" && xml.isStartElement() )
+            summary.setLiveness( xml.readElementText().toDouble() );
 
         xml.readNext();
     }

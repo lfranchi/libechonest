@@ -347,3 +347,23 @@ void Echonest::AudioSummary::setAcousticness(qreal acousticness)
     d->acousticness = acousticness;
 }
 
+qreal Echonest::AudioSummary::speechiness() const
+{
+    return d->speechiness;
+}
+
+void Echonest::AudioSummary::setSpeechiness(qreal speechiness)
+{
+    d->speechiness = speechiness;
+}
+
+qreal Echonest::AudioSummary::liveness() const
+{
+    return d->liveness;
+}
+
+void Echonest::AudioSummary::setLiveness(qreal liveness)
+{
+    d->liveness = liveness;
+}
+

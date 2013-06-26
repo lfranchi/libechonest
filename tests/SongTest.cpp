@@ -96,6 +96,8 @@ void SongTest::testSearch1()
     QVERIFY( songs[ 0 ].audioSummary().danceability() > 0 );
     QVERIFY( songs[ 0 ].audioSummary().energy() > 0 );
     QVERIFY( songs[ 0 ].audioSummary().acousticness() > 0 );
+    QVERIFY( songs[ 0 ].audioSummary().speechiness() > 0 );
+    QVERIFY( songs[ 0 ].audioSummary().liveness() > 0 );
 
 
 }
