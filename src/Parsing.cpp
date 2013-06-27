@@ -37,6 +37,7 @@ void Echonest::Parser::checkForErrors( QNetworkReply* reply ) throw( Echonest::P
 //         throw ParseError( Echonest::UnfinishedQuery );
 //
     if( reply->error() != QNetworkReply::NoError && reply->error() != QNetworkReply::UnknownContentError ) {    // let UnknownContentError through so we parse it in readStatus with the proper error message
+        qDebug() << reply->errorString();
         ParseError err( Echonest::NetworkError );
         err.setNetworkError( reply->error() );
 

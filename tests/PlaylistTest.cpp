@@ -282,6 +282,7 @@ void PlaylistTest::testDynamic2()
     playlist.parseCreate( reply );
 
     reply = playlist.next( 1 );
+    qDebug() << reply->url().toString();
 
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
@@ -293,6 +294,7 @@ void PlaylistTest::testDynamic2()
 
     // GET NEXT
     reply = playlist.next( 1 );
+    qDebug() << reply->url().toString();
 
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
@@ -304,6 +306,7 @@ void PlaylistTest::testDynamic2()
 
     // GET NEXT
     reply = playlist.next( 1 );
+    qDebug() << reply->url().toString();
 
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
@@ -319,12 +322,16 @@ void PlaylistTest::testDynamic2()
     steering.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::ArtistMinFamiliarity, QLatin1String( ".5" ) ) );
 
     reply = playlist.steer( steering );
+    qDebug() << reply->url().toString();
+
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     playlist.parseSteer( reply );
 
     reply = playlist.next( 1 );
-//     qDebug() << "Control URL:" << reply->url().toString();
+    qDebug() << reply->url().toString();
+
+
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     song = playlist.parseNext( reply ).first.first();
@@ -335,9 +342,11 @@ void PlaylistTest::testDynamic2()
     // GET NEXT
     steering.clear();
     steering.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::TargetLoudness, QLatin1String( ".9" ) ) );
-    steering.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::MoreLikeThis, QLatin1String( "last" ) ) );
+    //steering.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::MoreLikeThis, QLatin1String( "last" ) ) ); //BUG: this no longer seems to work
 
     reply = playlist.steer( steering );
+    qDebug() << reply->url().toString();
+
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     playlist.parseSteer( reply );
@@ -345,7 +354,8 @@ void PlaylistTest::testDynamic2()
     playlist.next();
 
     reply = playlist.next( 1 );
-//     qDebug() << "Control URL:" << reply->url().toString();
+    qDebug() << reply->url().toString();
+
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
     song = playlist.parseNext( reply ).first.first();
@@ -399,6 +409,8 @@ void PlaylistTest::testDynamic2()
     playlist.parseCreate( reply );
 
     reply = playlist.next();
+    qDebug() << reply->url().toString();
+
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
 
@@ -411,6 +423,7 @@ void PlaylistTest::testDynamic2()
     QVERIFY( song.artistFamiliarity() == -1 ); // make sure we are in a new playlist, and we didn't ask for this info so it shouldn't be there
 
     reply = playlist.deleteSession();
+    qDebug() << reply->url().toString();
 
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
@@ -572,6 +585,30 @@ void PlaylistTest::testGenreRadio()
         //no usefull test code can be inserted here, because genres are not (yet?) supported in songs (e.g. to check via SongInformation if a song is genre "dance pop")
         qDebug() << song;
     }*/
+}
+
+void PlaylistTest::testAudioSummaryAttributes()
+{
+    DynamicPlaylist::PlaylistParams p;
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Artist, QLatin1String( "The Doors" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::MinLiveness, 0.7 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::MaxValence, 0.7 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity | Echonest::SongInformation::SongType ) ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 10 ) );
+
+    QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
+
+    qDebug() << reply->url().toEncoded();
+
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    SongList songs = DynamicPlaylist::parseStaticPlaylist( reply );
+
+    Q_FOREACH( const Song& song, songs ) {
+        QVERIFY( song.audioSummary().liveness() >= 0.7 );
+        QVERIFY( song.audioSummary().valence() <= 0.7 );
+    }
 }
 
 

@@ -450,6 +450,22 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "artist_end_year_before";
         case Echonest::DynamicPlaylist::ArtistEndYearAfter:
             return "artist_end_year_after";
+        case Echonest::DynamicPlaylist::MaxAcousticness:
+            return "max_accousticness";
+        case Echonest::DynamicPlaylist::MinAcousticness:
+            return "min_accousticness";
+        case Echonest::DynamicPlaylist::MaxSpeechiness:
+            return "max_speechiness";
+        case Echonest::DynamicPlaylist::MinSpeechiness:
+            return "min_speechiness";
+        case Echonest::DynamicPlaylist::MaxLiveness:
+            return "max_liveness";
+        case Echonest::DynamicPlaylist::MinLiveness:
+            return "min_liveness";
+        case Echonest::DynamicPlaylist::MaxValence:
+            return "max_valence";
+        case Echonest::DynamicPlaylist::MinValence:
+            return "min_valence";
     }
     return QByteArray();
 }
