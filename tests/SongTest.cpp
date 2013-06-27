@@ -132,6 +132,8 @@ void SongTest::testSearch3()
     params.append( Echonest::Song::SearchParamData( Echonest::Song::MaxAcousticness, 0.7 ) );
     params.append( Echonest::Song::SearchParamData( Echonest::Song::MaxSpeechiness, 0.4 ) );
     params.append( Echonest::Song::SearchParamData( Echonest::Song::MinLiveness, 0.4 ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::MinValence, 0.3 ) );
+    params.append( Echonest::Song::SearchParamData( Echonest::Song::MaxValence, 0.9 ) );
 
     QNetworkReply* reply = Echonest::Song::search( params, Echonest::SongInformation( Echonest::SongInformation::ArtistHotttnesss  |
                                                                                       Echonest::SongInformation::ArtistLocation |
@@ -149,10 +151,15 @@ void SongTest::testSearch3()
     QVERIFY( songs[ 0 ].audioSummary().acousticness() <= 0.7 );
     QVERIFY( songs[ 0 ].audioSummary().speechiness() <= 0.4 );
     QVERIFY( songs[ 0 ].audioSummary().liveness() >= 0.4 );
+    QVERIFY( songs[ 0 ].audioSummary().valence() >= 0.3 );
+    QVERIFY( songs[ 0 ].audioSummary().valence() <= 0.9 );
+
     QVERIFY( songs[ 1 ].audioSummary().acousticness() >= 0.1 );
     QVERIFY( songs[ 1 ].audioSummary().acousticness() <= 0.7 );
     QVERIFY( songs[ 1 ].audioSummary().speechiness() <= 0.4 );
     QVERIFY( songs[ 1 ].audioSummary().liveness() >= 0.4 );
+    QVERIFY( songs[ 1 ].audioSummary().valence() >= 0.3 );
+    QVERIFY( songs[ 1 ].audioSummary().valence() <= 0.9 );
 }
 
 void SongTest::testProfile()

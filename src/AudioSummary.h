@@ -115,6 +115,12 @@ namespace Echonest{
         qreal liveness() const;
         void setLiveness( qreal liveness );
         
+        /**
+         * The valence of this song, from 0 to 1.
+         */
+        qreal valence() const;
+        void setValence( qreal valence );
+        
         /// The following require additional fetching to read ///
                          /** TODO: implement **/
         

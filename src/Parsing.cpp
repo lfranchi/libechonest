@@ -274,6 +274,8 @@ Echonest::AudioSummary Echonest::Parser::parseAudioSummary( QXmlStreamReader& xm
             summary.setSpeechiness( xml.readElementText().toDouble() );
         else if( xml.name() == "liveness" && xml.isStartElement() )
             summary.setLiveness( xml.readElementText().toDouble() );
+        else if( xml.name() == "valence" && xml.isStartElement() )
+            summary.setValence( xml.readElementText().toDouble() );
 
         xml.readNext();
     }

@@ -408,6 +408,10 @@ QByteArray Echonest::Song::searchParamToString( Echonest::Song::SearchParam para
             return "max_liveness";
         case Echonest::Song::MinLiveness:
             return "min_liveness";
+        case Echonest::Song::MaxValence:
+            return "max_valence";
+        case Echonest::Song::MinValence:
+            return "min_valence";
     }
     return QByteArray();
 }

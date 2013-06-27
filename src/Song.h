@@ -88,7 +88,9 @@ public:
       MaxSpeechiness,
       MinSpeechiness,
       MaxLiveness,
-      MinLiveness
+      MinLiveness,
+      MaxValence,
+      MinValence
   };
   typedef QPair< Echonest::Song::SearchParam, QVariant > SearchParamData;
   typedef QVector< SearchParamData > SearchParams;

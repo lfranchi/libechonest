@@ -367,3 +367,13 @@ void Echonest::AudioSummary::setLiveness(qreal liveness)
     d->liveness = liveness;
 }
 
+qreal Echonest::AudioSummary::valence() const
+{
+    return d->valence;
+}
+
+void Echonest::AudioSummary::setValence(qreal valence)
+{
+    d->valence = valence;
+}
+
