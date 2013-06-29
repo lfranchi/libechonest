@@ -554,6 +554,22 @@ QByteArray Echonest::DynamicPlaylist::playlistSortToString(Echonest::DynamicPlay
             return "danceability-asc";
         case SortDanceabilityDescending:
             return "danceability-desc";
+        case SortAcousticnessAscending:
+            return "acousticness-asc";
+        case SortAcousticnessDescending:
+            return "acousticness-desc";
+        case SortSpeechinessAscending:
+            return "speechiness-asc";
+        case SortSpeechinessDescending:
+            return "speechiness-desc";
+        case SortLivenessAscending:
+            return "liveness-asc";
+        case SortLivenessDescending:
+            return "liveness-desc";
+        case SortValenceAscending:
+            return "valence-asc";
+        case SortValenceDescending:
+            return "valence-desc";
     }
     return QByteArray();
 }

@@ -97,7 +97,15 @@ namespace Echonest{
             SortEnergyAscending,
             SortEnergyDescending,
             SortDanceabilityAscending,
-            SortDanceabilityDescending
+            SortDanceabilityDescending,
+            SortAcousticnessAscending,
+            SortAcousticnessDescending,
+            SortSpeechinessAscending,
+            SortSpeechinessDescending,
+            SortLivenessAscending,
+            SortLivenessDescending,
+            SortValenceAscending,
+            SortValenceDescending
         };
 
         /**

@@ -31,7 +31,7 @@ private slots:
     void testStaticWithSongType();
     void testStaticXSPF();
     void testDynamic1();
-    void testDynamic2();
+    //void testDynamic2(); // hits API limit with it's requests - uncomment when limit is set higher
     void testNewDynamicAPI();
     void testDynamicChainXSPF();
 
