@@ -27,6 +27,7 @@ private slots:
 
     void testStatic1();
     void testStatic2();
+    void testStaticArtistYears();
     void testStaticWithSongType();
     void testStaticXSPF();
     void testDynamic1();

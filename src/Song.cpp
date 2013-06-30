@@ -393,7 +393,7 @@ QByteArray Echonest::Song::searchParamToString( Echonest::Song::SearchParam para
         case Echonest::Song::ArtistStartYearAfter:
             return "artist_start_year_after";
         case Echonest::Song::ArtistEndYearBefore:
-            return "artist_endt_year_before";
+            return "artist_end_year_before";
         case Echonest::Song::ArtistEndYearAfter:
             return "artist_end_year_after";
     }

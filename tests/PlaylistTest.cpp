@@ -116,6 +116,34 @@ void PlaylistTest::testStatic2()
 
 }
 
+
+void PlaylistTest::testStaticArtistYears()
+{
+    DynamicPlaylist::PlaylistParams p;
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Type, DynamicPlaylist::ArtistDescriptionType ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Description, QLatin1String( "rock" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::ArtistStartYearBefore, 1970 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::ArtistEndYearBefore, 1980 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::SongInformation, QVariant::fromValue( Echonest::SongInformation( Echonest::SongInformation::Hotttnesss | Echonest::SongInformation::ArtistHotttnesss | Echonest::SongInformation::ArtistFamiliarity ) ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 4 ) );
+
+    QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
+
+    qDebug() << reply->url().toEncoded();
+    QCOMPARE( QLatin1String( reply->url().toEncoded() ), QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&type=artist-description&description=rock&artist_start_year_before=1970&artist_end_year_before=1980&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&results=4" ) );
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    SongList songs = DynamicPlaylist::parseStaticPlaylist( reply );
+
+//     qDebug() << "Got songs;" << songs;
+    QCOMPARE( songs.size(), 4 );
+    Q_FOREACH( const Song& song, songs ) {
+        QVERIFY( !song.id().isEmpty() );
+    }
+
+}
+
 void PlaylistTest::testStaticWithSongType()
 {
     DynamicPlaylist::PlaylistParams p;

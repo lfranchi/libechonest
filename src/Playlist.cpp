@@ -442,6 +442,14 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "song_type";
         case Echonest::DynamicPlaylist::Genre :
             return "genre";
+        case Echonest::DynamicPlaylist::ArtistStartYearBefore:
+            return "artist_start_year_before";
+        case Echonest::DynamicPlaylist::ArtistStartYearAfter:
+            return "artist_start_year_after";
+        case Echonest::DynamicPlaylist::ArtistEndYearBefore:
+            return "artist_end_year_before";
+        case Echonest::DynamicPlaylist::ArtistEndYearAfter:
+            return "artist_end_year_after";
     }
     return QByteArray();
 }

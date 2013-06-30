@@ -176,6 +176,10 @@ namespace Echonest{
             TargetArtistFamiliarity, /// When steering: 0.0 < artist_familiarity < 1.Target a desired energy for the artist_familiarity in this dynamic playlist session
             SongType, /// Type of Song (atm: Live, Studio, Christmas)
             Genre, /// Genre Parameter needed for GenreRadio Playlist
+            ArtistStartYearBefore,
+            ArtistStartYearAfter,
+            ArtistEndYearBefore,
+            ArtistEndYearAfter
         };
 
         /**
