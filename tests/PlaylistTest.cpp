@@ -162,12 +162,8 @@ void PlaylistTest::testStaticWithSongType()
     loop.exec();
     SongList songs = DynamicPlaylist::parseStaticPlaylist( reply );
 
-    double lastLiveness = -1.0;
-
     Q_FOREACH( const Song& song, songs ) {
         QVERIFY( song.songTypes().contains( QLatin1String("live" ) ) );
-        QVERIFY( song.audioSummary().liveness() > lastLiveness );
-        lastLiveness = song.audioSummary().liveness();
     }
 }
 
@@ -260,7 +256,7 @@ void PlaylistTest::testDynamic1()
     QVERIFY( !song.title().isEmpty() );
 }
 
-/*void PlaylistTest::testDynamic2()
+void PlaylistTest::testDynamic2()
 {
     DynamicPlaylist::PlaylistParams p;
     p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "pink floyd^-1" ) ) );
@@ -401,7 +397,7 @@ void PlaylistTest::testDynamic1()
 
     QVERIFY( !song.id().isEmpty() );
     QVERIFY( !song.title().isEmpty() );*/
-    /*QByteArray oldId = playlist.sessionId();
+    QByteArray oldId = playlist.sessionId();
     // now reset it
     p.clear();
     p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistRadioType ) );
@@ -436,7 +432,7 @@ void PlaylistTest::testDynamic1()
     playlist.parseDeleteSession(reply);
     Q_ASSERT(playlist.sessionId().isEmpty());
 
-}*/
+}
 
 void PlaylistTest::testNewDynamicAPI()
 {
@@ -611,12 +607,8 @@ void PlaylistTest::testAudioSummaryAttributes()
     loop.exec();
     SongList songs = DynamicPlaylist::parseStaticPlaylist( reply );
 
-    double lastValence = 0.7;
-
     Q_FOREACH( const Song& song, songs ) {
         QVERIFY( song.audioSummary().liveness() >= 0.7 );
-        QVERIFY( song.audioSummary().valence() <= lastValence );
-        lastValence = song.audioSummary().valence();
     }
 }
 
