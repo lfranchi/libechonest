@@ -97,7 +97,15 @@ namespace Echonest{
             SortEnergyAscending,
             SortEnergyDescending,
             SortDanceabilityAscending,
-            SortDanceabilityDescending
+            SortDanceabilityDescending,
+            SortAcousticnessAscending,
+            SortAcousticnessDescending,
+            SortSpeechinessAscending,
+            SortSpeechinessDescending,
+            SortLivenessAscending,
+            SortLivenessDescending,
+            SortValenceAscending,
+            SortValenceDescending
         };
 
         /**
@@ -174,12 +182,20 @@ namespace Echonest{
             TargetSongHotttnesss, /// When steering: 0.0 < song_hotttnesss < 1.Target a desired song_hotttnesss for the songs in this dynamic playlist session
             TargetArtistHotttnesss, /// When steering: 0.0 < artist_hottttnesss < 1.Target a desired artist_hottttnesss for the songs in this dynamic playlist session
             TargetArtistFamiliarity, /// When steering: 0.0 < artist_familiarity < 1.Target a desired energy for the artist_familiarity in this dynamic playlist session
-            SongType, /// Type of Song (atm: Live, Studio, Christmas)
+            SongType, /// Type of Song (atm: Live, Studio, Christmas, Acoustic, Electric)
             Genre, /// Genre Parameter needed for GenreRadio Playlist
             ArtistStartYearBefore,
             ArtistStartYearAfter,
             ArtistEndYearBefore,
-            ArtistEndYearAfter
+            ArtistEndYearAfter,
+            MaxAcousticness, /// 0 < acousticness < 1  a measure of the maximum acousticness of the song
+            MinAcousticness, /// 0 < acousticness < 1  a measure of the minimum acousticness of the song
+            MaxSpeechiness, /// 0 < speechiness < 1  a measure of the maximum speechiness of the song
+            MinSpeechiness, /// 0 < speechiness < 1  a measure of the minimum speechiness of the song
+            MaxLiveness, /// 0 < liveness < 1  a measure of the maximum liveness of the song
+            MinLiveness, /// 0 < liveness < 1  a measure of the minimum liveness of the song
+            MaxValence, /// 0 < valence < 1  a measure of the maximum valence of the song
+            MinValence /// 0 < valence < 1  a measure of the minimum valence of the song
         };
 
         /**

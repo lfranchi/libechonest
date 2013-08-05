@@ -82,7 +82,15 @@ public:
       ArtistStartYearBefore,
       ArtistStartYearAfter,
       ArtistEndYearBefore,
-      ArtistEndYearAfter
+      ArtistEndYearAfter,
+      MaxAcousticness,
+      MinAcousticness,
+      MaxSpeechiness,
+      MinSpeechiness,
+      MaxLiveness,
+      MinLiveness,
+      MaxValence,
+      MinValence
   };
   typedef QPair< Echonest::Song::SearchParam, QVariant > SearchParamData;
   typedef QVector< SearchParamData > SearchParams;

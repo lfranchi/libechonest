@@ -27,6 +27,7 @@ private slots:
 
     void testSearch1();
     void testSearch2();
+    void testSearch3();
     void testProfile();
 
     void testIdentify();

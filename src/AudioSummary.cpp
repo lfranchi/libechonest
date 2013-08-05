@@ -337,3 +337,43 @@ void Echonest::AudioSummary::setEnergy(qreal energy)
     d->energy = energy;
 }
 
+qreal Echonest::AudioSummary::acousticness() const
+{
+    return d->acousticness;
+}
+
+void Echonest::AudioSummary::setAcousticness(qreal acousticness)
+{
+    d->acousticness = acousticness;
+}
+
+qreal Echonest::AudioSummary::speechiness() const
+{
+    return d->speechiness;
+}
+
+void Echonest::AudioSummary::setSpeechiness(qreal speechiness)
+{
+    d->speechiness = speechiness;
+}
+
+qreal Echonest::AudioSummary::liveness() const
+{
+    return d->liveness;
+}
+
+void Echonest::AudioSummary::setLiveness(qreal liveness)
+{
+    d->liveness = liveness;
+}
+
+qreal Echonest::AudioSummary::valence() const
+{
+    return d->valence;
+}
+
+void Echonest::AudioSummary::setValence(qreal valence)
+{
+    d->valence = valence;
+}
+

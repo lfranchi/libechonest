@@ -37,6 +37,7 @@ void Echonest::Parser::checkForErrors( QNetworkReply* reply ) throw( Echonest::P
 //         throw ParseError( Echonest::UnfinishedQuery );
 //
     if( reply->error() != QNetworkReply::NoError && reply->error() != QNetworkReply::UnknownContentError ) {    // let UnknownContentError through so we parse it in readStatus with the proper error message
+        qDebug() << reply->errorString();
         ParseError err( Echonest::NetworkError );
         err.setNetworkError( reply->error() );
 
@@ -268,6 +269,14 @@ Echonest::AudioSummary Echonest::Parser::parseAudioSummary( QXmlStreamReader& xm
             summary.setDanceability( xml.readElementText().toDouble() );
         else if( xml.name() == "energy" && xml.isStartElement() )
             summary.setEnergy( xml.readElementText().toDouble() );
+        else if( xml.name() == "acousticness" && xml.isStartElement() )
+            summary.setAcousticness( xml.readElementText().toDouble() );
+        else if( xml.name() == "speechiness" && xml.isStartElement() )
+            summary.setSpeechiness( xml.readElementText().toDouble() );
+        else if( xml.name() == "liveness" && xml.isStartElement() )
+            summary.setLiveness( xml.readElementText().toDouble() );
+        else if( xml.name() == "valence" && xml.isStartElement() )
+            summary.setValence( xml.readElementText().toDouble() );
 
         xml.readNext();
     }
