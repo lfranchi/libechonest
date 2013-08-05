@@ -36,6 +36,7 @@ private slots:
     void testDynamicChainXSPF();
 
     void testGenreRadio();
+    void testAudioSummaryAttributes();
 };
 
 #endif
