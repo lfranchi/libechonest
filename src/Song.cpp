@@ -396,6 +396,22 @@ QByteArray Echonest::Song::searchParamToString( Echonest::Song::SearchParam para
             return "artist_end_year_before";
         case Echonest::Song::ArtistEndYearAfter:
             return "artist_end_year_after";
+        case Echonest::Song::MaxAcousticness:
+            return "max_acousticness";
+        case Echonest::Song::MinAcousticness:
+            return "min_acousticness";
+        case Echonest::Song::MaxSpeechiness:
+            return "max_speechiness";
+        case Echonest::Song::MinSpeechiness:
+            return "min_speechiness";
+        case Echonest::Song::MaxLiveness:
+            return "max_liveness";
+        case Echonest::Song::MinLiveness:
+            return "min_liveness";
+        case Echonest::Song::MaxValence:
+            return "max_valence";
+        case Echonest::Song::MinValence:
+            return "min_valence";
     }
     return QByteArray();
 }

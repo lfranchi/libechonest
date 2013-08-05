@@ -450,6 +450,22 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "artist_end_year_before";
         case Echonest::DynamicPlaylist::ArtistEndYearAfter:
             return "artist_end_year_after";
+        case Echonest::DynamicPlaylist::MaxAcousticness:
+            return "max_accousticness";
+        case Echonest::DynamicPlaylist::MinAcousticness:
+            return "min_accousticness";
+        case Echonest::DynamicPlaylist::MaxSpeechiness:
+            return "max_speechiness";
+        case Echonest::DynamicPlaylist::MinSpeechiness:
+            return "min_speechiness";
+        case Echonest::DynamicPlaylist::MaxLiveness:
+            return "max_liveness";
+        case Echonest::DynamicPlaylist::MinLiveness:
+            return "min_liveness";
+        case Echonest::DynamicPlaylist::MaxValence:
+            return "max_valence";
+        case Echonest::DynamicPlaylist::MinValence:
+            return "min_valence";
     }
     return QByteArray();
 }
@@ -538,6 +554,22 @@ QByteArray Echonest::DynamicPlaylist::playlistSortToString(Echonest::DynamicPlay
             return "danceability-asc";
         case SortDanceabilityDescending:
             return "danceability-desc";
+        case SortAcousticnessAscending:
+            return "acousticness-asc";
+        case SortAcousticnessDescending:
+            return "acousticness-desc";
+        case SortSpeechinessAscending:
+            return "speechiness-asc";
+        case SortSpeechinessDescending:
+            return "speechiness-desc";
+        case SortLivenessAscending:
+            return "liveness-asc";
+        case SortLivenessDescending:
+            return "liveness-desc";
+        case SortValenceAscending:
+            return "valence-asc";
+        case SortValenceDescending:
+            return "valence-desc";
     }
     return QByteArray();
 }
