@@ -8,10 +8,31 @@ cmake_minimum_required( VERSION 2.6 )
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
 
-# find_package( Qt4 COMPONENTS QtCore QtNetwork QtTest REQUIRED )
-# include( ${QT_USE_FILE} )
-find_package(Qt5Core REQUIRED)
+option(BUILD_WITH_QT4 "Build libechonest with Qt4 no matter if Qt5 was found" ON)
 
+if( NOT BUILD_WITH_QT4 )
+    find_package(Qt5Core QUIET)
+    if( Qt5Core_DIR )
+        message(STATUS "Found Qt5! Be aware that Qt5-support is still experimental and not officially supported!")
+
+        macro(qt_wrap_cpp)
+            qt5_wrap_cpp(${ARGN})
+        endmacro()
+    endif()
+endif()
+
+if( NOT Qt5Core_DIR )
+    message(STATUS "Could not find Qt5, searching for Qt4 instead...")
+    find_package( Qt4 COMPONENTS QtCore QtNetwork QtTest REQUIRED )
+    include( ${QT_USE_FILE} )
+
+    macro(qt5_use_modules)
+    endmacro()
+
+    macro(qt_wrap_cpp)
+        qt4_wrap_cpp(${ARGN})
+    endmacro()
+endif()
 
 find_package(QJSON REQUIRED)
 
