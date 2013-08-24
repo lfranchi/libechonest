@@ -27,7 +27,6 @@
 
 #include <QNetworkReply>
 #include <QDebug>
-#include <QUrlQuery>
 #include <qxmlstream.h>
 #include <QtNetwork/QNetworkReply>
 
@@ -202,10 +201,7 @@ QNetworkReply* Echonest::Song::fetchInformation( Echonest::SongInformation infor
 {
     QUrl url = Echonest::baseGetQuery( "song", "profile" );
 
-    QUrlQuery urlQuery( url );
-    urlQuery.addQueryItem( QLatin1String( "id" ), QString::fromLatin1( d->id ) );
-    url.setQuery( urlQuery );
-
+    urlAddQueryItem( url, QString::fromLatin1( "id" ), QString::fromLatin1( d->id ) );
     addQueryInformation( url, information );
 
     qDebug() << "Creating fetchInformation URL" << url;
@@ -220,9 +216,7 @@ QNetworkReply* Echonest::Song::search( const Echonest::Song::SearchParams& param
     SearchParams::const_iterator iter = params.constBegin();
     for( ; iter < params.constEnd(); ++iter )
     {
-        QUrlQuery urlQuery( url );
-        urlQuery.addQueryItem( QString::fromLatin1( searchParamToString( iter->first ) ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( iter->second.toString() ) ) );
-        url.setQuery( urlQuery );
+        urlAddQueryItem( url, QString::fromLatin1( searchParamToString( iter->first ) ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( iter->second.toString() ) ) );
     }
 
     qDebug() << "Creating search URL" << url;
@@ -434,28 +428,25 @@ QByteArray Echonest::Song::identifyParamToString( Echonest::Song::IdentifyParam 
 
 void Echonest::Song::addQueryInformation(QUrl& url, Echonest::SongInformation information)
 {
-    QUrlQuery urlQuery( url );
     if( information.flags().testFlag( Echonest::SongInformation::AudioSummaryInformation ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "audio_summary" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "audio_summary" ) );
     if( information.flags().testFlag( Echonest::SongInformation::Tracks ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "tracks" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "tracks" ) );
     if( information.flags().testFlag( Echonest::SongInformation::Hotttnesss ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "song_hotttnesss" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "song_hotttnesss" ) );
     if( information.flags().testFlag( Echonest::SongInformation::ArtistHotttnesss ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "artist_hotttnesss" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "artist_hotttnesss" ) );
     if( information.flags().testFlag( Echonest::SongInformation::ArtistFamiliarity ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "artist_familiarity" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "artist_familiarity" ) );
     if( information.flags().testFlag( Echonest::SongInformation::ArtistLocation ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "artist_location" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "artist_location" ) );
     if( information.flags().testFlag( Echonest::SongInformation::SongType ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "song_type" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "song_type" ) );
 
     if( !information.idSpaces().isEmpty() ) {
         foreach( const QString& idSpace, information.idSpaces() )
-            urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "id:" + idSpace.toUtf8() ) );
+            urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "id:" + idSpace.toUtf8() ) );
     }
-
-    url.setQuery( urlQuery );
 }
 
 

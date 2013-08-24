@@ -125,6 +125,9 @@ namespace Echonest
     QByteArray catalogUpdateActionToLiteral( CatalogTypes::Action );
     CatalogTypes::Action literalToCatalogUpdateAction( const QByteArray& type );
 
+    void urlAddQueryItem( QUrl& url, const QString& key, const QString& value );
+    void urlRemoveQueryItem( QUrl& url, const QString& key );
+
     ECHONEST_EXPORT QDebug operator<<(QDebug d, const ForeignId& id);
     ECHONEST_EXPORT QDebug operator<<(QDebug d, const ArtistLocation& id);
 }

@@ -21,7 +21,6 @@
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QUrlQuery>
 
 Echonest::Artist::Artist()
     : d( new ArtistData )
@@ -285,10 +284,8 @@ QNetworkReply* Echonest::Artist::fetchBiographies(const QString& license, int nu
 {
     QUrl url = setupQuery( "biographies", numResults, offset );
 
-    QUrlQuery urlQuery( url );
     if( !license.isEmpty() )
-        urlQuery.addQueryItem( QLatin1String( "license" ), license );
-    url.setQuery( urlQuery );
+        urlAddQueryItem( url, QLatin1String( "license" ), license );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -297,10 +294,8 @@ QNetworkReply* Echonest::Artist::fetchBlogs( bool highRelevanceOnly, int numResu
 {
     QUrl url = setupQuery( "blogs", numResults, offset );
 
-    QUrlQuery urlQuery( url );
     if( highRelevanceOnly ) // false is default
-        urlQuery.addQueryItem( QLatin1String( "high_relevance" ), QLatin1String( "true" ) );
-    url.setQuery( urlQuery );
+        urlAddQueryItem( url, QLatin1String( "high_relevance" ), QLatin1String( "true" ) );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -316,10 +311,8 @@ QNetworkReply* Echonest::Artist::fetchHotttnesss(const QString& type) const
 {
     QUrl url = setupQuery( "hotttnesss", 0, -1 );
 
-    QUrlQuery urlQuery( url );
     if( type != QLatin1String( "normal" ) )
-        urlQuery.addQueryItem( QLatin1String( "type" ), type );
-    url.setQuery( urlQuery );
+        urlAddQueryItem( url, QLatin1String( "type" ), type );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -328,10 +321,8 @@ QNetworkReply* Echonest::Artist::fetchImages( const QString& license, int numRes
 {
     QUrl url = setupQuery( "images", numResults, offset );
 
-    QUrlQuery urlQuery( url );
     if( !license.isEmpty() )
-        urlQuery.addQueryItem( QLatin1String( "license" ), license );
-    url.setQuery( urlQuery );
+        urlAddQueryItem( url, QLatin1String( "license" ), license );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -348,10 +339,8 @@ QNetworkReply* Echonest::Artist::fetchNews( bool highRelevanceOnly, int numResul
 {
     QUrl url = setupQuery( "news", numResults, offset );
 
-    QUrlQuery urlQuery( url );
     if( highRelevanceOnly ) // false is default
-        urlQuery.addQueryItem( QLatin1String( "high_relevance" ), QLatin1String( "true" ) );
-    url.setQuery( urlQuery );
+        urlAddQueryItem( url, QLatin1String( "high_relevance" ), QLatin1String( "true" ) );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -368,17 +357,15 @@ QNetworkReply* Echonest::Artist::fetchSimilar(const Echonest::Artist::SearchPara
     QUrl url = Echonest::baseGetQuery( "artist", "similar" );
     addQueryInformation( url, information );
 
-    QUrlQuery urlQuery( url );
     if( numResults > 0 )
-        urlQuery.addQueryItem( QLatin1String( "results" ), QString::number( numResults ) );
+        urlAddQueryItem( url, QLatin1String( "results" ), QString::number( numResults ) );
     if( offset >= 0 )
-        urlQuery.addQueryItem( QLatin1String( "start" ), QString::number( offset ) );
+        urlAddQueryItem( url, QLatin1String( "start" ), QString::number( offset ) );
 
     Echonest::Artist::SearchParams::const_iterator iter = params.constBegin();
     for( ; iter < params.constEnd(); ++iter )
-        urlQuery.addQueryItem( QString::fromLatin1( searchParamToString( iter->first ) ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( iter->second.toString() ) ) );
+        urlAddQueryItem( url, QString::fromLatin1( searchParamToString( iter->first ) ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( iter->second.toString() ) ) );
 
-    url.setQuery( urlQuery );
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
@@ -393,12 +380,10 @@ QNetworkReply* Echonest::Artist::fetchTerms( Echonest::Artist::TermSorting sorti
 {
     QUrl url = setupQuery( "terms", 0, -1 );
 
-    QUrlQuery urlQuery( url );
     if( sorting == Echonest::Artist::Weight )
-        urlQuery.addQueryItem( QLatin1String( "sort" ), QLatin1String( "weight" ) );
+        urlAddQueryItem( url, QLatin1String( "sort" ), QLatin1String( "weight" ) );
     else if( sorting == Echonest::Artist::Frequency )
-        urlQuery.addQueryItem( QLatin1String( "sort" ), QLatin1String( "frequency" ) );
-    url.setQuery( urlQuery );
+        urlAddQueryItem( url, QLatin1String( "sort" ), QLatin1String( "frequency" ) );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -432,11 +417,9 @@ QNetworkReply* Echonest::Artist::search(const Echonest::Artist::SearchParams& pa
 
     Echonest::Artist::SearchParams::const_iterator iter = params.constBegin();
 
-    QUrlQuery urlQuery( url );
     for( ; iter < params.constEnd(); ++iter )
-        urlQuery.addQueryItem( QString::fromLatin1( searchParamToString( iter->first ) ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( iter->second.toString() ) ) );
-    urlQuery.addQueryItem( QLatin1String( "limit" ), QLatin1String( limit ? "true" : "false" ) );
-    url.setQuery( urlQuery );
+        urlAddQueryItem( url, QString::fromLatin1( searchParamToString( iter->first ) ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( iter->second.toString() ) ) );
+    urlAddQueryItem( url, QLatin1String( "limit" ), QLatin1String( limit ? "true" : "false" ) );
 
     addQueryInformation( url, information );
 
@@ -448,15 +431,13 @@ QNetworkReply* Echonest::Artist::topHottt(Echonest::ArtistInformation informatio
     QUrl url = Echonest::baseGetQuery( "artist", "top_hottt" );
     addQueryInformation( url, information );
 
-    QUrlQuery urlQuery( url );
     if( numResults > 0 )
-        urlQuery.addQueryItem( QLatin1String( "results" ), QString::number( numResults ) );
+        urlAddQueryItem( url, QLatin1String( "results" ), QString::number( numResults ) );
     if( offset >= 0 )
-        urlQuery.addQueryItem( QLatin1String( "start" ), QString::number( offset ) );
+        urlAddQueryItem( url, QLatin1String( "start" ), QString::number( offset ) );
 
-    urlQuery.addQueryItem( QLatin1String( "limit" ), QLatin1String( limit ? "true" : "false" ) );
+    urlAddQueryItem( url, QLatin1String( "limit" ), QLatin1String( limit ? "true" : "false" ) );
 
-    url.setQuery( urlQuery );
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
@@ -464,9 +445,7 @@ QNetworkReply* Echonest::Artist::topTerms(int numResults)
 {
     QUrl url = Echonest::baseGetQuery( "artist", "top_terms" );
 
-    QUrlQuery urlQuery( url );
-    urlQuery.addQueryItem( QLatin1String( "results" ), QString::number( numResults ) );
-    url.setQuery( urlQuery );
+    urlAddQueryItem( url, QLatin1String( "results" ), QString::number( numResults ) );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -475,9 +454,7 @@ QNetworkReply* Echonest::Artist::listTerms( const QString& type )
 {
     QUrl url = Echonest::baseGetQuery( "artist", "list_terms" );
 
-    QUrlQuery urlQuery( url );
-    urlQuery.addQueryItem( QLatin1String( "type" ), type );
-    url.setQuery( urlQuery );
+    urlAddQueryItem( url, QLatin1String( "type" ), type );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -488,10 +465,8 @@ QNetworkReply* Echonest::Artist::suggest( const QString& name, int results )
     QUrl url = Echonest::baseGetQuery( "artist", "suggest" );
     QString realname = name;
 
-    QUrlQuery urlQuery( url );
-    urlQuery.addQueryItem( QLatin1String( "name" ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( realname ) ) );
-    urlQuery.addQueryItem( QLatin1String( "results" ), QString::number( results ) );
-    url.setQuery( urlQuery );
+    urlAddQueryItem( url, QLatin1String( "name" ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( realname ) ) );
+    urlAddQueryItem( url, QLatin1String( "results" ), QString::number( results ) );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -596,22 +571,18 @@ QUrl Echonest::Artist::setupQuery( const QByteArray& methodName, int numResults,
 {
     QUrl url = Echonest::baseGetQuery( "artist", methodName );
 
-    QUrlQuery urlQuery( url );
-
     if( !d->id.isEmpty() )
-        urlQuery.addQueryItem( QLatin1String( "id" ), QString::fromLatin1( d->id ) );
+        urlAddQueryItem( url, QLatin1String( "id" ), QString::fromLatin1( d->id ) );
     else if( !d->name.isEmpty() ) {
-        urlQuery.addQueryItem( QLatin1String( "name" ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( d->name ) ) );
+        urlAddQueryItem( url, QLatin1String( "name" ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( d->name ) ) );
     } else if ( methodName != "terms" ) {
         qWarning() << "Artist method" << methodName << "called on an artist object without name or id!";
         return QUrl();
     }
     if( numResults > 0 )
-        urlQuery.addQueryItem( QLatin1String( "results" ), QString::number( numResults ) );
+        urlAddQueryItem( url, QLatin1String( "results" ), QString::number( numResults ) );
     if( start >= 0 )
-        urlQuery.addQueryItem( QLatin1String( "start" ), QString::number( start ) );
-
-    url.setQuery( urlQuery );
+        urlAddQueryItem( url, QLatin1String( "start" ), QString::number( start ) );
 
     return url;
 }
@@ -651,37 +622,33 @@ QByteArray Echonest::Artist::searchParamToString(Echonest::Artist::SearchParam p
 
 void Echonest::Artist::addQueryInformation(QUrl& url, Echonest::ArtistInformation information)
 {
-    QUrlQuery urlQuery( url );
-
     if( information.flags().testFlag( Echonest::ArtistInformation::Audio ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "audio" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "audio" ) );
     if( information.flags().testFlag( Echonest::ArtistInformation::Biographies ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "biographies" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "biographies" ) );
     if( information.flags().testFlag( Echonest::ArtistInformation::Blogs ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "blogs" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "blogs" ) );
     if( information.flags().testFlag( Echonest::ArtistInformation::Familiarity ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "familiarity" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "familiarity" ) );
     if( information.flags().testFlag( Echonest::ArtistInformation::Hotttnesss ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "hotttnesss" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "hotttnesss" ) );
     if( information.flags().testFlag( Echonest::ArtistInformation::Images ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "images" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "images" ) );
     if( information.flags().testFlag( Echonest::ArtistInformation::News ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "news" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "news" ) );
     if( information.flags().testFlag( Echonest::ArtistInformation::Reviews ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "reviews" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "reviews" ) );
     if( information.flags().testFlag( Echonest::ArtistInformation::Terms ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "terms" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "terms" ) );
     if( information.flags().testFlag( Echonest::ArtistInformation::Urls ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "urls" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "urls" ) );
     if( information.flags().testFlag( Echonest::ArtistInformation::Videos ) )
-        urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "video" ) );
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "video" ) );
 
     if( !information.idSpaces().isEmpty() ) {
         foreach( const QString& idSpace, information.idSpaces() )
-            urlQuery.addQueryItem( QLatin1String( "bucket" ), QLatin1String( "id:" + idSpace.toUtf8() ) );
+            urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "id:" + idSpace.toUtf8() ) );
     }
-
-    url.setQuery( urlQuery );
 }
 
 

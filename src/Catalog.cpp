@@ -134,10 +134,8 @@ QNetworkReply* Echonest::Catalog::create(const QString& name, Echonest::CatalogT
 {
     QUrl url = Echonest::baseGetQuery( "catalog", "create" );
 
-    QUrlQuery urlQuery( url );
-    urlQuery.addQueryItem( QLatin1String( "name" ), name );
-    urlQuery.addQueryItem( QLatin1String( "type" ), QString::fromLatin1( Echonest::catalogTypeToLiteral( type )  ) );
-    url.setQuery( urlQuery );
+    urlAddQueryItem( url, QLatin1String( "name" ), name );
+    urlAddQueryItem( url, QLatin1String( "type" ), QString::fromLatin1( Echonest::catalogTypeToLiteral( type )  ) );
 
     QNetworkRequest request = QNetworkRequest( url );
     request.setHeader( QNetworkRequest::ContentTypeHeader, QLatin1String( "multipart/form-data" ) );
@@ -150,9 +148,7 @@ QNetworkReply* Echonest::Catalog::deleteCatalog() const
     QUrl url = Echonest::baseGetQuery( "catalog", "delete" );
     Q_ASSERT( !d->id.isEmpty() );
 
-    QUrlQuery urlQuery( url );
-    urlQuery.addQueryItem( QLatin1String( "id" ), QString::fromLatin1( d->id ) );
-    url.setQuery( urlQuery );
+    urlAddQueryItem( url, QLatin1String( "id" ), QString::fromLatin1( d->id ) );
 
     return Echonest::doPost( url );
 }
@@ -169,14 +165,12 @@ QNetworkReply* Echonest::Catalog::profile() const
 {
     QUrl url = Echonest::baseGetQuery( "catalog", "profile" );
 
-    QUrlQuery urlQuery( url );
     if( !d->id.isEmpty() )
-        urlQuery.addQueryItem( QLatin1String( "id" ), QString::fromLatin1( d->id ) );
+        urlAddQueryItem( url, QLatin1String( "id" ), QString::fromLatin1( d->id ) );
     else if( !d->name.isEmpty() )
-        urlQuery.addQueryItem( QLatin1String( "name" ), d->name );
+        urlAddQueryItem( url, QLatin1String( "name" ), d->name );
     else
         Q_ASSERT_X( false, "Catalog", "Not enough information!" );
-    url.setQuery( urlQuery );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -185,9 +179,7 @@ QNetworkReply* Echonest::Catalog::status(const QByteArray& ticket)
 {
     QUrl url = Echonest::baseGetQuery( "catalog", "status" );
 
-    QUrlQuery urlQuery( url );
-    urlQuery.addQueryItem( QLatin1String( "ticket" ), QString::fromLatin1( ticket ) );
-    url.setQuery( urlQuery );
+    urlAddQueryItem( url, QLatin1String( "ticket" ), QString::fromLatin1( ticket ) );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -197,9 +189,7 @@ QNetworkReply* Echonest::Catalog::update(const Echonest::CatalogUpdateEntries& e
     QUrl url = Echonest::baseGetQuery( "catalog", "update" );
     Q_ASSERT( !d->id.isEmpty() );
 
-    QUrlQuery urlQuery( url );
-    urlQuery.addQueryItem( QLatin1String( "id" ), QString::fromLatin1( d->id ) );
-    url.setQuery( urlQuery );
+    urlAddQueryItem( url, QLatin1String( "id" ), QString::fromLatin1( d->id ) );
 
     return Echonest::Catalog::updatePrivate( url, entries );
 }
@@ -318,35 +308,27 @@ Echonest::Catalog Echonest::Catalog::parseCreate(QNetworkReply* reply) throw( Ec
 
 QNetworkReply* Echonest::Catalog::updatePrivate( QUrl& url, const Echonest::CatalogUpdateEntries& entries)
 {
-    QUrlQuery urlQuery( url );
-    urlQuery.addQueryItem( QLatin1String( "data_type" ), QLatin1String( "json" ) );
+    urlAddQueryItem( url, QLatin1String( "data_type" ), QLatin1String( "json" ) );
 
     QByteArray payload = Generator::catalogEntriesToJson( entries );
-    urlQuery.addQueryItem( QLatin1String( "data" ), QString::fromLatin1( payload ) );
-
-    url.setQuery( urlQuery );
+    urlAddQueryItem( url, QLatin1String( "data" ), QString::fromLatin1( payload ) );
 
     return Echonest::doPost( url );
 }
 
 void Echonest::Catalog::addLimits(QUrl& url, int results, int start)
 {
-    QUrlQuery urlQuery( url );
     if( results != 30 )
-        urlQuery.addQueryItem( QLatin1String( "results" ), QString::number( results ) );
+        urlAddQueryItem( url, QLatin1String( "results" ), QString::number( results ) );
     if( start > -1 )
-        urlQuery.addQueryItem( QLatin1String( "start" ), QString::number( start ) );
-
-    url.setQuery( urlQuery );
+        urlAddQueryItem( url, QLatin1String( "start" ), QString::number( start ) );
 }
 
 QNetworkReply* Echonest::Catalog::readPrivate(QUrl& url, int results, int start) const
 {
     Q_ASSERT( !d->id.isEmpty() );
 
-    QUrlQuery urlQuery( url );
-    urlQuery.addQueryItem( QLatin1String( "id" ), QString::fromLatin1( d->id ) );
-    url.setQuery( urlQuery );
+    urlAddQueryItem( url, QLatin1String( "id" ), QString::fromLatin1( d->id ) );
 
     addLimits( url, results, start );
 
