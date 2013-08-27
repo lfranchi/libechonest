@@ -16,7 +16,11 @@
 
 #include "Util.h"
 
+
 #include <QString>
+#if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
+    #include <QUrlQuery>
+#endif
 
 QByteArray Echonest::escapeSpacesAndPluses(const QString& in)
 {
@@ -136,4 +140,27 @@ QDebug Echonest::operator<<(QDebug d, const Echonest::ForeignId& id)
 QDebug Echonest::operator<<(QDebug d, const Echonest::ArtistLocation& loc)
 {
     return d.maybeSpace() << QString::fromLatin1( "Artist Location(%1, %2, %3)" ).arg( loc.location ).arg( loc.latitude ).arg( loc.longitude );
+}
+
+
+void Echonest::urlAddQueryItem(QUrl& url, const QString& key, const QString& value)
+{
+#if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem( key, value );
+    url.setQuery( urlQuery );
+#else
+    url.addQueryItem( key, value );
+#endif
+}
+
+void Echonest::urlRemoveQueryItem(QUrl& url, const QString& key )
+{
+#if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
+    QUrlQuery urlQuery( url );
+    urlQuery.removeQueryItem( key );
+    url.setQuery( urlQuery );
+#else
+    url.removeEncodedQueryItem( key.toLatin1() );
+#endif
 }

@@ -17,7 +17,8 @@
 #include "Playlist.h"
 #include "Playlist_p.h"
 #include "Parsing_p.h"
-#include <QtNetwork/QNetworkReply>
+
+#include <QNetworkReply>
 
 Echonest::DynamicPlaylist::DynamicPlaylist()
     : d( new DynamicPlaylistData )
@@ -91,9 +92,10 @@ void Echonest::DynamicPlaylist::setCurrentSong(const Echonest::Song& song)
 QNetworkReply* Echonest::DynamicPlaylist::next( int results, int lookahead ) const
 {
     QUrl url = Echonest::baseGetQuery( "playlist/dynamic", "next" );
-    url.addEncodedQueryItem( "session_id", d->sessionId );
-    url.addEncodedQueryItem( "results", QByteArray::number( results ) );
-    url.addEncodedQueryItem( "lookahead", QByteArray::number( lookahead ) );
+
+    urlAddQueryItem( url,  QLatin1String( "session_id" ), QString::fromLatin1( d->sessionId ) );
+    urlAddQueryItem( url,  QLatin1String( "results" ), QString::number( results ) );
+    urlAddQueryItem( url,  QLatin1String( "lookahead" ), QString::number( lookahead ) );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -101,7 +103,8 @@ QNetworkReply* Echonest::DynamicPlaylist::next( int results, int lookahead ) con
 QNetworkReply* Echonest::DynamicPlaylist::fetchInfo() const
 {
     QUrl url = Echonest::baseGetQuery( "playlist/dynamic", "info" );
-    url.addEncodedQueryItem( "session_id", d->sessionId );
+
+    urlAddQueryItem( url, QLatin1String( "session_id" ), QString::fromLatin1( d->sessionId ) );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -128,10 +131,11 @@ Echonest::DynamicPlaylist::FetchPair Echonest::DynamicPlaylist::parseNext(QNetwo
 QNetworkReply* Echonest::DynamicPlaylist::feedback(const Echonest::DynamicPlaylist::DynamicFeedback& feedback) const
 {
     QUrl url = Echonest::baseGetQuery( "playlist/dynamic", "feedback" );
-    url.addEncodedQueryItem( "session_id", d->sessionId );
+
+    urlAddQueryItem( url, QLatin1String( "session_id" ), QString::fromLatin1( d->sessionId ) );
 
     foreach( const Echonest::DynamicPlaylist::DynamicFeedbackParamData& param, feedback ) {
-        url.addEncodedQueryItem(dynamicFeedbackToString(param.first), param.second);
+        urlAddQueryItem( url, QString::fromLatin1( dynamicFeedbackToString(param.first) ), QString::fromLatin1( param.second ) );
     }
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
@@ -151,7 +155,8 @@ void Echonest::DynamicPlaylist::parseFeedback(QNetworkReply* reply) const throw(
 QNetworkReply* Echonest::DynamicPlaylist::steer(const Echonest::DynamicPlaylist::PlaylistParams& steerParams) const
 {
     QUrl url = Echonest::baseGetQuery( "playlist/dynamic", "steer" );
-    url.addEncodedQueryItem( "session_id", d->sessionId );
+
+    urlAddQueryItem( url, QLatin1String( "session_id" ), QString::fromLatin1( d->sessionId ) );
 
     foreach( const Echonest::DynamicPlaylist::PlaylistParamData& param, steerParams ) {
         // HACK ARG min/max functions for steering are min_foo_bar, but params for static/initial seeds are foo_min_bar. can't reuse :(
@@ -203,7 +208,7 @@ QNetworkReply* Echonest::DynamicPlaylist::steer(const Echonest::DynamicPlaylist:
             default:
                 str = playlistParamToString( param.first );
         }
-        url.addEncodedQueryItem(str, param.second.toString().toUtf8());
+        urlAddQueryItem( url, QString::fromLatin1( str ), param.second.toString());
     }
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
@@ -236,7 +241,8 @@ Echonest::SessionInfo Echonest::DynamicPlaylist::parseInfo(QNetworkReply* reply)
 QNetworkReply* Echonest::DynamicPlaylist::deleteSession() const
 {
     QUrl url = Echonest::baseGetQuery( "playlist/dynamic", "delete" );
-    url.addEncodedQueryItem( "session_id", d->sessionId );
+
+    urlAddQueryItem( url, QLatin1String( "session_id" ), QString::fromLatin1( d->sessionId ) );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -285,49 +291,49 @@ QNetworkReply* Echonest::DynamicPlaylist::generateInternal(const Echonest::Dynam
 {
     QUrl url = Echonest::baseGetQuery( "playlist", type );
 
+
     Echonest::DynamicPlaylist::PlaylistParams::const_iterator iter = params.constBegin();
     for( ; iter < params.constEnd(); ++iter ) {
         if( iter->first == Format ) // If it's a format, we have to remove the xml format we automatically specify
-            url.removeEncodedQueryItem( "format" );
+            urlRemoveQueryItem( url, QString::fromLatin1( "format" ) );
 
         if( iter->first == Type ) { // convert type enum to string
             switch( static_cast<Echonest::DynamicPlaylist::ArtistTypeEnum>( iter->second.toInt() ) )
             {
             case ArtistType:
-                url.addEncodedQueryItem(  playlistParamToString( iter->first ), "artist" );
+                urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QLatin1String( "artist" ) );
                 break;
             case ArtistRadioType:
-                url.addEncodedQueryItem(  playlistParamToString( iter->first ), "artist-radio" );
+                urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QLatin1String( "artist-radio" ) );
                 break;
             case ArtistDescriptionType:
-                url.addEncodedQueryItem(  playlistParamToString( iter->first ), "artist-description" );
+                urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QLatin1String( "artist-description" ) );
                 break;
             case CatalogType:
-                url.addEncodedQueryItem(  playlistParamToString( iter->first ), "catalog" );
+                urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QLatin1String( "catalog" ) );
                 break;
             case CatalogRadioType:
-                url.addEncodedQueryItem(  playlistParamToString( iter->first ), "catalog-radio" );
+                urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QLatin1String( "catalog-radio" ) );
                 break;
             case SongRadioType:
-                url.addEncodedQueryItem(  playlistParamToString( iter->first ), "song-radio" );
+                urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QLatin1String( "song-radio" ) );
                 break;
             case GenreRadioType:
-                url.addEncodedQueryItem( playlistParamToString( iter->first ), "genre-radio" );
+                urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QLatin1String( "genre-radio" ) );
                 break;
             }
 
         } else if( iter->first == Sort ) {
-            url.addEncodedQueryItem( playlistParamToString( iter->first ), playlistSortToString( static_cast<Echonest::DynamicPlaylist::SortingType>( iter->second.toInt() ) ) );
+            urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QString::fromLatin1( playlistSortToString( static_cast<Echonest::DynamicPlaylist::SortingType>( iter->second.toInt() ) ) ) );
         } else if( iter->first == Pick ) {
-            url.addEncodedQueryItem( playlistParamToString( iter->first ), playlistArtistPickToString( static_cast<Echonest::DynamicPlaylist::ArtistPick>( iter->second.toInt() ) ) );
+            urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QString::fromLatin1( playlistArtistPickToString( static_cast<Echonest::DynamicPlaylist::ArtistPick>( iter->second.toInt() ) ) ) );
         } else if( iter->first == SongInformation ){
             Echonest::Song::addQueryInformation( url, Echonest::SongInformation( iter->second.value< Echonest::SongInformation >() ) );
         } else {
-            url.addEncodedQueryItem( playlistParamToString( iter->first ), Echonest::escapeSpacesAndPluses( iter->second.toString() ) );
+            urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( iter->second.toString() ) ) );
         }
     }
 
-//     qDebug() << "Creating playlist URL" << url;
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
 
