@@ -19,11 +19,12 @@
 
 #include "Config.h"
 
-#include <QtXml/QXmlStreamReader>
 #include "Song.h"
 #include "Artist.h"
 #include "Catalog.h"
 #include "Playlist.h"
+
+#include <QXmlStreamReader>
 
 class QNetworkReply;
 

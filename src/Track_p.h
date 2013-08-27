@@ -21,6 +21,9 @@
 #include "Config.h"
 #include "Song.h"
 
+#if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
+    #include <QUrlQuery>
+#endif
 
 #include <QSharedData>
 #include <QString>
@@ -32,11 +35,19 @@ namespace  Echonest {
         // UGLY :( Build url, then extract the encded query items, put them in the POST body, and send that to the url minus the encoded params.
         // The final data
         QByteArray data;
+#if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
+        int size = QUrlQuery( url ).queryItems().size();
+        for( int i = 0; i < size; i++ ) {
+            const QPair< QString, QString > item = QUrlQuery( url ).queryItems().at( i );
+            data.append( item.first.toLatin1() + "=" + item.second.toLatin1() + "&" );
+        }
+#else
         int size = url.encodedQueryItems().size();
         for( int i = 0; i < size; i++ ) {
             const QPair< QByteArray, QByteArray > item = url.encodedQueryItems().at( i );
             data.append( item.first + "=" + item.second + "&" );
         }
+#endif
         data.truncate( data.size() - 1 ); // remove extra &
         //qDebug() << "Sending data:" << data << "for method:" << url.path();
         // strip the extras
