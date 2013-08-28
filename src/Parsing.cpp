@@ -269,13 +269,13 @@ Echonest::AudioSummary Echonest::Parser::parseAudioSummary( QXmlStreamReader& xm
             summary.setDanceability( xml.readElementText().toDouble() );
         else if( xml.name() == QLatin1String( "energy" ) && xml.isStartElement() )
             summary.setEnergy( xml.readElementText().toDouble() );
-        else if( xml.name() == "acousticness" && xml.isStartElement() )
+        else if( xml.name() == QLatin1String( "acousticness" ) && xml.isStartElement() )
             summary.setAcousticness( xml.readElementText().toDouble() );
-        else if( xml.name() == "speechiness" && xml.isStartElement() )
+        else if( xml.name() == QLatin1String( "speechiness" ) && xml.isStartElement() )
             summary.setSpeechiness( xml.readElementText().toDouble() );
-        else if( xml.name() == "liveness" && xml.isStartElement() )
+        else if( xml.name() == QLatin1String( "liveness" ) && xml.isStartElement() )
             summary.setLiveness( xml.readElementText().toDouble() );
-        else if( xml.name() == "valence" && xml.isStartElement() )
+        else if( xml.name() == QLatin1String( "valence" ) && xml.isStartElement() )
             summary.setValence( xml.readElementText().toDouble() );
 
         xml.readNext();
