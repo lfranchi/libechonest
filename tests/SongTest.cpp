@@ -76,7 +76,7 @@ void SongTest::testSearch1()
     params.append( Echonest::Song::SearchParamData( Echonest::Song::Results, 3 ) );
 
     Echonest::SongInformation info( Echonest::SongInformation( Echonest::SongInformation::AudioSummaryInformation | Echonest::SongInformation::Tracks | Echonest::SongInformation::Hotttnesss ) );
-    info.setIdSpaces( QStringList() << QLatin1String( "musicbrainz" ) << QLatin1String( "7digital" ) << QLatin1String( "playme" ) );
+    info.setIdSpaces( QStringList() << QLatin1String( "musicbrainz" ) << QLatin1String( "playme" ) );
     reply = Echonest::Song::search( params, info);
     qDebug() << "QUERY:" << reply->url().toString();
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
