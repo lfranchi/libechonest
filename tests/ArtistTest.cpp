@@ -56,7 +56,7 @@ void ArtistTest::testAudioUrl()
     QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/audio?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=ARH6W4X1187B99274F&results=100" ) );
 }
 
-void ArtistTest::testAudio()
+/*void ArtistTest::testAudio()
 {
     Artist testArtist;
     testArtist.setName( QLatin1String( "Goo Goo Dolls") );
@@ -73,7 +73,7 @@ void ArtistTest::testAudio()
 
     qDebug() << testArtist.audio().at(0).artist() << testArtist.audio().at(0).date() << testArtist.audio().at(0).id() << testArtist.audio().at(0).length() << testArtist.audio().at(0).release() <<
                 testArtist.audio().at(0).title() << testArtist.audio().at(0).url() << testArtist.audio().at(0).title() << testArtist.audio().at(0).link();
-}
+}*/
 
 void ArtistTest::testBiographiesUrl()
 {
@@ -808,6 +808,7 @@ void ArtistTest::testVideos()
 void ArtistTest::testGenres()
 {
     QNetworkReply* reply = Artist::fetchGenres();
+    qDebug() << reply->url();
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();

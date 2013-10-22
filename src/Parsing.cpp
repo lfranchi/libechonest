@@ -795,6 +795,9 @@ QVector< QString > Echonest::Parser::parseTermList( QXmlStreamReader& xml ) thro
 
 QVector< QString > Echonest::Parser::parseGenreList( QXmlStreamReader& xml ) throw( Echonest::ParseError )
 {
+    xml.readNextStartElement();
+    xml.readNextStartElement();
+
     if( xml.atEnd() || xml.name() != QLatin1String( "genres" ) || xml.tokenType() != QXmlStreamReader::StartElement )
         throw Echonest::ParseError( Echonest::UnknownParseError );
 
