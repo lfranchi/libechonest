@@ -31,50 +31,6 @@ void ArtistTest::initTestCase()
     Config::instance()->setAPIKey( "JGJCRKWLXLBZIFAZB" );
 }
 
-void ArtistTest::testAudioUrl()
-{
-    Artist testArtist;
-    testArtist.setName( QLatin1String( "FooArtist" ) );
-
-    QNetworkReply* reply = testArtist.fetchAudio();
-
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/audio?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=FooArtist" ) );
-
-    reply = testArtist.fetchAudio( 15 );
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/audio?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=FooArtist&results=15" ) );
-
-    reply = testArtist.fetchAudio( 15, 5 );
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/audio?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=FooArtist&results=15&start=5" ) );
-
-    testArtist.setName( QString() );
-    testArtist.setId( "ARH6W4X1187B99274F" );
-    reply = testArtist.fetchAudio( 15, -1 );
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/audio?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=ARH6W4X1187B99274F&results=15" ) );
-
-    testArtist.setName( QLatin1String( "FooArtist" ) );
-    reply = testArtist.fetchAudio( 100 );
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/audio?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=ARH6W4X1187B99274F&results=100" ) );
-}
-
-/*void ArtistTest::testAudio()
-{
-    Artist testArtist;
-    testArtist.setName( QLatin1String( "Goo Goo Dolls") );
-
-    QNetworkReply* reply = testArtist.fetchAudio( 5, 2 );
-    qDebug() << reply->url().toString();
-    QEventLoop loop;
-    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-    loop.exec();
-    testArtist.parseProfile( reply );
-
-    qDebug() << testArtist.audio().size();
-    QVERIFY( testArtist.audio().size() == 2 );
-
-    qDebug() << testArtist.audio().at(0).artist() << testArtist.audio().at(0).date() << testArtist.audio().at(0).id() << testArtist.audio().at(0).length() << testArtist.audio().at(0).release() <<
-                testArtist.audio().at(0).title() << testArtist.audio().at(0).url() << testArtist.audio().at(0).title() << testArtist.audio().at(0).link();
-}*/
-
 void ArtistTest::testBiographiesUrl()
 {
     Artist testArtist;
