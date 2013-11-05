@@ -120,6 +120,7 @@ namespace Echonest{
          */
 
         /**
+         * @Deprecated
          * A list of audio files on the web for this artist.
          */
         AudioList audio() const;
@@ -208,6 +209,7 @@ namespace Echonest{
         void setForeignIds( const ForeignIds& ids );
 
         /**
+         * @Deprecated
          * Fetch a list of audio documents found on the web that are related to this artist.
          *
          * @param numResults Limit how many results are returned
