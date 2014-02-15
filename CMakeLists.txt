@@ -19,6 +19,10 @@ if( NOT BUILD_WITH_QT4 )
             qt5_wrap_cpp(${ARGN})
         endmacro()
     endif()
+
+    # pkg-config names of QtCore and QtNetwork are Qt5Core and Qt5Network for
+    # Qt5
+    set(ECHONEST_QT_MAJOR_VERSION "5")
 endif()
 
 if( NOT Qt5Core_DIR )
@@ -32,6 +36,8 @@ if( NOT Qt5Core_DIR )
     macro(qt_wrap_cpp)
         qt4_wrap_cpp(${ARGN})
     endmacro()
+
+    set(ECHONEST_QT_MAJOR_VERSION "")
 endif()
 
 find_package(QJSON REQUIRED)
