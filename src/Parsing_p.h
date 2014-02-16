@@ -23,6 +23,7 @@
 #include "Artist.h"
 #include "Catalog.h"
 #include "Playlist.h"
+#include "Genre.h"
 
 #include <QXmlStreamReader>
 
@@ -85,13 +86,17 @@ namespace Parser
     void parseArtistSong( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
     void parseVideos( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
     void parseForeignArtistIds( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
+    void parseArtistGenres( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( ParseError );
 
     // parse a list of terms
     TermList parseTopTermList( QXmlStreamReader& xml ) throw( ParseError );
     QVector< QString > parseTermList( QXmlStreamReader& xml ) throw( ParseError );
 
     //parse a list of genres
-    QVector< QString > parseGenreList( QXmlStreamReader& xml ) throw( ParseError );
+    QVector< QString > parseGenreListStrings( QXmlStreamReader& xml ) throw( ParseError );
+
+    Echonest::Genres parseGenres( QXmlStreamReader& xml ) throw( ParseError );
+    Echonest::Genre parseGenre( QXmlStreamReader& xml ) throw( ParseError );
 
     Artists parseArtistSuggestList( QXmlStreamReader& xml ) throw( ParseError );
 
@@ -123,4 +128,3 @@ namespace Parser
 }
 
 #endif
-

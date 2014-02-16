@@ -19,6 +19,9 @@
 #include "Artist.h"
 #include "CatalogItem_p.h"
 #include "Util.h"
+#include "Genre.h"
+#include "Catalog.h"
+#include "CatalogArtist.h"
 
 // QJSon
 #include <qjson/parser.h>
@@ -468,6 +471,8 @@ void Echonest::Parser::parseArtistInfo( QXmlStreamReader& xml, Echonest::Artist&
         artist.setName( xml.readElementText() );
     }  else if( xml.name() == QLatin1String( "id" ) ) {
         artist.setId( xml.readElementText().toLatin1() );
+    } else if( xml.name() == QLatin1String( "genres" ) ) {
+        parseArtistGenres( xml, artist );
     }
 }
 
@@ -793,7 +798,7 @@ QVector< QString > Echonest::Parser::parseTermList( QXmlStreamReader& xml ) thro
     return terms;
 }
 
-QVector< QString > Echonest::Parser::parseGenreList( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+QVector< QString > Echonest::Parser::parseGenreListStrings( QXmlStreamReader& xml ) throw( Echonest::ParseError )
 {
     xml.readNextStartElement();
     xml.readNextStartElement();
@@ -809,6 +814,56 @@ QVector< QString > Echonest::Parser::parseGenreList( QXmlStreamReader& xml ) thr
     }
 
     return genres;
+}
+
+Echonest::Genres Echonest::Parser::parseGenres( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    if ( xml.name() == QLatin1String( "start" ) )
+        xml.readNextStartElement();
+    if ( xml.name() == QLatin1String( "start" ) )
+        xml.readNextStartElement(); // skip <start>
+
+    if( xml.atEnd() || xml.name() != QLatin1String( "genres" ) || xml.tokenType() != QXmlStreamReader::StartElement )
+        throw Echonest::ParseError( Echonest::UnknownParseError );
+
+    Genres genres;
+    while( !(xml.isEndElement() && xml.name() == QLatin1String( "genres" ) ) /*xml.name() != QLatin1String( "response" ) || !xml.isEndElement() ||*/  ){
+        if (!xml.isStartElement())
+            xml.readNextStartElement();
+        if( xml.name() == QLatin1String( "genre" ) && xml.isStartElement() ) {
+            Genre g = parseGenre( xml );
+            genres.append( g );
+        }
+        xml.readNext();
+    }
+    return genres;
+}
+
+Echonest::Genre Echonest::Parser::parseGenre( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+{
+    Genre g;
+    while ( !( xml.isEndElement() && xml.name() == QLatin1String( "genre" ) ) ) {
+        if ( xml.name() == QLatin1String( "name" ) && xml.isStartElement() )
+            g.setName( xml.readElementText() );
+        else if ( xml.name() == QLatin1String( "description" ) )
+            g.setDescription( xml.readElementText() );
+        else if ( xml.name() == QLatin1String( "urls" ) ) {
+            xml.readNextStartElement();
+            if ( xml.name() == QLatin1String( "urls" ) ) {
+                xml.readNextStartElement();
+                if ( xml.name() == QLatin1String( "wikipedia_url" ) )
+                    g.setWikipediaUrl( xml.readElementText() );
+            }
+        }
+        xml.readNextStartElement();
+    }
+    return g;
+}
+
+void Echonest::Parser::parseArtistGenres( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )
+{
+    Genres genres = parseGenres( xml );
+    artist.setGenres( genres );
 }
 
 void Echonest::Parser::parseForeignArtistIds( QXmlStreamReader& xml, Echonest::Artist& artist ) throw( Echonest::ParseError )

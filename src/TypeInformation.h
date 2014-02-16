@@ -27,6 +27,7 @@
 namespace Echonest {
     class ArtistInformationPrivate;
     class SongInformationPrivate;
+    class GenreInformationPrivate;
     
     /**
      * This class describes what artist information to return with a query.
@@ -48,7 +49,8 @@ namespace Echonest {
             Reviews = 0x0080,
             Terms = 0x0100,
             Urls = 0x200,
-            Videos = 0x0400
+            Videos = 0x0400,
+            Genre = 0x0800
         };
         Q_DECLARE_FLAGS( ArtistInformationFlags, ArtistInformationFlag )
         
@@ -128,9 +130,47 @@ namespace Echonest {
     };
     
     Q_DECLARE_OPERATORS_FOR_FLAGS(SongInformation::SongInformationFlags)
+
+    /**
+     * This class describes what genre information to return with a query.
+     *
+     * The default behaviour is NoInformation.
+     */
+    class ECHONEST_EXPORT GenreInformation
+    {
+    public:
+        enum GenreInformationFlag {
+            Description = 0x001,
+            Urls = 0x002,
+
+            NoInformation = 0x800
+        };
+        Q_DECLARE_FLAGS( GenreInformationFlags, GenreInformationFlag )
+
+        GenreInformation();
+        GenreInformation( GenreInformationFlags flags );
+        GenreInformation( const GenreInformation& other );
+        ~GenreInformation();
+        GenreInformation& operator=( const GenreInformation& info );
+
+        /**
+         * The individual pieces of information to fetch for this song.
+         */
+        GenreInformationFlags flags() const;
+        void setGenreInformationFlags( GenreInformationFlags flags );
+
+    private:
+        GenreInformationPrivate* d_ptr;
+        Q_DECLARE_PRIVATE( GenreInformation )
+
+    };
+
+    Q_DECLARE_OPERATORS_FOR_FLAGS(GenreInformation::GenreInformationFlags)
+
 }
 
 Q_DECLARE_METATYPE( Echonest::ArtistInformation )
 Q_DECLARE_METATYPE( Echonest::SongInformation )
+Q_DECLARE_METATYPE( Echonest::GenreInformation )
 
 #endif
