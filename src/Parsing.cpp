@@ -793,7 +793,7 @@ QVector< QString > Echonest::Parser::parseTermList( QXmlStreamReader& xml ) thro
     return terms;
 }
 
-QVector< QString > Echonest::Parser::parseGenreList( QXmlStreamReader& xml ) throw( Echonest::ParseError )
+QVector< QString > Echonest::Parser::parseGenreListStrings( QXmlStreamReader& xml ) throw( Echonest::ParseError )
 {
     xml.readNextStartElement();
     xml.readNextStartElement();

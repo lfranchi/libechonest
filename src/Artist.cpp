@@ -561,7 +561,7 @@ QVector< QString > Echonest::Artist::parseGenreList( QNetworkReply* reply ) thro
 
     Echonest::Parser::readStatus( xml );
 
-    QVector< QString > genres = Echonest::Parser::parseGenreList( xml );
+    QVector< QString > genres = Echonest::Parser::parseGenreListStrings( xml );
 
     reply->deleteLater();
     return genres;

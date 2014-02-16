@@ -91,7 +91,7 @@ namespace Parser
     QVector< QString > parseTermList( QXmlStreamReader& xml ) throw( ParseError );
 
     //parse a list of genres
-    QVector< QString > parseGenreList( QXmlStreamReader& xml ) throw( ParseError );
+    QVector< QString > parseGenreListStrings( QXmlStreamReader& xml ) throw( ParseError );
 
     Artists parseArtistSuggestList( QXmlStreamReader& xml ) throw( ParseError );
 

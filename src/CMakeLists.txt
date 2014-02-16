@@ -18,6 +18,7 @@ set( LIBECHONEST_SRC
         CatalogArtist.cpp
         CatalogItem.cpp
         TypeInformation.cpp
+        Genre.cpp
 )
 
 set( LIBECHONEST_H
@@ -36,6 +37,7 @@ set( LIBECHONEST_H
         CatalogArtist.h
         CatalogItem.h
         TypeInformation.h
+        Genre.h
 )
 
 QT_WRAP_CPP( ${LIBECHONEST_H} )

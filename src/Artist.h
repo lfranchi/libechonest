@@ -36,6 +36,7 @@ namespace Echonest{
 
     class Biography;
     class Catalog;
+    class Genre;
 
     class Artist;
     typedef QVector< Artist > Artists;
@@ -397,6 +398,7 @@ namespace Echonest{
         QSharedDataPointer<ArtistData> d;
 
         friend class Catalog;
+        friend class Genre;
     };
 
     ECHONEST_EXPORT QDebug operator<<(QDebug d, const Echonest::Artist& artist);

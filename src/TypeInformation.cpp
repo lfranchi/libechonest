@@ -42,6 +42,16 @@ public:
     QStringList idSpaces;
 };
 
+class GenreInformationPrivate
+{
+public:
+
+    GenreInformationPrivate() : flags( GenreInformation::NoInformation )
+    {}
+
+    GenreInformation::GenreInformationFlags flags;
+};
+
 } // namespace 
 Echonest::ArtistInformation::ArtistInformation() 
     : d_ptr( new Echonest::ArtistInformationPrivate )
@@ -181,3 +191,51 @@ void Echonest::SongInformation::setIdSpaces(const QStringList& idspaces)
     d->idSpaces = idspaces;
 }
 
+Echonest::GenreInformation::GenreInformation()
+    : d_ptr( new Echonest::GenreInformationPrivate )
+{
+    Q_D( Echonest::GenreInformation );
+
+    d->flags = Echonest::GenreInformation::NoInformation;
+}
+
+Echonest::GenreInformation::GenreInformation( GenreInformationFlags flags )
+    : d_ptr( new Echonest::GenreInformationPrivate )
+{
+    Q_D( GenreInformation );
+
+    d->flags = flags;
+}
+
+Echonest::GenreInformation::GenreInformation( const Echonest::GenreInformation& other )
+    : d_ptr( new Echonest::GenreInformationPrivate( *other.d_ptr ) )
+{
+
+}
+
+Echonest::GenreInformation::~GenreInformation()
+{
+    delete d_ptr;
+}
+
+Echonest::GenreInformation& Echonest::GenreInformation::operator=( const Echonest::GenreInformation& info )
+{
+    d_ptr = new Echonest::GenreInformationPrivate( *info.d_ptr );
+
+    return *this;
+}
+
+
+Echonest::GenreInformation::GenreInformationFlags Echonest::GenreInformation::flags() const
+{
+    Q_D( const Echonest::GenreInformation );
+
+    return d->flags;
+}
+
+void Echonest::GenreInformation::setGenreInformationFlags( GenreInformationFlags flags )
+{
+    Q_D( Echonest::GenreInformation );
+
+    d->flags = flags;
+}
