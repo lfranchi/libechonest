@@ -49,7 +49,8 @@ namespace Echonest {
             Reviews = 0x0080,
             Terms = 0x0100,
             Urls = 0x200,
-            Videos = 0x0400
+            Videos = 0x0400,
+            Genre = 0x0800
         };
         Q_DECLARE_FLAGS( ArtistInformationFlags, ArtistInformationFlag )
         

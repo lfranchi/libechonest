@@ -38,6 +38,7 @@ set( LIBECHONEST_H
         CatalogItem.h
         TypeInformation.h
         Genre.h
+        CommonTypes.h
 )
 
 QT_WRAP_CPP( ${LIBECHONEST_H} )

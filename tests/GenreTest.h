@@ -15,43 +15,23 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
  ****************************************************************************************/
 
+#ifndef ECHONEST_GENRE_TEST_H
+#define ECHONEST_GENRE_TEST_H
 
-#ifndef ECHONEST_GENRE_P_H
-#define ECHONEST_GENRE_P_H
+#include <QtTest/QtTest>
+#include <boost/concept_check.hpp>
 
-#include "Artist.h"
-
-#include <QSharedData>
-#include <QString>
-
-
-namespace Echonest {
-    class Genre;
-}
-
-class GenreData : public QSharedData
+class GenreTest : public QObject
 {
-public:
-    GenreData() {}
-    GenreData(const GenreData& other) : QSharedData(other) {
-        name = other.name;
-        artists = other.artists;
-        similar = other.similar;
-        wikipedia_url = other.wikipedia_url;
-        description = other.description;
-    }
+    Q_OBJECT
+private slots:
+    void initTestCase();
 
-    // The following exist in all valid Genre objects
-    QString name;
+    void testArtistsUrl();
+    void testArtists();
 
-    //The following are populated on demand, and may not exist
-    Echonest::Artists artists;
-
-    QVector<Echonest::Genre> similar;
-
-    QUrl wikipedia_url;
-
-    QString description;
+    void testListUrl();
+    void testList();
 };
 
 #endif

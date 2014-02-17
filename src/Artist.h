@@ -24,6 +24,7 @@
 #include "echonest_export.h"
 #include "TypeInformation.h"
 #include "Song.h"
+#include "CommonTypes.h"
 
 #include <QDebug>
 #include <QSharedData>
@@ -36,10 +37,6 @@ namespace Echonest{
 
     class Biography;
     class Catalog;
-    class Genre;
-
-    class Artist;
-    typedef QVector< Artist > Artists;
 
     /**
      * This encapsulates an Echo Nest artist---it always holds the basic info of artist id and
@@ -180,6 +177,12 @@ namespace Echonest{
          */
         TermList terms() const;
         void setTerms( const TermList& );
+
+        /**
+         * Genres describing this artist.
+         */
+        Genres genres() const;
+        void setGenres( const Genres& );
 
         /**
          * Urls pointing to this artists' basic information around the web.

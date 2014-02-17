@@ -16,42 +16,14 @@
  ****************************************************************************************/
 
 
-#ifndef ECHONEST_GENRE_P_H
-#define ECHONEST_GENRE_P_H
+#ifndef ECHONEST_COMMONTYPES_H
+#define ECHONEST_COMMONTYPES_H
 
-#include "Artist.h"
-
-#include <QSharedData>
-#include <QString>
-
-
-namespace Echonest {
+namespace Echonest{
+    class Artist;
+    typedef QVector< Artist > Artists;
     class Genre;
-}
-
-class GenreData : public QSharedData
-{
-public:
-    GenreData() {}
-    GenreData(const GenreData& other) : QSharedData(other) {
-        name = other.name;
-        artists = other.artists;
-        similar = other.similar;
-        wikipedia_url = other.wikipedia_url;
-        description = other.description;
-    }
-
-    // The following exist in all valid Genre objects
-    QString name;
-
-    //The following are populated on demand, and may not exist
-    Echonest::Artists artists;
-
-    QVector<Echonest::Genre> similar;
-
-    QUrl wikipedia_url;
-
-    QString description;
-};
+    typedef QVector< Genre > Genres;
+} // namespace
 
 #endif

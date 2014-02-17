@@ -16,19 +16,20 @@
  ****************************************************************************************/
 
 
-#ifndef ECHONEST_GENRE_P_H
-#define ECHONEST_GENRE_P_H
+#ifndef ECHONEST_GENRE_H
+#define ECHONEST_GENRE_H
 
-#include "Artist.h"
+#include "echonest_export.h"
+#include "Config.h"
+#include "TypeInformation.h"
+#include "CommonTypes.h"
 
 #include <QString>
+#include <QUrl>
 
 class QNetworkReply;
 class GenreData;
 namespace Echonest{
-
-    class Genre;
-    typedef QVector< Genre > Genres;
 
     class ECHONEST_EXPORT Genre {
 
@@ -57,15 +58,14 @@ namespace Echonest{
 
         QNetworkReply* fetchArtists( ArtistInformation information = ArtistInformation(), int numResults = 0, bool limit = false );
         QNetworkReply* fetchSimilar( GenreInformation information = GenreInformation(), int numResults = 0, int start = -1 );
-        QNetworkReply* fetchProfile( GenreInformation information = GenreInformation() );
 
+        static QNetworkReply* fetchProfile( const Genres& genres, GenreInformation information = GenreInformation() );
         static QNetworkReply* fetchList( GenreInformation information = GenreInformation(), int numResults = 0 );
         static QNetworkReply* fetchSearch( const QString& name, GenreInformation information = GenreInformation(), int numResults = 0, int start = -1 );
 
-        Artists parseArtists( QNetworkReply* ) throw( ParseError );
-        Genres parseSimilar( QNetworkReply* ) throw( ParseError );
-        void parseProfile( QNetworkReply* ) throw( ParseError );
-
+        static Artists parseArtists( QNetworkReply* ) throw( ParseError );
+        static Genres parseSimilar( QNetworkReply* ) throw( ParseError );
+        static Genres parseProfile( QNetworkReply* ) throw( ParseError );
         static Genres parseList( QNetworkReply* ) throw( ParseError );
         static Genres parseSearch( QNetworkReply* ) throw( ParseError );
     private:

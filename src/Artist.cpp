@@ -192,6 +192,16 @@ void Echonest::Artist::setTerms(const Echonest::TermList& terms)
     d->terms = terms;
 }
 
+Echonest::Genres Echonest::Artist::genres() const
+{
+    return d->genres;
+}
+
+void Echonest::Artist::setGenres(const Echonest::Genres& genres)
+{
+    d->genres = genres;
+}
+
 QUrl Echonest::Artist::amazonUrl() const
 {
     return d->amazon_url;
@@ -644,6 +654,8 @@ void Echonest::Artist::addQueryInformation(QUrl& url, Echonest::ArtistInformatio
         urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "urls" ) );
     if( information.flags().testFlag( Echonest::ArtistInformation::Videos ) )
         urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "video" ) );
+    if( information.flags().testFlag( Echonest::ArtistInformation::Genre ) )
+        urlAddQueryItem( url, QLatin1String( "bucket" ), QLatin1String( "genre" ) );
 
     if( !information.idSpaces().isEmpty() ) {
         foreach( const QString& idSpace, information.idSpaces() )

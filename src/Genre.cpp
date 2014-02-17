@@ -54,7 +54,7 @@ Echonest::Genre::~Genre()
 
 void Echonest::Genre::init()
 {
-    qRegisterMetaType<Echonest::Artist>("Echonest::Artist");
+    qRegisterMetaType<Echonest::Genre>("Echonest::Genre");
 }
 
 
@@ -126,10 +126,13 @@ QNetworkReply* Echonest::Genre::fetchSimilar( GenreInformation information, int 
 }
 
 
-QNetworkReply* Echonest::Genre::fetchProfile( GenreInformation information )
+QNetworkReply* Echonest::Genre::fetchProfile( const Echonest::Genres& genres, GenreInformation information )
 {
-    QUrl url = setupQuery( "profile" );
+    QUrl url = setupStaticQuery( "profile" );
     addQueryInformation( url, information );
+
+    foreach( const Genre& g, genres )
+        urlAddQueryItem( url, QLatin1String( "name" ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( g.name() ) ) );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
 }
@@ -167,16 +170,23 @@ Echonest::Genres Echonest::Genre::parseSimilar( QNetworkReply* reply ) throw( Ec
 }
 
 
-void Echonest::Genre::parseProfile( QNetworkReply* reply ) throw( Echonest::ParseError )
+Echonest::Genres Echonest::Genre::parseProfile( QNetworkReply* reply ) throw( Echonest::ParseError )
 {
-
+    return parseList( reply );
 }
 
 
 Echonest::Genres Echonest::Genre::parseList( QNetworkReply* reply ) throw( Echonest::ParseError )
 {
-    Genres genres;
-    genres.append(Genre( QString::fromLatin1( "TODO" )));
+    Echonest::Parser::checkForErrors( reply );
+
+    QXmlStreamReader xml( reply->readAll() );
+
+    Echonest::Parser::readStatus( xml );
+
+    Echonest::Genres genres = Echonest::Parser::parseGenres( xml );
+
+    reply->deleteLater();
     return genres;
 }
 

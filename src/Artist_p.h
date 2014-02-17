@@ -19,6 +19,7 @@
 
 #include "Song.h"
 #include "ArtistTypes.h"
+#include "CommonTypes.h"
 
 #include <QSharedData>
 #include <QString>
@@ -61,6 +62,7 @@ public:
         mb_url = other.mb_url;
         
         foreign_ids = other.foreign_ids;
+        genres = other.genres;
     }
     
     // The following exist in all valid Artist objects
@@ -91,6 +93,8 @@ public:
     QUrl mb_url;
     
     Echonest::ForeignIds foreign_ids;
+
+    Echonest::Genres genres;
 };
 
 #endif
