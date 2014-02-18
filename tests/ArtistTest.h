@@ -60,6 +60,7 @@ private slots:
     void testVideosUrl();
     void testVideos();
     void testGenres();
+    void testUrlsFix();
 };
 
 #endif
