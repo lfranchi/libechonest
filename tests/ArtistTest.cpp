@@ -714,10 +714,7 @@ void ArtistTest::testUrls()
     testArtist.parseProfile( reply );
 
     QVERIFY( !testArtist.lastFmUrl().isEmpty() );
-    QVERIFY( !testArtist.aolMusicUrl().isEmpty() );
     QVERIFY( !testArtist.myspaceUrl().isEmpty() );
-    QVERIFY( !testArtist.amazonUrl().isEmpty() );
-    QVERIFY( !testArtist.itunesUrl().isEmpty() );
     QVERIFY( !testArtist.musicbrainzUrl().isEmpty() );
 }
 

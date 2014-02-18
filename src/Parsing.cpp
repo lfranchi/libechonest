@@ -457,7 +457,7 @@ void Echonest::Parser::parseArtistInfo( QXmlStreamReader& xml, Echonest::Artist&
     }  else if( xml.name() == QLatin1String( "terms" ) ) {
         parseTerms( xml, artist );
     }  else if( xml.name() == QLatin1String( "urls" ) ) {
-        parseTerms( xml, artist );
+        parseUrls( xml, artist );
     }  else if( xml.name() == QLatin1String( "songs" ) ) {
         parseArtistSong( xml, artist );
     }  else if( xml.name() == QLatin1String( "video" ) ) {
