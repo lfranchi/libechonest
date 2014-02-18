@@ -107,6 +107,52 @@ void GenreTest::testList()
     QVERIFY( contains );
 }
 
+void GenreTest::testProfileUrl()
+{
+    Genres genres;
+    Genre g;
+    g.setName( QLatin1String( "classic rock" ) );
+    genres.append( g );
+    GenreInformation information;
+    information.setGenreInformationFlags( GenreInformation::Description | GenreInformation::Urls );
+    QNetworkReply* reply = Genre::fetchProfile( genres, information);
+
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/genre/profile?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=description&bucket=urls&name=classic+rock" ) );
+    Genre g1;
+    g1.setName( QLatin1String( "psychedelic rock" ) );
+    genres.append( g1 );
+    reply = Genre::fetchProfile( genres, information);
+
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/genre/profile?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=description&bucket=urls&name=classic+rock&name=psychedelic+rock" ) );
+}
+
+void GenreTest::testProfile()
+{
+    GenreInformation information;
+    information.setGenreInformationFlags( GenreInformation::Description | GenreInformation::Urls );
+    Genres genres;
+    Genre g;
+    g.setName( QLatin1String( "classic rock" ) );
+    genres.append( g );
+    Genre g1;
+    g1.setName( QLatin1String( "psychedelic rock" ) );
+    genres.append( g1 );
+
+    QNetworkReply* reply = Genre::fetchProfile( genres, information);
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+
+    Genres profiledGenres = Genre::parseProfile( reply );
+
+    QVERIFY( profiledGenres.size() == 2 );
+    Genre g3 = profiledGenres.at(0);
+    Genre g4 = profiledGenres.at(1);
+    QVERIFY( g3.name() == g.name() );
+    QVERIFY( g4.name() == g1.name() );
+    QVERIFY( g3.wikipediaUrl().toString().startsWith( QLatin1String("http://en.wikipedia.org/wiki/" ) ) );
+}
+
 QTEST_MAIN(GenreTest)
 
 #include "GenreTest.moc"
