@@ -344,6 +344,7 @@ namespace Echonest{
         static QNetworkReply* listTerms( const QString& type = QLatin1String("style") );
 
         /**
+         * @Deprecated
          * Fetch a list of genres supported by echonest
          */
         static QNetworkReply* fetchGenres();
@@ -382,6 +383,7 @@ namespace Echonest{
         static QVector< QString > parseTermList( QNetworkReply* ) throw( ParseError );
 
         /**
+         * @Deprecated
          * Parse the result of a genres query. Returns the list of genres delivered.
          */
         static QVector< QString > parseGenreList( QNetworkReply* ) throw ( ParseError );

@@ -714,10 +714,7 @@ void ArtistTest::testUrls()
     testArtist.parseProfile( reply );
 
     QVERIFY( !testArtist.lastFmUrl().isEmpty() );
-    QVERIFY( !testArtist.aolMusicUrl().isEmpty() );
     QVERIFY( !testArtist.myspaceUrl().isEmpty() );
-    QVERIFY( !testArtist.amazonUrl().isEmpty() );
-    QVERIFY( !testArtist.itunesUrl().isEmpty() );
     QVERIFY( !testArtist.musicbrainzUrl().isEmpty() );
 }
 
@@ -772,6 +769,25 @@ void ArtistTest::testGenres()
     QVector< QString > genres = Artist::parseGenreList( reply );
     QVERIFY( genres.size() > 0 );
     QVERIFY( genres.contains( QLatin1String( "dub" ) ) );
+}
+
+void ArtistTest::testUrlsFix()
+{
+    Artist::SearchParams params;
+    params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "The Beatles" ) ) );
+
+    QNetworkReply* reply = Artist::fetchSimilar( params, ArtistInformation( ArtistInformation::Urls ) );
+
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    Echonest::Artists artists = Echonest::Artist::parseSimilar( reply );
+
+    QVERIFY( artists.size() > 0 );
+    Q_FOREACH( const Artist& artist, artists ) {
+        QVERIFY( !artist.lastFmUrl().isEmpty() );
+        QVERIFY( !artist.musicbrainzUrl().isEmpty() );
+    }
 }
 
 QTEST_MAIN(ArtistTest)
