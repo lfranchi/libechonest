@@ -6,6 +6,6 @@ includedir=@INCLUDE_INSTALL_DIR@
 Name: libechonest
 Description: libechonest is a qt-based library that makes the Echo Nest APIs easily accessible
 Version: @ECHONEST_LIB_MAJOR_VERSION@.@ECHONEST_LIB_MINOR_VERSION@.@ECHONEST_LIB_PATCH_VERSION@
-Requires: Qt@ECHONEST_QT_MAJOR_VERSION@Core Qt@ECHONEST_QT_MAJOR_VERSION@Network
+Requires: Qt@ECHONEST_QT_MAJOR_VERSION@Core Qt@ECHONEST_QT_MAJOR_VERSION@Network QJson
 Libs: -L${libdir} -lechonest
 Cflags: -I${includedir}
