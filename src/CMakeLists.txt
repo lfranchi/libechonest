@@ -19,6 +19,7 @@ set( LIBECHONEST_SRC
         CatalogItem.cpp
         TypeInformation.cpp
         Genre.cpp
+        qjsonwrapper/Json.cpp
 )
 
 set( LIBECHONEST_H

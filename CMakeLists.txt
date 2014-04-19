@@ -38,9 +38,11 @@ if( NOT Qt5Core_DIR )
     endmacro()
 
     set(ECHONEST_QT_MAJOR_VERSION "")
+
+    # QJson is only required for Qt4
+    find_package(QJSON REQUIRED)
 endif()
 
-find_package(QJSON REQUIRED)
 
 set( ECHONEST_LIB_MAJOR_VERSION "2" )
 set( ECHONEST_LIB_MINOR_VERSION "2" )
