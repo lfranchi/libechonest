@@ -8,6 +8,7 @@ cmake_minimum_required( VERSION 2.6 )
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
 
+option(ECHONEST_BUILD_TESTS "Build all unit tests" ON)
 option(BUILD_WITH_QT4 "Build libechonest with Qt4 no matter if Qt5 was found" ON)
 
 if( NOT BUILD_WITH_QT4 )
@@ -27,7 +28,11 @@ endif()
 
 if( NOT Qt5Core_DIR )
     message(STATUS "Could not find Qt5, searching for Qt4 instead...")
-    find_package( Qt4 COMPONENTS QtCore QtNetwork QtTest REQUIRED )
+    if( ECHONEST_BUILD_TESTS )
+        find_package( Qt4 COMPONENTS QtCore QtNetwork QtTest REQUIRED )
+    else( ECHONEST_BUILD_TESTS )
+        find_package( Qt4 COMPONENTS QtCore QtNetwork REQUIRED )
+    endif()
     include( ${QT_USE_FILE} )
 
     macro(qt5_use_modules)
@@ -70,8 +75,6 @@ if(MSVC)
     add_definitions(/wd4290)
 endif(MSVC)
 
-
-option(ECHONEST_BUILD_TESTS "Build all unit tests" ON)
 
 if(ECHONEST_BUILD_TESTS)
   enable_testing()
