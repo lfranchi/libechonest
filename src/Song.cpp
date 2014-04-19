@@ -21,9 +21,7 @@
 #include "AudioSummary.h"
 
 #include "Parsing_p.h"
-
-#include <qjson/serializer.h>
-#include <qjson/parser.h>
+#include "qjsonwrapper/Json.h"
 
 #include <QNetworkReply>
 #include <QDebug>
@@ -236,8 +234,7 @@ QNetworkReply* Echonest::Song::identify( const Echonest::Song::IdentifyParams& p
     }
     metadata[ QLatin1String( "version" ) ] = QLatin1String( "4.12" );
     query[ QLatin1String( "metadata" ) ] = metadata;
-    QJson::Serializer s;
-    QByteArray data = s.serialize( query );
+    QByteArray data = QJsonWrapper::toJson( query );
 
     QUrl url = Echonest::baseGetQuery( "song", "identify" );
     addQueryInformation( url, information );
@@ -255,8 +252,7 @@ Echonest::SongList Echonest::Song::parseIdentify( QNetworkReply* reply ) throw( 
     Echonest::Parser::checkForErrors( reply );
 
     QByteArray data = reply->readAll();
-    QJson::Parser p;
-    QVariantMap res = p.parse( data ).toMap();
+    QVariantMap res = QJsonWrapper::parseJson( data ).toMap();
 //     qDebug() << "Got data from identify call:" << data << res;
 
 

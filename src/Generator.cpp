@@ -17,8 +17,8 @@
 #include "Generator_p.h"
 #include "CatalogUpdateEntry.h"
 
-// QJSon
-#include <qjson/serializer.h>
+// JSON Parsing
+#include "qjsonwrapper/Json.h"
 
 #include <QVariant>
 #include <quuid.h>
@@ -26,20 +26,16 @@
 
 QByteArray Echonest::Generator::catalogEntriesToJson( const Echonest::CatalogUpdateEntries& items )
 {
-    QJson::Serializer s;
-
     QVariant itms = catalogEntriesToVariant( items );
-    QByteArray serialized = s.serialize( itms );
+    QByteArray serialized = QJsonWrapper::toJson( itms );
 //    qDebug() << "Serialized:" << serialized;
     return serialized;
 }
 
 QByteArray Echonest::Generator::catalogEntryToJson( const Echonest::CatalogUpdateEntry& item )
 {
-    QJson::Serializer s;
-
     QVariant itm = catalogEntryToVariant( item );
-    QByteArray serialized = s.serialize( itm );
+    QByteArray serialized = QJsonWrapper::toJson( itm );
    // qDebug() << "Serialized:" << serialized;
     return serialized;
 }

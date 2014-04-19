@@ -22,9 +22,7 @@
 #include "Genre.h"
 #include "Catalog.h"
 #include "CatalogArtist.h"
-
-// QJSon
-#include <qjson/parser.h>
+#include "qjsonwrapper/Json.h"
 
 #include <QtNetwork/QNetworkReply>
 #include <QDateTime>
@@ -307,11 +305,11 @@ inline QVector< T > extractTripleTuple( const QVariantList& list ) {
 
 void Echonest::Parser::parseDetailedAudioSummary( QNetworkReply* reply, Echonest::AudioSummary& summary ) throw( ParseError )
 {
-   QJson::Parser parser;
    bool ok;
-   QVariant data = parser.parse( reply, &ok );
+   QByteArray jsonData = reply->readAll();
+   QVariant data = QJsonWrapper::parseJson( jsonData, &ok );
    if( !ok ) {
-       qWarning() << "Failed to parse JSON data!" << parser.errorString();
+       qWarning() << "Failed to parse JSON data!" << jsonData;
        throw ParseError( Echonest::UnknownParseError );
     }
     QVariantMap mainMap = data.toMap();
