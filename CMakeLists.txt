@@ -24,6 +24,7 @@ if( NOT BUILD_WITH_QT4 )
     # pkg-config names of QtCore and QtNetwork are Qt5Core and Qt5Network for
     # Qt5
     set(ECHONEST_QT_MAJOR_VERSION "5")
+    set(ECHONEST_PC_DEPS "")
 endif()
 
 if( NOT Qt5Core_DIR )
@@ -43,6 +44,7 @@ if( NOT Qt5Core_DIR )
     endmacro()
 
     set(ECHONEST_QT_MAJOR_VERSION "")
+    set(ECHONEST_PC_DEPS "QJson")
 
     # QJson is only required for Qt4
     find_package(QJSON REQUIRED)
