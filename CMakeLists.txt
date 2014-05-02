@@ -15,6 +15,7 @@ if( NOT BUILD_WITH_QT4 )
     find_package(Qt5Core QUIET)
     if( Qt5Core_DIR )
         message(STATUS "Found Qt5! Be aware that Qt5-support is still experimental and not officially supported!")
+        set(ECHONEST_LIB_VERSION_SUFFIX 5)
 
         macro(qt_wrap_cpp)
             qt5_wrap_cpp(${ARGN})
@@ -104,9 +105,9 @@ SET (LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" CACHE STRING "Di
 SET (INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "The directory the headers are installed in")
 IF (NOT WIN32)
   CONFIGURE_FILE (${CMAKE_CURRENT_SOURCE_DIR}/libechonest.pc.in
-                  ${CMAKE_CURRENT_BINARY_DIR}/libechonest.pc
+                  ${CMAKE_CURRENT_BINARY_DIR}/libechonest${ECHONEST_LIB_VERSION_SUFFIX}.pc
                   @ONLY)
-  INSTALL (FILES ${CMAKE_CURRENT_BINARY_DIR}/libechonest.pc
+  INSTALL (FILES ${CMAKE_CURRENT_BINARY_DIR}/libechonest${ECHONEST_LIB_VERSION_SUFFIX}.pc
            DESTINATION lib${LIB_SUFFIX}/pkgconfig)
 ENDIF (NOT WIN32)
 
@@ -129,6 +130,8 @@ CONFIGURE_FILE(
 
 ADD_CUSTOM_TARGET(uninstall
   "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+
+set(ECHONEST_LIB_TARGET_NAME echonest${ECHONEST_LIB_VERSION_SUFFIX} CACHE INTERNAL "Target name of libechonest" FORCE)
 
 add_subdirectory( src )
 
