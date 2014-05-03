@@ -3,9 +3,9 @@ exec_prefix=${prefix}
 libdir=@LIB_INSTALL_DIR@
 includedir=@INCLUDE_INSTALL_DIR@
 
-Name: libechonest
+Name: libechonest@ECHONEST_LIB_VERSION_SUFFIX@
 Description: libechonest is a qt-based library that makes the Echo Nest APIs easily accessible
 Version: @ECHONEST_LIB_MAJOR_VERSION@.@ECHONEST_LIB_MINOR_VERSION@.@ECHONEST_LIB_PATCH_VERSION@
 Requires: Qt@ECHONEST_QT_MAJOR_VERSION@Core Qt@ECHONEST_QT_MAJOR_VERSION@Network @ECHONEST_PC_DEPS@
-Libs: -L${libdir} -lechonest
+Libs: -L${libdir} -lechonest@ECHONEST_LIB_VERSION_SUFFIX@
 Cflags: -I${includedir}
