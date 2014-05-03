@@ -18,7 +18,7 @@
 #define ECHONEST_EXPORT_H
 
 #if defined _WIN32
-    #if defined ( echonest_EXPORTS ) or defined ( echonest5_EXPORTS )
+    #if defined ( echonest_EXPORTS ) || defined ( echonest5_EXPORTS )
         #define ECHONEST_EXPORT __declspec(dllexport)
     #else
         #define ECHONEST_EXPORT __declspec(dllimport)
