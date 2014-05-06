@@ -26,6 +26,7 @@ if( NOT BUILD_WITH_QT4 )
     # Qt5
     set(ECHONEST_QT_MAJOR_VERSION "5")
     set(ECHONEST_PC_DEPS "")
+    set(ECHONEST_INCLUDE_DIR_PREFIX "echonest5")
 endif()
 
 if( NOT Qt5Core_DIR )
@@ -102,7 +103,9 @@ endif( APPLE )
 #add extra search paths for libraries and includes
 SET (LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 SET (LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" CACHE STRING "Directory where lib will install")
-SET (INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "The directory the headers are installed in")
+SET (INCLUDE_INSTALL_DIR
+    "${CMAKE_INSTALL_PREFIX}/include/${ECHONEST_INCLUDE_DIR_PREFIX}" CACHE
+    PATH "The directory the headers are installed in")
 IF (NOT WIN32)
   CONFIGURE_FILE (${CMAKE_CURRENT_SOURCE_DIR}/libechonest.pc.in
                   ${CMAKE_CURRENT_BINARY_DIR}/libechonest${ECHONEST_LIB_VERSION_SUFFIX}.pc
