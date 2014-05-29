@@ -207,7 +207,6 @@ void PlaylistTest::testDynamic1()
     p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "tallest man on earth" ) ) );
     p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "fleet foxes" ) ) );
     p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "johnny cash" ) ) );
-    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "crosby, stills, nash and young" ) ) );
     p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistRadioType ) );
     p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::ArtistMinHotttnesss, .6 ) );
     p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::ArtistMaxFamiliarity, .4 ) );
@@ -217,7 +216,7 @@ void PlaylistTest::testDynamic1()
     QNetworkReply* reply = playlist.create( p );
 
     qDebug() << reply->url().toString();
-    QCOMPARE( reply->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/playlist/dynamic/create?api_key=JGJCRKWLXLBZIFAZB&format=xml&artist=tallest+man+on+earth&artist=fleet+foxes&artist=johnny+cash&artist=crosby,+stills,+nash+and+young&type=artist-radio&artist_min_hotttnesss=0.6&artist_max_familiarity=0.4&mood=sad" ) );
+    QCOMPARE( reply->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/playlist/dynamic/create?api_key=JGJCRKWLXLBZIFAZB&format=xml&artist=tallest+man+on+earth&artist=fleet+foxes&artist=johnny+cash&type=artist-radio&artist_min_hotttnesss=0.6&artist_max_familiarity=0.4&mood=sad" ) );
 
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -612,6 +611,50 @@ void PlaylistTest::testAudioSummaryAttributes()
     }
 }
 
+void PlaylistTest::testGenrePresets()
+{
+    DynamicPlaylist::PlaylistParams p;
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Genre, QLatin1String( "classic rock" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Type, Echonest::DynamicPlaylist::GenreRadioType ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::GenrePreset, DynamicPlaylist::CoreBest ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 30 ) );
+
+    QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
+
+    qDebug() << reply->url().toEncoded();
+
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    SongList songs = DynamicPlaylist::parseStaticPlaylist( reply );
+
+    QVERIFY( songs.size() == 30 );
+}
+
+void PlaylistTest::testDistribution()
+{
+    DynamicPlaylist::PlaylistParams p;
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QLatin1String( "the doors" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistRadioType ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Results, 50 ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::Distribution, QLatin1String( "wandering" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( DynamicPlaylist::GenrePreset, DynamicPlaylist::CoreBest ) );
+
+    QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
+
+    qDebug() << reply->url().toEncoded();
+
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    SongList songs = DynamicPlaylist::parseStaticPlaylist( reply );
+
+    Q_FOREACH( const Song& song, songs) {
+        qDebug() << song;
+    }
+
+    QVERIFY( songs.size() == 50 );
+}
 
 QTEST_MAIN( PlaylistTest )
 

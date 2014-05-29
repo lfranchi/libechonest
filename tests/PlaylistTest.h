@@ -37,6 +37,8 @@ private slots:
 
     void testGenreRadio();
     void testAudioSummaryAttributes();
+    void testGenrePresets();
+    void testDistribution();
 };
 
 #endif

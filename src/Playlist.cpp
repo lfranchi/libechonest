@@ -327,8 +327,10 @@ QNetworkReply* Echonest::DynamicPlaylist::generateInternal(const Echonest::Dynam
             urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QString::fromLatin1( playlistSortToString( static_cast<Echonest::DynamicPlaylist::SortingType>( iter->second.toInt() ) ) ) );
         } else if( iter->first == Pick ) {
             urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QString::fromLatin1( playlistArtistPickToString( static_cast<Echonest::DynamicPlaylist::ArtistPick>( iter->second.toInt() ) ) ) );
-        } else if( iter->first == SongInformation ){
+        } else if( iter->first == SongInformation ) {
             Echonest::Song::addQueryInformation( url, Echonest::SongInformation( iter->second.value< Echonest::SongInformation >() ) );
+        } else if ( iter->first == GenrePreset ) {
+            urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QString::fromLatin1( playlistGenrePresetToString( static_cast<Echonest::DynamicPlaylist::GenrePresetParam>( iter->second.toInt() ) ) ) );
         } else {
             urlAddQueryItem( url, QString::fromLatin1( playlistParamToString( iter->first ) ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( iter->second.toString() ) ) );
         }
@@ -472,6 +474,10 @@ QByteArray Echonest::DynamicPlaylist::playlistParamToString(Echonest::DynamicPla
             return "max_valence";
         case Echonest::DynamicPlaylist::MinValence:
             return "min_valence";
+        case Echonest::DynamicPlaylist::Distribution:
+            return "distribution";
+        case Echonest::DynamicPlaylist::GenrePreset:
+            return "genre_preset";
     }
     return QByteArray();
 }
@@ -605,6 +611,25 @@ QByteArray Echonest::DynamicPlaylist::dynamicFeedbackToString(Echonest::DynamicP
             return "";
     }
 }
+
+QByteArray Echonest::DynamicPlaylist::playlistGenrePresetToString(Echonest::DynamicPlaylist::GenrePresetParam param)
+{
+    switch( param )
+    {
+        case CoreBest:
+            return "core-best";
+        case CoreShuffled:
+            return "core-shuffled";
+        case EmergingBest:
+            return "emerging-best";
+        case EmerginShuffled:
+            return "emerging-shuffled";
+        default:
+            Q_ASSERT(false);
+            return "";
+    }
+}
+
 
 QDebug Echonest::operator<<(QDebug d, const Echonest::DynamicPlaylist& playlist)
 {

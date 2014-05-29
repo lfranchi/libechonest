@@ -195,7 +195,9 @@ namespace Echonest{
             MaxLiveness, /// 0 < liveness < 1  a measure of the maximum liveness of the song
             MinLiveness, /// 0 < liveness < 1  a measure of the minimum liveness of the song
             MaxValence, /// 0 < valence < 1  a measure of the maximum valence of the song
-            MinValence /// 0 < valence < 1  a measure of the minimum valence of the song
+            MinValence, /// 0 < valence < 1  a measure of the minimum valence of the song
+            Distribution, /// focused or wandering
+            GenrePreset /// core-best, core-shuffled, in_rotation-best, in_rotation-shuffled, emerging-best or emerging-shuffled
         };
 
         /**
@@ -210,6 +212,18 @@ namespace Echonest{
             PlaySong, /// Mark this song as played. Unneeded unless you want to pre-seed a station. [track_id, song_id, "last"]
             UnplaySong, /// Remove a song from a dynamic session's history. Will not blacklist the song. [track_id, song_id, "last"]
             RateSong, /// Rate the desired song. [track_id, song_id, "last"]^[0-10]. E.g: "last^3" or "TRTLKZV12E5AC92E11^5"
+        };
+
+        /**
+         * The parameters that can be passed to GenrePreset
+         */
+        enum GenrePresetParam {
+            CoreBest,
+            CoreShuffled,
+            InRotationBest,
+            InRotationShuffled,
+            EmergingBest,
+            EmerginShuffled,
         };
 
         typedef QPair< PlaylistParam, QVariant > PlaylistParamData;
@@ -339,6 +353,7 @@ namespace Echonest{
         static QNetworkReply* generateInternal( const PlaylistParams& params, const QByteArray& type );
         static QByteArray playlistSortToString(SortingType sorting);
         static QByteArray playlistArtistPickToString(ArtistPick pick);
+        static QByteArray playlistGenrePresetToString(GenrePresetParam param);
         static QByteArray dynamicFeedbackToString(DynamicFeedbackParam param);
 
         QSharedDataPointer<DynamicPlaylistData> d;
