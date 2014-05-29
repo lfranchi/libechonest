@@ -945,7 +945,8 @@ Echonest::SongList Echonest::Parser::parseDynamicLookahead( QXmlStreamReader& xm
 
             xml.readNext();
         }
-        lookahead.append(song);
+        if ( !( song.id().isEmpty() && song.title().isEmpty() && song.artistId().isEmpty() && song.artistName().isEmpty() ) )
+            lookahead.append(song);
 
         xml.readNext();
     }
