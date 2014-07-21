@@ -13,6 +13,8 @@ option(BUILD_WITH_QT4 "Build libechonest with Qt4 no matter if Qt5 was found" ON
 
 if( NOT BUILD_WITH_QT4 )
     find_package(Qt5Core QUIET)
+    # CMAKE 2.8.13+/3.0.0+ requires these for IMPORTed targets
+    find_package(Qt5Xml REQUIRED)
     if( Qt5Core_DIR )
         message(STATUS "Found Qt5! Be aware that Qt5-support is still experimental and not officially supported!")
         set(ECHONEST_LIB_VERSION_SUFFIX 5)
