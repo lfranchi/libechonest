@@ -29,6 +29,7 @@ private slots:
 
 
     void testCreateUpdateDeleteSong();
+    void testCreateUpdateDeleteArtist();
 
     void testList();
 private:
@@ -36,7 +37,7 @@ private:
     void testRead();
     void testStatus();
 
-    void testCreateUpdateDeleteArtist();
+
 
     Echonest::Catalog m_songC;
     Echonest::Catalog m_artistC;

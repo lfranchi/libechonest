@@ -132,7 +132,7 @@ void Echonest::Catalog::setType(Echonest::CatalogTypes::Type type)
 
 QNetworkReply* Echonest::Catalog::create(const QString& name, Echonest::CatalogTypes::Type type)
 {
-    QUrl url = Echonest::baseGetQuery( "catalog", "create" );
+    QUrl url = Echonest::baseGetQuery( "tasteprofile", "create" );
 
     urlAddQueryItem( url, QLatin1String( "name" ), name );
     urlAddQueryItem( url, QLatin1String( "type" ), QString::fromLatin1( Echonest::catalogTypeToLiteral( type )  ) );
@@ -145,7 +145,7 @@ QNetworkReply* Echonest::Catalog::create(const QString& name, Echonest::CatalogT
 
 QNetworkReply* Echonest::Catalog::deleteCatalog() const
 {
-    QUrl url = Echonest::baseGetQuery( "catalog", "delete" );
+    QUrl url = Echonest::baseGetQuery( "tasteprofile", "delete" );
     Q_ASSERT( !d->id.isEmpty() );
 
     urlAddQueryItem( url, QLatin1String( "id" ), QString::fromLatin1( d->id ) );
@@ -155,7 +155,7 @@ QNetworkReply* Echonest::Catalog::deleteCatalog() const
 
 QNetworkReply* Echonest::Catalog::list(int results, int start)
 {
-    QUrl url = Echonest::baseGetQuery( "catalog", "list" );
+    QUrl url = Echonest::baseGetQuery( "tasteprofile", "list" );
     addLimits( url, results, start );
 
     return Echonest::Config::instance()->nam()->get( QNetworkRequest( url ) );
@@ -163,7 +163,7 @@ QNetworkReply* Echonest::Catalog::list(int results, int start)
 
 QNetworkReply* Echonest::Catalog::profile() const
 {
-    QUrl url = Echonest::baseGetQuery( "catalog", "profile" );
+    QUrl url = Echonest::baseGetQuery( "tasteprofile", "profile" );
 
     if( !d->id.isEmpty() )
         urlAddQueryItem( url, QLatin1String( "id" ), QString::fromLatin1( d->id ) );
@@ -177,7 +177,7 @@ QNetworkReply* Echonest::Catalog::profile() const
 
 QNetworkReply* Echonest::Catalog::status(const QByteArray& ticket)
 {
-    QUrl url = Echonest::baseGetQuery( "catalog", "status" );
+    QUrl url = Echonest::baseGetQuery( "tasteprofile", "status" );
 
     urlAddQueryItem( url, QLatin1String( "ticket" ), QString::fromLatin1( ticket ) );
 
@@ -186,7 +186,7 @@ QNetworkReply* Echonest::Catalog::status(const QByteArray& ticket)
 
 QNetworkReply* Echonest::Catalog::update(const Echonest::CatalogUpdateEntries& entries) const
 {
-    QUrl url = Echonest::baseGetQuery( "catalog", "update" );
+    QUrl url = Echonest::baseGetQuery( "tasteprofile", "update" );
     Q_ASSERT( !d->id.isEmpty() );
 
     urlAddQueryItem( url, QLatin1String( "id" ), QString::fromLatin1( d->id ) );
@@ -196,13 +196,13 @@ QNetworkReply* Echonest::Catalog::update(const Echonest::CatalogUpdateEntries& e
 
 QNetworkReply* Echonest::Catalog::updateAndCreate(const Echonest::CatalogUpdateEntries& entries)
 {
-    QUrl url = Echonest::baseGetQuery( "catalog", "update" );
+    QUrl url = Echonest::baseGetQuery( "tasteprofile", "update" );
     return Echonest::Catalog::updatePrivate( url, entries );
 }
 
 QNetworkReply* Echonest::Catalog::readArtistCatalog(Echonest::ArtistInformation info, int results, int start) const
 {
-    QUrl url = Echonest::baseGetQuery( "catalog", "read" );
+    QUrl url = Echonest::baseGetQuery( "tasteprofile", "read" );
     Artist::addQueryInformation( url, info );
 
     return readPrivate( url, results, start );
@@ -210,7 +210,7 @@ QNetworkReply* Echonest::Catalog::readArtistCatalog(Echonest::ArtistInformation 
 
 QNetworkReply* Echonest::Catalog::readSongCatalog(Echonest::SongInformation info, int results, int start) const
 {
-    QUrl url = Echonest::baseGetQuery( "catalog", "read" );
+    QUrl url = Echonest::baseGetQuery( "tasteprofile", "read" );
     Song::addQueryInformation( url, info );
 
     return readPrivate( url, results, start );
