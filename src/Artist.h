@@ -409,5 +409,6 @@ namespace Echonest{
 } // namespace
 
 Q_DECLARE_METATYPE( Echonest::Artist )
+Q_DECLARE_METATYPE( Echonest::Artists );
 
 #endif

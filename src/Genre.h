@@ -83,5 +83,6 @@ namespace Echonest{
 } // namespace
 
 Q_DECLARE_METATYPE( Echonest::Genre )
+Q_DECLARE_METATYPE( Echonest::Genres );
 
 #endif
