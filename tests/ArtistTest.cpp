@@ -758,19 +758,6 @@ void ArtistTest::testVideos()
     qDebug() << testArtist.videos();
 }
 
-void ArtistTest::testGenres()
-{
-    QNetworkReply* reply = Artist::fetchGenres();
-    qDebug() << reply->url();
-    QEventLoop loop;
-    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
-    loop.exec();
-
-    QVector< QString > genres = Artist::parseGenreList( reply );
-    QVERIFY( genres.size() > 0 );
-    QVERIFY( genres.contains( QLatin1String( "dub" ) ) );
-}
-
 void ArtistTest::testUrlsFix()
 {
     Artist::SearchParams params;
