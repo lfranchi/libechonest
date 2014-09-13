@@ -73,7 +73,7 @@ void PlaylistTest::testStatic2()
     QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
 
     qDebug() << reply->url().toEncoded();
-    QCOMPARE( QLatin1String( reply->url().toEncoded() ), QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&artist=tallest+man+on+earth&artist=bon+iver&artist=mumford+and+sons&artist=Florence+%2B+The+Machine&artist_max_familiarity=0.4&min_danceability=0.7&type=artist&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&results=4" ) );
+    QCOMPARE( QLatin1String( reply->url().toEncoded() ), QLatin1String( "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&artist=tallest+man+on+earth&artist=bon+iver&artist=mumford+and+sons&artist=Florence+%252B+The+Machine&artist_max_familiarity=0.4&min_danceability=0.7&type=artist&bucket=song_hotttnesss&bucket=artist_hotttnesss&bucket=artist_familiarity&results=4" ) );
 
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );

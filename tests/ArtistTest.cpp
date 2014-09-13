@@ -239,8 +239,8 @@ void ArtistTest::testProfileUrl()
     Artist testArtist;
     testArtist.setName( QLatin1String( "ReallyGoodArtist" ) );
 
-    QNetworkReply* reply = testArtist.fetchProfile( ArtistInformation( ArtistInformation::Familiarity | ArtistInformation::Videos | ArtistInformation::Audio ) );
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/profile?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=ReallyGoodArtist&bucket=audio&bucket=familiarity&bucket=video" ) );
+    QNetworkReply* reply = testArtist.fetchProfile( ArtistInformation( ArtistInformation::Familiarity | ArtistInformation::Videos  ) );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/profile?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=ReallyGoodArtist&bucket=familiarity&bucket=video" ) );
 
     ArtistInformation info( ArtistInformation::Biographies | ArtistInformation::News | ArtistInformation::Reviews | ArtistInformation::Terms | ArtistInformation::Urls );
     info.setIdSpaces( QStringList() << QLatin1String( "musicbrainz" ) );
@@ -260,7 +260,7 @@ void ArtistTest::testProfile()
     Artist testArtist;
     testArtist.setName( QLatin1String( "The American Dollar" ) );
 
-    QNetworkReply* reply = testArtist.fetchProfile( ArtistInformation( ArtistInformation::Audio | ArtistInformation::Hotttnesss | ArtistInformation::Familiarity | ArtistInformation::Videos ) );
+    QNetworkReply* reply = testArtist.fetchProfile( ArtistInformation( ArtistInformation::Hotttnesss | ArtistInformation::Familiarity | ArtistInformation::Videos ) );
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
@@ -316,7 +316,7 @@ void ArtistTest::testSearchUrl()
     params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "alternative rock" ) ) );
     params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
     searchResult = Artist::search( params, ArtistInformation( ArtistInformation::Audio | ArtistInformation::Videos ), true );
-    QCOMPARE( searchResult->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/artist/search?api_key=JGJCRKWLXLBZIFAZB&format=xml&max_familiarity=12.221&min_hotttnesss=0.52&description=alternative+rock&fuzzy_match=true&limit=true&bucket=audio&bucket=video" ) );
+    QCOMPARE( searchResult->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/artist/search?api_key=JGJCRKWLXLBZIFAZB&format=xml&max_familiarity=12.221&min_hotttnesss=0.52&description=alternative+rock&fuzzy_match=true&limit=true&bucket=video" ) );
 
 
 }
@@ -324,9 +324,9 @@ void ArtistTest::testSearchUrl()
 void ArtistTest::testSearch()
 {
     Artist::SearchParams params;
-    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "emo^2" ) ) );
-    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "female vocalist^2" ) ) );
-    params.append( Artist::SearchParamEntry( Artist::Mood, QLatin1String( "happy^2" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "emo" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "female vocalist" ) ) );
+    params.append( Artist::SearchParamEntry( Artist::Mood, QLatin1String( "happy" ) ) );
     params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
     QNetworkReply* searchResult = Artist::search( params, ArtistInformation( ArtistInformation::Familiarity | ArtistInformation::Hotttnesss ) );
 
@@ -352,7 +352,7 @@ void ArtistTest::testSearch()
     params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "alternative rock" ) ) );
     params.append( Artist::SearchParamEntry( Artist::Description, QLatin1String( "stadium rock" ) ) );
     params.append( Artist::SearchParamEntry( Artist::FuzzyMatch, true ) );
-    searchResult = Artist::search( params, ArtistInformation( ArtistInformation::Familiarity | ArtistInformation::Hotttnesss | ArtistInformation::News | ArtistInformation::Blogs | ArtistInformation::Audio ) );
+    searchResult = Artist::search( params, ArtistInformation( ArtistInformation::Familiarity | ArtistInformation::Hotttnesss | ArtistInformation::News | ArtistInformation::Blogs  ) );
     qDebug() << "Querying:" << searchResult->url().toString();
     QEventLoop loop2;
     loop2.connect( searchResult, SIGNAL(finished()), SLOT(quit()) );
@@ -419,10 +419,10 @@ void ArtistTest::testSimilarUrl()
     params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Queen" ) ) );
     params.append( Artist::SearchParamEntry( Artist::MinHotttnesss, 0.5 ) );
 
-    QNetworkReply* reply = Artist::fetchSimilar( params, ArtistInformation( ArtistInformation::Hotttnesss | ArtistInformation::Familiarity | ArtistInformation::Audio ) );
+    QNetworkReply* reply = Artist::fetchSimilar( params, ArtistInformation( ArtistInformation::Hotttnesss | ArtistInformation::Familiarity ) );
 
     qDebug() << reply->url().toString();
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/similar?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=audio&bucket=familiarity&bucket=hotttnesss&name=The+Beatles&name=Rilo+Kiley&name=Queen&min_hotttnesss=0.5" ) );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/similar?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=familiarity&bucket=hotttnesss&name=The+Beatles&name=Rilo+Kiley&name=Queen&min_hotttnesss=0.5" ) );
 
     params.clear();
     params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Devo" ) ) );
@@ -430,9 +430,9 @@ void ArtistTest::testSimilarUrl()
     params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Lady Gaga" ) ) );
     params.append( Artist::SearchParamEntry( Artist::MinFamiliarity, 0.5 ) );
 
-    reply = Artist::fetchSimilar( params, ArtistInformation( ArtistInformation::Biographies | ArtistInformation::News | ArtistInformation::Audio ), 10 );
+    reply = Artist::fetchSimilar( params, ArtistInformation( ArtistInformation::Biographies | ArtistInformation::News  ), 10 );
 
-    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/similar?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=audio&bucket=biographies&bucket=news&results=10&name=Devo&name=The+New+Pornographers&name=Lady+Gaga&min_familiarity=0.5" ) );
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/similar?api_key=JGJCRKWLXLBZIFAZB&format=xml&bucket=biographies&bucket=news&results=10&name=Devo&name=The+New+Pornographers&name=Lady+Gaga&min_familiarity=0.5" ) );
 }
 
 void ArtistTest::testSimilar()
@@ -443,7 +443,7 @@ void ArtistTest::testSimilar()
     params.append( Artist::SearchParamEntry( Artist::Name, QLatin1String( "Queen" ) ) );
     params.append( Artist::SearchParamEntry( Artist::MinHotttnesss, 0.5 ) );
 
-    QNetworkReply* reply = Artist::fetchSimilar( params, ArtistInformation( ArtistInformation::Hotttnesss | ArtistInformation::Familiarity | ArtistInformation::Audio ) );
+    QNetworkReply* reply = Artist::fetchSimilar( params, ArtistInformation( ArtistInformation::Hotttnesss | ArtistInformation::Familiarity  ) );
 
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
@@ -456,7 +456,6 @@ void ArtistTest::testSimilar()
     Q_FOREACH( const Artist& artist, artists ) {
         QVERIFY( artist.familiarity() >= 0 );
         QVERIFY( artist.hotttnesss() >= 0 );
-        QVERIFY( artist.audio().size() > 0 );
     }
 
     artists.clear();
@@ -624,7 +623,7 @@ void ArtistTest::testSuggest()
 
     artists = Artist::parseSuggest( reply );
     qDebug() << "Got suggestions:" << artists;
-    QCOMPARE( artists.size(), 0 );
+    QCOMPARE( artists.size(), 1 );
 
     reply = Artist::suggest( QLatin1String( "tallest mangggggg" ), 12 );
     QCOMPARE( reply->url().toString(), QLatin1String( "http://developer.echonest.com/api/v4/artist/suggest?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=tallest+mangggggg&results=12" ) );
