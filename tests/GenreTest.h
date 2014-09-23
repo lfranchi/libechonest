@@ -19,7 +19,6 @@
 #define ECHONEST_GENRE_TEST_H
 
 #include <QtTest/QtTest>
-#include <boost/concept_check.hpp>
 
 class GenreTest : public QObject
 {
