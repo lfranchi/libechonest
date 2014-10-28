@@ -87,13 +87,14 @@ void GenreTest::testListUrl()
 void GenreTest::testList()
 {
 
-    QNetworkReply* reply = Genre::fetchList();
+    QNetworkReply* reply = Genre::fetchList( GenreInformation() , 2000 );
     QEventLoop loop;
     loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
     loop.exec();
 
     Genres genres = Genre::parseList( reply );
     qDebug() << genres.size();
+
     QVERIFY( genres.size() > 0 );
 
     Genre g;
@@ -101,7 +102,7 @@ void GenreTest::testList()
 
     bool contains = false;
     foreach( const Genre& other, genres )
-        if (other.name() == g.name() )
+        if ( other.name() == g.name() )
             contains = true;
 
     QVERIFY( contains );
@@ -152,6 +153,33 @@ void GenreTest::testProfile()
     QVERIFY( g4.name() == g1.name() );
     QVERIFY( g3.wikipediaUrl().toString().startsWith( QLatin1String("http://en.wikipedia.org/wiki/" ) ) );
 }
+
+void GenreTest::testSearchUrl()
+{
+    QNetworkReply* reply = Genre::fetchSearch( QLatin1String( "rock" ) );
+
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/genre/search?api_key=JGJCRKWLXLBZIFAZB&format=xml&name=rock" ) );
+}
+
+void GenreTest::testSearch()
+{
+    QNetworkReply* reply = Genre::fetchSearch( QLatin1String( "rock" ) );
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+
+    Genres genres = Genre::parseList( reply );
+    qDebug() << genres.size();
+    qDebug() << genres;
+    QVERIFY( genres.size() > 0 );
+
+    bool contains = true;
+    foreach( const Genre& genre, genres )
+        contains = contains && genre.name().contains( QLatin1String( "rock" ) );
+
+     QVERIFY( contains );
+}
+
 
 QTEST_MAIN(GenreTest)
 

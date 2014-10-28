@@ -34,6 +34,9 @@ private slots:
 
     void testProfileUrl();
     void testProfile();
+
+    void testSearchUrl();
+    void testSearch();
 };
 
 #endif

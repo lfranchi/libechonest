@@ -27,20 +27,20 @@ Echonest::Genre::Genre()
 }
 
 
-Echonest::Genre::Genre(const Echonest::Genre& other)
+Echonest::Genre::Genre( const Echonest::Genre& other )
     : d( other.d )
 {
     init();
 }
 
 
-Echonest::Genre::Genre(const QString& name)
+Echonest::Genre::Genre( const QString& name )
 {
     init();
     setName( name );
 }
 
-Echonest::Genre& Echonest::Genre::operator=(const Echonest::Genre& genre)
+Echonest::Genre& Echonest::Genre::operator=( const Echonest::Genre& genre )
 {
     d = genre.d;
     return *this;
@@ -149,7 +149,7 @@ QNetworkReply* Echonest::Genre::fetchList( GenreInformation information, int num
 
 QNetworkReply* Echonest::Genre::fetchSearch( const QString& name, Echonest::GenreInformation information, int numResults, int start )
 {
-    QUrl url = setupStaticQuery( "list", numResults );
+    QUrl url = setupStaticQuery( "search", numResults );
     addQueryInformation( url, information );
 
     urlAddQueryItem( url, QLatin1String( "name" ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( name ) ) );
@@ -191,7 +191,7 @@ Echonest::Genres Echonest::Genre::parseList( QNetworkReply* reply ) throw( Echon
 }
 
 
-Echonest::Genres Echonest::Genre::parseSearch(QNetworkReply* reply ) throw( Echonest::ParseError )
+Echonest::Genres Echonest::Genre::parseSearch( QNetworkReply* reply ) throw( Echonest::ParseError )
 {
    return parseList( reply );
 }
@@ -210,13 +210,13 @@ QUrl Echonest::Genre::setupStaticQuery( const QByteArray& methodName, int numRes
 }
 
 
-QUrl Echonest::Genre::setupQuery(const QByteArray& methodName, int numResults, int start) const
+QUrl Echonest::Genre::setupQuery( const QByteArray& methodName, int numResults, int start) const
 {
     QUrl url = setupStaticQuery( methodName, numResults, start );
     if( !d->name.isEmpty() ) {
         urlAddQueryItem( url, QLatin1String( "name" ), QString::fromLatin1( Echonest::escapeSpacesAndPluses( d->name ) ) );
     } else if ( methodName != "list" || methodName != "search" ) {
-        qWarning() << "Artist method" << methodName << "called on an artist object without name or id!";
+        qWarning() << "Genre method" << methodName << "called on a genre object without name or id!";
         return QUrl();
     }
     return url;
