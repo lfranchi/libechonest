@@ -37,6 +37,8 @@ private slots:
 
     void testSearchUrl();
     void testSearch();
+
+    void testLegacyHack();
 };
 
 #endif

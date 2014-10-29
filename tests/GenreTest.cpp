@@ -180,6 +180,20 @@ void GenreTest::testSearch()
      QVERIFY( contains );
 }
 
+void GenreTest::testLegacyHack()
+{
+    QNetworkReply* reply = Genre::fetchList( GenreInformation() , 2000 );
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+
+    QVector< QString > genres = Artist::parseGenreList( reply );
+    qDebug() << genres.size();
+
+    QVERIFY( genres.size() > 0 );
+}
+
+
 
 QTEST_MAIN(GenreTest)
 
