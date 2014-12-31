@@ -54,6 +54,8 @@ public:
         terms = other.terms;
         videos = other.videos;
         
+        twitter = other.twitter;
+        
         lastfm_url = other.lastfm_url;
         aolmusic_url = other.aolmusic_url;
         myspace_url = other.myspace_url;
@@ -84,6 +86,7 @@ public:
     QVector<Echonest::Artist> similar;
     Echonest::TermList terms;
     Echonest::VideoList videos;
+    QString twitter;
     
     QUrl lastfm_url;
     QUrl aolmusic_url;
