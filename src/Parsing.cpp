@@ -472,7 +472,7 @@ void Echonest::Parser::parseArtistInfo( QXmlStreamReader& xml, Echonest::Artist&
     } else if( xml.name() == QLatin1String( "genres" ) ) {
         parseArtistGenres( xml, artist );
     } else if ( xml.name() == QLatin1String( "twitter" ) ) {
-        artist.setTwitter(xml.readElementText());
+        artist.setTwitter( xml.readElementText() );
     }
 }
 
