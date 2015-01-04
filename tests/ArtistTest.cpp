@@ -691,6 +691,32 @@ void ArtistTest::testTopTerms()
     QVERIFY( terms.size() == 5 );
 }
 
+
+void ArtistTest::testTwitterUrl()
+{
+    Artist testArtist;
+    testArtist.setId( "ARFC93D1187FB49D2E" ); // Arcade Fire
+
+    QNetworkReply* reply = testArtist.fetchTwitter();
+
+    QVERIFY( reply->url().toString() == QLatin1String( "http://developer.echonest.com/api/v4/artist/twitter?api_key=JGJCRKWLXLBZIFAZB&format=xml&id=ARFC93D1187FB49D2E" ) );
+}
+
+void ArtistTest::testTwitter()
+{
+    Artist testArtist;
+    testArtist.setId( "ARFC93D1187FB49D2E" ); // Arcade Fire
+
+    QNetworkReply* reply = testArtist.fetchTwitter();
+
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    testArtist.parseProfile( reply );
+
+    QVERIFY( testArtist.twitter() == QLatin1String( "arcadefire" ) );
+}
+
 void ArtistTest::testUrlsUrl()
 {
     Artist testArtist;

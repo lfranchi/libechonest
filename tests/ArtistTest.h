@@ -55,6 +55,8 @@ private slots:
     void testTopHottt();
     void testTopTermsUrl();
     void testTopTerms();
+    void testTwitterUrl();
+    void testTwitter();
     void testUrlsUrl();
     void testUrls();
     void testVideosUrl();
