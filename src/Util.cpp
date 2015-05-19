@@ -150,7 +150,9 @@ void Echonest::urlAddQueryItem(QUrl& url, const QString& key, const QString& val
     urlQuery.addQueryItem( key, value );
     url.setQuery( urlQuery );
 #else
-    url.addQueryItem( key, value );
+    // We assume here that the key and values, though QStrings, are actually latin1 and not UTF-8.
+    // That is, they've already gone through playlistParamToString(). This is terrible.
+    url.addEncodedQueryItem( key.toLatin1(), value.toLatin1() );
 #endif
 }
 

@@ -201,6 +201,28 @@ void PlaylistTest::testStaticXSPF()
 }
 
 
+void PlaylistTest::testStaticWithSpecialChars()
+{
+    DynamicPlaylist::PlaylistParams p;
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Artist, QString::fromUtf8( "Björk" ) ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Type, Echonest::DynamicPlaylist::ArtistRadioType ) );
+    p.append( DynamicPlaylist::PlaylistParamData( Echonest::DynamicPlaylist::Results, 10 ) );
+
+    QNetworkReply* reply = DynamicPlaylist::staticPlaylist( p );
+
+    QVERIFY( reply->url().toEncoded() == "http://developer.echonest.com/api/v4/playlist/static?api_key=JGJCRKWLXLBZIFAZB&format=xml&artist=Bj%C3%B6rk&type=artist-radio&results=10" );
+
+    QEventLoop loop;
+    loop.connect( reply, SIGNAL(finished()), SLOT(quit()) );
+    loop.exec();
+    SongList songs = DynamicPlaylist::parseStaticPlaylist( reply );
+
+    QVERIFY( songs.size() == 10 );
+    Q_FOREACH( const Song& song, songs )
+            QVERIFY( !song.id().isEmpty() );
+
+}
+
 void PlaylistTest::testDynamic1()
 {
     DynamicPlaylist::PlaylistParams p;
